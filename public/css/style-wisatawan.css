@@ -1,0 +1,434 @@
+/* ========================================================= */
+/* FILE: public/css/style-wisatawan.css                      */
+/* THEME: WanderMed SPA - Desktop Landscape Version          */
+/* AUTHOR: Hear & Build Studio                               */
+/* ========================================================= */
+
+/* 1. RESET & VARIABLES */
+:root {
+    --hnb-navy: #112240;
+    --hnb-navy-light: #233554;
+    --hnb-orange: #ff7a00;
+    --hnb-orange-hover: #e66a00;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Poppins", sans-serif !important;
+    background-color: var(--hnb-navy);
+    color: #ffffff;
+    overflow-x: hidden;
+    transition: var(--transition);
+}
+
+/* 2. NAVBAR & ACTION BOX (FIX TERPOTONG) */
+.navbar-desktop-premier {
+    background: rgba(17, 34, 64, 0.85); /* Navy transparan */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 0 !important; /* Spasi agar tidak mepet atas */
+    transition: var(--transition);
+}
+
+.nav-pill-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding: 8px 15px;
+    transition: var(--transition);
+}
+
+.nav-pill-link:hover,
+.nav-pill-link.active {
+    color: var(--hnb-orange) !important;
+}
+
+/* Kotak Gabungan Login & Lapor */
+.nav-action-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 2px 5px;
+    display: flex;
+    align-items: center;
+}
+
+.v-separator {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 10px;
+}
+
+/* Update pada public/css/style-wisatawan.css */
+
+/* --- 3. HERO SECTION (SLANTED) --- */
+/* Update pada public/css/style-wisatawan.css */
+
+.hero-slanted {
+    position: relative;
+    width: 100%;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(
+        135deg,
+        var(--hnb-navy) 0%,
+        var(--hnb-navy-light) 100%
+    );
+
+    /* Ubah dari 0px ke 40px untuk jarak yang lebih pas sesuai garis merah */
+    padding-top: 70px !important;
+    padding-bottom: 150px;
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+}
+
+.hero-slanted::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Cpath d="M0 0h100v100H0z" fill="none"/%3E%3Cpath d="M0 50h100M50 0v100" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/%3E%3C/svg%3E');
+    z-index: 1;
+}
+
+.hero-slanted .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* 4. BRAND COMPONENTS & ICONS */
+.icon-kesehatan {
+    border-radius: 50%;
+    border: 4px solid var(--hnb-orange);
+    background: rgba(255, 122, 0, 0.05);
+    box-shadow: 0 0 40px rgba(255, 122, 0, 0.2);
+}
+
+.icon-kesehatan i {
+    color: var(--hnb-orange);
+}
+
+.btn-hnb-orange {
+    background: var(--hnb-orange);
+    color: #fff !important;
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-weight: 600;
+    border: none;
+    transition: var(--transition);
+}
+
+.btn-hnb-orange:hover {
+    background: var(--hnb-orange-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 122, 0, 0.3);
+}
+
+/* 5. SECTIONS (TENTANG, PANDUAN, MITRA) */
+section.section-scroll {
+    padding: 100px 0;
+}
+
+.teks-judul {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+.teks-subjudul {
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8;
+}
+
+/* Glassmorphism Cards */
+.glass-premier {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+/* 6. FORMS & INPUTS */
+.form-control-dark {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    transition: var(--transition);
+}
+
+.form-control-dark:focus {
+    border-color: var(--hnb-orange) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: none !important;
+}
+
+/* 7. ANIMATIONS */
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+.animasi-jantung {
+    animation: heartbeat 3s infinite ease-in-out;
+}
+
+/* 8. LIGHT MODE (SISTEM TUKAR PERAN) */
+body.light-mode {
+    background-color: #f8f9fa;
+    color: var(--hnb-navy);
+}
+
+body.light-mode .text-white,
+body.light-mode .teks-judul {
+    color: var(--hnb-navy) !important;
+}
+
+body.light-mode .text-white-50,
+body.light-mode .teks-subjudul {
+    color: #64748b !important;
+}
+
+/* Navbar Light Mode */
+body.light-mode .navbar-desktop-premier {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .nav-pill-link {
+    color: #475569 !important;
+}
+
+/* Hero Light Mode Tetap Berkarakter */
+body.light-mode .hero-slanted {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+}
+
+body.light-mode .hero-slanted::after {
+    filter: invert(1);
+    opacity: 0.05;
+}
+
+/* Cards & Components Light Mode */
+body.light-mode .glass-premier {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.light-mode .form-control-dark {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    color: var(--hnb-navy) !important;
+}
+
+body.light-mode .nav-action-box {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+body.light-mode .v-separator {
+    background: #cbd5e1;
+}
+body.light-mode .v-separator {
+    background: #cbd5e1;
+}
+
+.page-registration {
+    /* Kurangi padding-top agar lebih dekat ke navbar */
+    padding-top: 10px !important;
+    padding-bottom: 80px !important;
+    min-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    /* Ubah dari 'center' ke 'flex-start' agar konten naik ke atas */
+    justify-content: flex-start;
+}
+
+/* Tambahkan sedikit margin-top pada header agar ada jarak manis dari navbar */
+.page-registration .text-center.mb-5 {
+    margin-top: 2rem !important;
+}
+
+/* Mempercantik tampilan Search Bar di halaman daftar */
+.search-registration {
+    max-width: 600px;
+    margin: 0 auto 3rem auto;
+}
+
+/* Memastikan kartu tidak terlalu besar di monitor lebar */
+.card-opsi-landscape {
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+.card-opsi-landscape:hover {
+    transform: translateY(-10px);
+    border-color: var(--hnb-orange) !important;
+    background: rgba(255, 122, 0, 0.05) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+}
+
+.card-opsi-landscape .icon-kesehatan {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.active-card {
+    border-color: rgba(255, 122, 0, 0.3) !important;
+    background: rgba(255, 122, 0, 0.02) !important;
+}
+
+/* Penyesuaian Light Mode untuk Kartu Pendaftaran */
+body.light-mode .card-opsi-landscape {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-mode .card-opsi-landscape h5 {
+    color: var(--hnb-navy) !important;
+}
+
+body.light-mode .card-opsi-landscape:hover {
+    background: rgba(255, 122, 0, 0.03) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Fix khusus untuk Tombol Kembali agar tidak hilang di Mode Terang */
+body.light-mode .btn-outline-light {
+    color: var(--hnb-navy) !important;
+    border-color: var(--hnb-navy) !important;
+    background-color: transparent !important;
+}
+
+body.light-mode .btn-outline-light:hover {
+    background-color: var(--hnb-navy) !important;
+    color: #ffffff !important;
+}
+
+/* --- 10. LOGIN PAGE OPTIMIZATION --- */
+.page-login {
+    min-height: 70vh; /* Menyesuaikan dengan padding body */
+    padding: 60px 0;
+}
+
+/* Penyesuaian Input Login agar Transparan */
+.page-login .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Light Mode Fix untuk Login Card */
+body.light-mode .page-login .glass-premier {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 15px 40px rgba(17, 34, 64, 0.08) !important;
+}
+
+body.light-mode .page-login .text-white,
+body.light-mode .page-login label {
+    color: var(--hnb-navy) !important;
+}
+
+body.light-mode .page-login .input-group {
+    border-color: rgba(17, 34, 64, 0.1) !important;
+}
+
+body.light-mode .page-login .form-control {
+    color: var(--hnb-navy) !important;
+}
+
+body.light-mode .page-login .form-control::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* --- 10. PREMIUM LOGIN BOX STYLING --- */
+.login-box-premium {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px);
+}
+
+.input-group-custom {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 0;
+    transition: var(--transition);
+}
+
+.input-group-custom:focus-within {
+    border-color: var(--hnb-orange);
+}
+
+.icon-field {
+    color: var(--hnb-orange);
+    width: 30px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.form-control-transparent {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    padding: 5px 15px !important;
+    width: 100%;
+    outline: none !important;
+    font-size: 15px;
+}
+
+.btn-toggle-pass {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 0 10px;
+    transition: var(--transition);
+}
+
+.btn-toggle-pass:hover {
+    color: #ffffff;
+}
+
+.hover-orange:hover {
+    color: var(--hnb-orange) !important;
+}
+
+/* Light Mode Support */
+body.light-mode .login-box-premium {
+    background: #ffffff !important;
+    box-shadow: 0 20px 50px rgba(17, 34, 64, 0.1) !important;
+}
+
+body.light-mode .input-group-custom {
+    background: transparent;
+    border-color: rgba(17, 34, 64, 0.1);
+}
+
+body.light-mode .form-control-transparent {
+    color: var(--hnb-navy) !important;
+}
+
+body.light-mode .btn-toggle-pass {
+    color: rgba(17, 34, 64, 0.4);
+}
