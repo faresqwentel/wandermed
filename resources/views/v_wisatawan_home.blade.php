@@ -25,7 +25,7 @@
                         <span class="text-hnb-orange">Prioritas Kami.</span>
                     </h1>
                     <p class="text-white-50 mb-5" style="font-size: 1.1rem; max-width: 90%;">
-                        Sistem pemetaan pintar yang membantu wisatawan menemukan UGD, Klinik, atau Apotek terdekat dalam hitungan detik..
+                        Sistem pemetaan pintar yang membantu wisatawan menemukan UGD, Klinik, atau Apotek terdekat dalam hitungan detik
                     </p>
 
                     <form action="#" method="GET" class="w-100 pr-lg-4">
