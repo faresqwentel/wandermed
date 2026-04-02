@@ -32,8 +32,9 @@ Route::get('/daftar/pariwisata', [HomeController::class, 'daftarPariwisata']);
 // Rute untuk Formulir Faskes
 Route::get('/daftar/faskes', [HomeController::class, 'daftarFaskes']);
 
+// Rute untuk Formulir Wisatawan Biasa
+Route::get('/daftar/wisatawan', [HomeController::class, 'daftarWisatawan']);
 // routes/web.php
 
 Route::get('/', function () {
-    return view('v_wisatawan_home');
-});
+    return view('v_wisatawan_home');});

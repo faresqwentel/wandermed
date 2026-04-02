@@ -38,4 +38,10 @@ class HomeController extends Controller
     public function daftarFaskes() {
         return view('v_daftar_faskes');
     }
+
+    // Tambahkan di dalam class HomeController
+
+    public function daftarWisatawan() {
+        return view('v_daftar_wisatawan');
+    }
 }

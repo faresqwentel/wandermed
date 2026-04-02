@@ -1,14 +1,13 @@
 /* File: public/js/wizard-pariwisata.js */
-
 document.addEventListener("DOMContentLoaded", function () {
     let currentStep = 1;
-    const totalSteps = 4; // Tahap 5 adalah layar sukses
+    const totalSteps = 4;
 
     const judulSteps = [
         "Profil Singkat Pariwisata",
-        "Lokasi Pariwisata",
-        "Kontak & Operasional",
-        "Dokumentasi Pariwisata",
+        "Lokasi Strategis",
+        "Operasional Destinasi",
+        "Kontak & Dokumentasi",
         "Pendaftaran Berhasil!",
     ];
 
@@ -20,66 +19,69 @@ document.addEventListener("DOMContentLoaded", function () {
     const navButtons = document.getElementById("navButtons");
     const navFinish = document.getElementById("navFinish");
 
-    // Pastikan script ini hanya berjalan jika elemen-elemen di atas ada di halaman
     if (btnNext && btnPrev) {
-        // Fungsi untuk Memperbarui Tampilan Form
         function updateForm() {
-            // Sembunyikan semua step
-            document
-                .querySelectorAll(".step-content")
-                .forEach((el) => el.classList.add("d-none"));
-            // Tampilkan step yang aktif
-            document
-                .getElementById("step" + currentStep)
-                .classList.remove("d-none");
+            document.querySelectorAll(".step-content").forEach((el) => {
+                el.classList.add("d-none");
+                el.style.opacity = "0";
+            });
 
-            // Update Teks Judul
+            const activeStep = document.getElementById("step" + currentStep);
+            if (activeStep) {
+                activeStep.classList.remove("d-none");
+                setTimeout(() => {
+                    activeStep.style.opacity = "1";
+                }, 50);
+            }
+
             formTitle.innerText = judulSteps[currentStep - 1];
 
             if (currentStep <= totalSteps) {
-                // Masih di tahap isi form
                 formSubtitle.innerText =
                     "Langkah " + currentStep + " dari " + totalSteps;
                 formProgress.style.width =
                     (currentStep / totalSteps) * 100 + "%";
 
-                // Ganti teks tombol jika di langkah terakhir
                 if (currentStep === totalSteps) {
-                    btnNext.innerText = "Kirim Data";
+                    btnNext.innerHTML =
+                        'Kirim Data <i class="fas fa-paper-plane ml-2"></i>';
                 } else {
-                    btnNext.innerText = "Lanjut";
+                    btnNext.innerHTML =
+                        'Lanjut <i class="fas fa-chevron-right ml-2"></i>';
                 }
+
+                navButtons.classList.add("d-flex");
+                navButtons.classList.remove("d-none");
+                navFinish.classList.add("d-none");
             } else {
-                // Tahap 5 (Sukses)
                 formSubtitle.innerText = "Selesai";
                 formProgress.style.width = "100%";
                 formProgress.classList.replace("bg-hnb-orange", "bg-success");
-
-                // Sembunyikan tombol prev/next, tampilkan tombol beranda
                 navButtons.classList.add("d-none");
-                navButtons.classList.remove("d-flex");
                 navFinish.classList.remove("d-none");
                 navFinish.classList.add("d-flex");
             }
         }
 
-        // Aksi saat klik tombol Lanjut
         btnNext.addEventListener("click", function () {
             if (currentStep <= totalSteps) {
                 currentStep++;
                 updateForm();
+                window.scrollTo({ top: 0, behavior: "smooth" });
             }
         });
 
-        // Aksi saat klik tombol Kembali
         btnPrev.addEventListener("click", function () {
             if (currentStep > 1) {
                 currentStep--;
                 updateForm();
+                window.scrollTo({ top: 0, behavior: "smooth" });
             } else {
-                // Jika di tahap 1, kembali ke halaman pilihan peran
                 window.location.href = "/daftar";
             }
         });
+
+        // Inisialisasi tampilan pertama kali
+        updateForm();
     }
 });

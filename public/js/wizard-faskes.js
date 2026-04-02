@@ -2,15 +2,14 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     let currentStep = 1;
-    const totalSteps = 5; // Sekarang ada 5 tahap form, tahap 6 adalah layar sukses
+    const totalSteps = 5;
 
-    // Judul 5 Tahap + 1 Sukses
     const judulSteps = [
         "Profil Fasilitas Kesehatan",
-        "Lokasi Faskes",
+        "Lokasi Strategis Faskes",
         "Layanan & Kontak Darurat",
-        "Dokumentasi & Info PIC",
-        "Pembuatan Akun Faskes",
+        "Dokumentasi & Info Admin",
+        "Keamanan Akses Dashboard",
         "Faskes Terdaftar!",
     ];
 
@@ -22,18 +21,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const navButtons = document.getElementById("navButtons");
     const navFinish = document.getElementById("navFinish");
 
-    // === LOGIKA WIZARD MULTI-STEP ===
     if (btnNext && btnPrev) {
         function updateForm() {
-            // Sembunyikan semua step
-            document
-                .querySelectorAll(".step-content")
-                .forEach((el) => el.classList.add("d-none"));
+            // Sembunyikan step dengan efek transisi
+            document.querySelectorAll(".step-content").forEach((el) => {
+                el.classList.add("d-none");
+                el.style.opacity = "0";
+            });
+
             // Tampilkan step aktif
-            document
-                .getElementById("step" + currentStep)
-                .classList.remove("d-none");
-            // Update Teks Judul
+            const activeStep = document.getElementById("step" + currentStep);
+            if (activeStep) {
+                activeStep.classList.remove("d-none");
+                setTimeout(() => {
+                    activeStep.style.opacity = "1";
+                }, 50);
+            }
+
             formTitle.innerText = judulSteps[currentStep - 1];
 
             if (currentStep <= totalSteps) {
@@ -41,19 +45,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Langkah " + currentStep + " dari " + totalSteps;
                 formProgress.style.width =
                     (currentStep / totalSteps) * 100 + "%";
-                btnNext.innerText =
-                    currentStep === totalSteps
-                        ? "Kirim Data & Buat Akun"
-                        : "Lanjut";
+
+                // PERBAIKAN: Gunakan .innerHTML agar ikon tidak hilang
+                if (currentStep === totalSteps) {
+                    btnNext.innerHTML =
+                        'Kirim & Buat Akun <i class="fas fa-user-plus ml-2"></i>';
+                } else {
+                    btnNext.innerHTML =
+                        'Lanjut <i class="fas fa-chevron-right ml-2"></i>';
+                }
             } else {
-                // Layar Sukses (Tahap 6)
+                // Layar Sukses
                 formSubtitle.innerText = "Selesai";
                 formProgress.style.width = "100%";
                 formProgress.classList.replace("bg-hnb-orange", "bg-success");
-                navButtons.classList.add("d-none");
-                navButtons.classList.remove("d-flex");
-                navFinish.classList.remove("d-none");
-                navFinish.classList.add("d-flex");
+                navButtons.classList.replace("d-flex", "d-none");
+                navFinish.classList.replace("d-none", "d-flex");
             }
         }
 
@@ -61,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (currentStep <= totalSteps) {
                 currentStep++;
                 updateForm();
+                window.scrollTo({ top: 0, behavior: "smooth" });
             }
         });
 
@@ -68,27 +76,31 @@ document.addEventListener("DOMContentLoaded", function () {
             if (currentStep > 1) {
                 currentStep--;
                 updateForm();
+                window.scrollTo({ top: 0, behavior: "smooth" });
             } else {
                 window.location.href = "/daftar";
             }
         });
+
+        // Inisialisasi tampilan
+        updateForm();
     }
 
-    // === LOGIKA DINAMIS UGD (Tampil/Sembunyi Jam UGD) ===
+    // --- LOGIKA DINAMIS UGD ---
     const selectUGD = document.getElementById("selectUGD");
     const ugdTimeForm = document.getElementById("ugdTimeForm");
 
     if (selectUGD && ugdTimeForm) {
         selectUGD.addEventListener("change", function () {
             if (this.value === "Terbatas") {
-                ugdTimeForm.classList.remove("d-none"); // Munculkan form jam
+                ugdTimeForm.classList.remove("d-none");
             } else {
-                ugdTimeForm.classList.add("d-none"); // Sembunyikan form jam
+                ugdTimeForm.classList.add("d-none");
             }
         });
     }
 
-    // === LOGIKA SHOW/HIDE PASSWORD DI TAHAP 5 ===
+    // --- LOGIKA TOGGLE PASSWORD ---
     const btnTogglePass = document.getElementById("btnTogglePass");
     const inputPass = document.getElementById("inputPass");
 
@@ -96,12 +108,10 @@ document.addEventListener("DOMContentLoaded", function () {
         btnTogglePass.addEventListener("click", function () {
             if (inputPass.type === "password") {
                 inputPass.type = "text";
-                btnTogglePass.classList.remove("fa-eye");
-                btnTogglePass.classList.add("fa-eye-slash");
+                this.classList.replace("fa-eye", "fa-eye-slash");
             } else {
                 inputPass.type = "password";
-                btnTogglePass.classList.remove("fa-eye-slash");
-                btnTogglePass.classList.add("fa-eye");
+                this.classList.replace("fa-eye-slash", "fa-eye");
             }
         });
     }

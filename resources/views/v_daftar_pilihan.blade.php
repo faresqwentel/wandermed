@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="col-lg-4 mb-4">
-                    <a href="#" class="card glass-premier card-opsi-landscape text-decoration-none shadow-sm">
+                    <a href="/daftar/wisatawan" class="card glass-premier card-opsi-landscape text-decoration-none shadow-sm">
                         <div class="card-body p-4 text-center">
                             <div class="icon-kesehatan"><i class="fas fa-user fa-2x text-hnb-orange"></i></div>
                             <h6 class="font-weight-bold text-white mb-2">Wisatawan Biasa</h6>
