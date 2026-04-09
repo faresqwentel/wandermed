@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <meta name="theme-color" content="#112240">
     <meta name="msapplication-navbutton-color" content="#112240">
     <meta name="apple-mobile-web-app-status-bar-style" content="#112240">
@@ -16,27 +15,19 @@
 
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
-
     <link href="{{ asset('css/style-wisatawan.css') }}" rel="stylesheet">
 
+    @stack('styles')
+
     <style>
-        /* CSS Dasar untuk mencegah flash putih saat loading CSS eksternal */
         html, body {
-            background-color: #112240 !important; /* Warna Navy WanderMed */
+            background-color: #112240 !important;
             margin: 0;
             padding: 0;
             transition: background-color 0.3s ease;
         }
-
-        /* Ganjal body agar konten tidak tertutup navbar fixed */
-        body {
-            padding-top: 100px !important;
-            overflow-x: hidden;
-        }
-
-        @media (max-width: 991px) {
-            body { padding-top: 85px !important; }
-        }
+        body { padding-top: 100px !important; overflow-x: hidden; }
+        @media (max-width: 991px) { body { padding-top: 85px !important; } }
     </style>
 </head>
 
@@ -45,7 +36,6 @@
         (function() {
             const savedTheme = localStorage.getItem("wanderMedTheme");
             if (savedTheme === "light") {
-                // Menambahkan class pada html dan body sekaligus agar selektor CSS kuat
                 document.documentElement.classList.add("light-mode");
                 document.body.classList.add("light-mode");
             }
@@ -58,6 +48,8 @@
 
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    @stack('scripts')
 
     <script src="{{ asset('js/script-wisatawan.js') }}"></script>
 </body>

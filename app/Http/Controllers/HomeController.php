@@ -44,4 +44,8 @@ class HomeController extends Controller
     public function daftarWisatawan() {
         return view('v_daftar_wisatawan');
     }
+
+    public function petaFaskes() {
+        return view('v_peta_faskes');
+}
 }

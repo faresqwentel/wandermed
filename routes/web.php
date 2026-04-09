@@ -38,3 +38,6 @@ Route::get('/daftar/wisatawan', [HomeController::class, 'daftarWisatawan']);
 
 Route::get('/', function () {
     return view('v_wisatawan_home');});
+
+    // Rute untuk Peta Sebaran Faskes
+Route::get('/peta-faskes', [HomeController::class, 'petaFaskes']);
