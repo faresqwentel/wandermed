@@ -1,4 +1,4 @@
-\@extends('theme.wisatawan')
+@extends('theme.wisatawan')
 
 @section('content')
     @include('theme.navbar')
