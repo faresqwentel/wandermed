@@ -18,7 +18,7 @@
 
                     <div class="glass-premier shadow-lg border-0 radius-hnb overflow-hidden login-box-premium">
                         <div class="card-body p-4 p-md-5">
-                            <form action="/admin" method="GET">
+                            <form action="dashboard/admin" method="GET">
 
                                 <div class="form-group mb-4">
                                     <label class="text-white font-weight-bold ml-1 small opacity-75">Email Pengguna</label>

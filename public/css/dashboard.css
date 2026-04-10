@@ -1,0 +1,626 @@
+/* =========================================================
+ * FILE: public/css/dashboard.css
+ * THEME: WanderMed Dashboard - Custom Navy Dark Theme
+ * Tidak menggunakan SB Admin 2. Murni custom.
+ * ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ==============================
+ * 1. ROOT VARIABLES & RESET
+ * ============================== */
+:root {
+    --navy:         #0d1b2e;
+    --navy-light:   #1a2a44;
+    --navy-card:    #1e3354;
+    --navy-hover:   #243d5c;
+    --orange:       #ff7a00;
+    --orange-hover: #e06900;
+    --orange-glow:  rgba(255, 122, 0, 0.25);
+    --text-primary:   #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --text-muted:     rgba(255, 255, 255, 0.35);
+    --border:       rgba(255, 255, 255, 0.08);
+    --sidebar-w:    260px;
+    --topbar-h:     70px;
+    --radius:       14px;
+    --transition:   all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--navy);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; }
+
+/* ==============================
+ * 2. LAYOUT SHELL
+ * ============================== */
+.wm-shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ==============================
+ * 3. SIDEBAR
+ * ============================== */
+.wm-sidebar {
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--navy-light);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: relative;
+    transition: var(--transition);
+    z-index: 100;
+}
+
+/* Brand / Logo */
+.wm-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--border);
+}
+.wm-brand-icon {
+    width: 42px;
+    height: 42px;
+    background: var(--orange);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px var(--orange-glow);
+}
+.wm-brand-text { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+.wm-brand-badge {
+    font-size: 9px;
+    font-weight: 700;
+    background: var(--orange);
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-top: 3px;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
+/* Nav Groups */
+.wm-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 0;
+    scrollbar-width: none;
+}
+.wm-nav::-webkit-scrollbar { display: none; }
+
+.wm-nav-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 12px 20px 6px;
+}
+
+.wm-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    margin: 2px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    position: relative;
+}
+.wm-nav-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+.wm-nav-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+}
+.wm-nav-link.active {
+    background: var(--orange-glow);
+    color: var(--orange);
+    border: 1px solid rgba(255, 122, 0, 0.2);
+}
+.wm-nav-link.active i { color: var(--orange); }
+.wm-nav-link .badge-pill-side {
+    margin-left: auto;
+    background: var(--orange);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+/* Sidebar Footer */
+.wm-sidebar-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px;
+}
+.wm-user-mini {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    transition: var(--transition);
+}
+.wm-user-mini:hover { background: rgba(255,255,255,0.05); }
+.wm-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), #e06900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+.wm-user-name { font-size: 13px; font-weight: 600; line-height: 1.2; }
+.wm-user-role { font-size: 11px; color: var(--text-muted); }
+.wm-logout-btn {
+    margin-left: auto;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: var(--transition);
+}
+.wm-logout-btn:hover { background: rgba(231, 74, 59, 0.2); color: #e74a3b; border-color: rgba(231, 74, 59, 0.3); }
+
+/* ==============================
+ * 4. MAIN AREA
+ * ============================== */
+.wm-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ==============================
+ * 5. TOPBAR
+ * ============================== */
+.wm-topbar {
+    height: var(--topbar-h);
+    background: var(--navy-light);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 16px;
+    flex-shrink: 0;
+}
+.wm-topbar-title { font-size: 17px; font-weight: 700; flex: 1; }
+.wm-topbar-title span { color: var(--orange); }
+
+/* Search Bar */
+.wm-search {
+    position: relative;
+    flex: 0 0 280px;
+}
+.wm-search input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 16px 9px 40px;
+    font-size: 13px;
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: var(--transition);
+}
+.wm-search input::placeholder { color: var(--text-muted); }
+.wm-search input:focus { border-color: rgba(255, 122, 0, 0.5); background: rgba(255, 122, 0, 0.05); }
+.wm-search i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+/* Topbar Icons */
+.wm-topbar-icon {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 15px;
+    transition: var(--transition);
+    cursor: pointer;
+}
+.wm-topbar-icon:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+.wm-topbar-icon .dot {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    border: 2px solid var(--navy-light);
+}
+
+/* ==============================
+ * 6. CONTENT AREA
+ * ============================== */
+.wm-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+.wm-content::-webkit-scrollbar { width: 5px; }
+.wm-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+/* Section Header */
+.wm-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+.wm-page-title { font-size: 22px; font-weight: 700; }
+.wm-page-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+/* ==============================
+ * 7. STAT CARDS
+ * ============================== */
+.wm-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+.wm-stat-card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+.wm-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    border-radius: 14px 0 0 14px;
+}
+.wm-stat-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+
+.wm-stat-card.orange::before  { background: var(--orange); }
+.wm-stat-card.blue::before    { background: #4e73df; }
+.wm-stat-card.green::before   { background: #1cc88a; }
+.wm-stat-card.teal::before    { background: #36b9cc; }
+.wm-stat-card.yellow::before  { background: #f6c23e; }
+.wm-stat-card.red::before     { background: #e74a3b; }
+
+.wm-stat-icon {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.wm-stat-card.orange .wm-stat-icon  { background: rgba(255, 122, 0, 0.15); color: var(--orange); }
+.wm-stat-card.blue .wm-stat-icon    { background: rgba(78, 115, 223, 0.15); color: #4e73df; }
+.wm-stat-card.green .wm-stat-icon   { background: rgba(28, 200, 138, 0.15); color: #1cc88a; }
+.wm-stat-card.teal .wm-stat-icon    { background: rgba(54, 185, 204, 0.15); color: #36b9cc; }
+.wm-stat-card.yellow .wm-stat-icon  { background: rgba(246, 194, 62, 0.15); color: #f6c23e; }
+.wm-stat-card.red .wm-stat-icon     { background: rgba(231, 74, 59, 0.15); color: #e74a3b; }
+
+.wm-stat-value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+.wm-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 3px; }
+
+/* ==============================
+ * 8. CONTENT CARDS
+ * ============================== */
+.wm-card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 22px;
+}
+.wm-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+}
+.wm-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+.wm-card-title i { color: var(--orange); }
+.wm-card-body { padding: 22px; }
+
+/* ==============================
+ * 9. TABLES
+ * ============================== */
+.wm-table-wrap { overflow-x: auto; }
+.wm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+.wm-table thead th {
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.2);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+.wm-table tbody tr { border-bottom: 1px solid var(--border); transition: var(--transition); }
+.wm-table tbody tr:last-child { border-bottom: none; }
+.wm-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+.wm-table tbody td { padding: 14px 16px; vertical-align: middle; color: var(--text-secondary); }
+.wm-table tbody td.bold { color: var(--text-primary); font-weight: 600; }
+
+/* ==============================
+ * 10. BADGES
+ * ============================== */
+.wm-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.wm-badge.green  { background: rgba(28, 200, 138, 0.15); color: #1cc88a; border: 1px solid rgba(28, 200, 138, 0.3); }
+.wm-badge.yellow { background: rgba(246, 194, 62, 0.15);  color: #f6c23e; border: 1px solid rgba(246, 194, 62, 0.3); }
+.wm-badge.red    { background: rgba(231, 74, 59, 0.15);   color: #e74a3b; border: 1px solid rgba(231, 74, 59, 0.3); }
+.wm-badge.blue   { background: rgba(78, 115, 223, 0.15);  color: #4e73df; border: 1px solid rgba(78, 115, 223, 0.3); }
+.wm-badge.orange { background: rgba(255, 122, 0, 0.15);   color: var(--orange); border: 1px solid var(--orange-glow); }
+
+/* ==============================
+ * 11. BUTTONS
+ * ============================== */
+.wm-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 20px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    border: none; transition: var(--transition);
+    font-family: 'Poppins', sans-serif;
+}
+.wm-btn.orange {
+    background: var(--orange); color: #fff;
+    box-shadow: 0 4px 15px var(--orange-glow);
+}
+.wm-btn.orange:hover { background: var(--orange-hover); transform: translateY(-2px); box-shadow: 0 8px 25px var(--orange-glow); }
+.wm-btn.ghost {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+.wm-btn.ghost:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+.wm-btn.success { background: rgba(28, 200, 138, 0.15); color: #1cc88a; border: 1px solid rgba(28, 200, 138, 0.3); }
+.wm-btn.success:hover { background: rgba(28, 200, 138, 0.25); }
+.wm-btn.danger { background: rgba(231, 74, 59, 0.15); color: #e74a3b; border: 1px solid rgba(231, 74, 59, 0.3); }
+.wm-btn.danger:hover { background: rgba(231, 74, 59, 0.25); }
+.wm-btn.info { background: rgba(54, 185, 204, 0.15); color: #36b9cc; border: 1px solid rgba(54, 185, 204, 0.3); }
+.wm-btn.sm { padding: 6px 14px; font-size: 12px; border-radius: 8px; }
+
+/* ==============================
+ * 12. FORM CONTROLS
+ * ============================== */
+.wm-form-group { margin-bottom: 18px; }
+.wm-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 8px; }
+.wm-input, .wm-select, .wm-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: var(--transition);
+}
+.wm-input::placeholder, .wm-textarea::placeholder { color: var(--text-muted); }
+.wm-input:focus, .wm-select:focus, .wm-textarea:focus {
+    border-color: rgba(255, 122, 0, 0.5);
+    background: rgba(255, 122, 0, 0.04);
+}
+.wm-select { appearance: none; }
+.wm-textarea { resize: vertical; min-height: 90px; }
+
+/* ==============================
+ * 13. CUSTOM TOGGLE SWITCH
+ * ============================== */
+.wm-toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px;
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: var(--transition);
+}
+.wm-toggle-row:hover { border-color: rgba(255,255,255,0.15); }
+.wm-toggle-info h6 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.wm-toggle-info p { font-size: 12px; color: var(--text-muted); margin: 0; }
+.wm-toggle-group { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.wm-toggle-label { font-size: 12px; font-weight: 700; min-width: 115px; text-align: right; }
+
+.wm-switch { position: relative; display: inline-block; width: 52px; height: 28px; }
+.wm-switch input { opacity: 0; width: 0; height: 0; }
+.wm-switch-slider {
+    position: absolute; cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.15);
+    border-radius: 28px; transition: .4s;
+}
+.wm-switch-slider::before {
+    content: ""; position: absolute;
+    height: 22px; width: 22px;
+    left: 3px; bottom: 3px;
+    background: white; border-radius: 50%; transition: .4s;
+}
+.wm-switch input:checked + .wm-switch-slider { background: #1cc88a; }
+.wm-switch input:checked + .wm-switch-slider::before { transform: translateX(24px); }
+
+/* ==============================
+ * 14. INLINE EDIT NOTE
+ * ============================== */
+.note-view { cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: var(--transition); display: flex; align-items: center; gap: 8px; }
+.note-view:hover { background: rgba(255,255,255,0.07); }
+.note-view .note-edit-icon { opacity: 0; color: var(--orange); font-size: 12px; transition: var(--transition); }
+.note-view:hover .note-edit-icon { opacity: 1; }
+.note-edit-active { display: none; gap: 6px; align-items: center; }
+.note-edit-active.show { display: flex; }
+.note-edit-active input {
+    flex: 1;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255, 122, 0, 0.5);
+    border-radius: 7px;
+    padding: 5px 10px;
+    color: #fff;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+}
+
+/* ==============================
+ * 15. TOAST NOTIFICATION
+ * ============================== */
+.wm-toast {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-left: 4px solid #1cc88a;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 13px;
+    color: #1cc88a;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 9999;
+}
+.wm-toast.show { transform: translateY(0); opacity: 1; }
+
+/* ==============================
+ * 16. SIDEBAR MOBILE TOGGLE
+ * ============================== */
+.wm-mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .wm-sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        z-index: 999;
+        transition: left 0.3s ease;
+    }
+    .wm-sidebar.open { left: 0; }
+    .wm-mobile-toggle { display: block; }
+    .wm-search { flex: 0 0 180px; }
+    .wm-stat-grid { grid-template-columns: 1fr 1fr; }
+    .wm-content { padding: 16px; }
+}
+
+/* ==============================
+ * 17. CHECKBOX (Fasilitas List)
+ * ============================== */
+.wm-check-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.wm-check-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.wm-check-item:hover { border-color: rgba(255,255,255,0.18); }
+.wm-check-item.checked { background: rgba(28, 200, 138, 0.08); border-color: rgba(28, 200, 138, 0.3); }
+.wm-check-item input[type="checkbox"] { display: none; }
+.wm-check-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    color: transparent;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+.wm-check-item.checked .wm-check-box { background: #1cc88a; border-color: #1cc88a; color: #fff; }
+.wm-check-label { font-size: 13px; font-weight: 500; }
+
+/* ==============================
+ * 18. SIDEBAR OVERLAY (Mobile)
+ * ============================== */
+.wm-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 998;
+}
+.wm-overlay.show { display: block; }

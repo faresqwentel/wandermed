@@ -34,10 +34,17 @@ Route::get('/daftar/faskes', [HomeController::class, 'daftarFaskes']);
 
 // Rute untuk Formulir Wisatawan Biasa
 Route::get('/daftar/wisatawan', [HomeController::class, 'daftarWisatawan']);
-// routes/web.php
 
-Route::get('/', function () {
-    return view('v_wisatawan_home');});
-
-    // Rute untuk Peta Sebaran Faskes
+// Rute untuk Peta Sebaran Faskes
 Route::get('/peta-faskes', [HomeController::class, 'petaFaskes']);
+
+// ====== RUTE DASHBOARD ====== //
+
+// 1. Dashboard Wisatawan
+Route::get('/dashboard/wisatawan', [HomeController::class, 'dashboardWisatawan']);
+
+// 2. Dashboard Faskes
+Route::get('/dashboard/faskes', [HomeController::class, 'dashboardFaskes']);
+
+// 3. Dashboard Admin
+Route::get('/dashboard/admin', [HomeController::class, 'dashboardAdmin']);

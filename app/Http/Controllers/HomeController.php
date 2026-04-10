@@ -47,5 +47,18 @@ class HomeController extends Controller
 
     public function petaFaskes() {
         return view('v_peta_faskes');
-}
+    }
+
+    // Dashboard Routes
+    public function dashboardWisatawan() {
+        return view('dashboard_wisatawan');
+    }
+
+    public function dashboardFaskes() {
+        return view('dashboard_faskes');
+    }
+
+    public function dashboardAdmin() {
+        return view('dashboard_admin');
+    }
 }
