@@ -773,98 +773,118 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     // =========================================================
-    // DATA FASKES (kelak dari controller/API Laravel)
+    // DATA FASKES — Diambil dari database via API Laravel
+    // Endpoint: GET /api/faskes (AdminController@getFaskesJson)
+    // Jika API kosong (DB belum ada data), gunakan data fallback demo
     // =========================================================
-    var faskesData = [
-        {
-            id: 1,
-            name: "RSUD Subang",
-            lat: -6.5710, lng: 107.7600,
-            type: "Rumah Sakit",
-            bpjs: true,
-            status: "open",
-            address: "Jl. Brigjen Katamso No.37, Subang, Jawa Barat 41211",
-            phone: "(0260) 411421",
-            jam: "24 Jam (UGD & Layanan Darurat)",
-            notes: "Antrean poli umum buka pukul 07.00 WIB. Parkiran tersedia luas.",
-            facilities: [
-                { icon: "fac-icon red",    ico: "fas fa-ambulance",   label: "UGD 24 Jam" },
-                { icon: "fac-icon blue",   ico: "fas fa-car",         label: "Ambulans" },
-                { icon: "fac-icon teal",   ico: "fas fa-bed",         label: "Rawat Inap" },
-                { icon: "fac-icon green",  ico: "fas fa-pills",       label: "Apotek" },
-                { icon: "fac-icon yellow", ico: "fas fa-flask",       label: "Laboratorium" },
-                { icon: "fac-icon orange", ico: "fas fa-user-md",     label: "Dok. Spesialis" },
-                { icon: "fac-icon purple", ico: "fas fa-baby",        label: "Poli Anak" },
-                { icon: "fac-icon blue",   ico: "fas fa-x-ray",       label: "Radiologi" },
-            ]
-        },
-        {
-            id: 2,
-            name: "Klinik Pratama Cibogo",
-            lat: -6.5650, lng: 107.7500,
-            type: "Klinik",
-            bpjs: true,
-            status: "open",
-            address: "Jl. Raya Cibogo No.12, Subang",
-            phone: "(0260) 422111",
-            jam: "Senin – Sabtu, 08.00 – 20.00 WIB",
-            notes: null,
-            facilities: [
-                { icon: "fac-icon green",  ico: "fas fa-stethoscope", label: "Poli Umum" },
-                { icon: "fac-icon green",  ico: "fas fa-pills",       label: "Apotek" },
-                { icon: "fac-icon yellow", ico: "fas fa-flask",       label: "Lab Dasar" },
-                { icon: "fac-icon blue",   ico: "fas fa-baby",        label: "Poli Ibu-Anak" },
-            ]
-        },
-        {
-            id: 3,
-            name: "Apotek Kimia Farma Subang",
-            lat: -6.5730, lng: 107.7560,
-            type: "Apotek",
-            bpjs: true,
-            status: "open",
-            address: "Jl. Otista No.4, Subang",
-            phone: "(0260) 417080",
-            jam: "Setiap Hari, 07.00 – 22.00 WIB",
-            notes: null,
-            facilities: [
-                { icon: "fac-icon green",  ico: "fas fa-pills",       label: "Obat Keras" },
-                { icon: "fac-icon blue",   ico: "fas fa-prescription-bottle-alt", label: "Obat Generik" },
-                { icon: "fac-icon teal",   ico: "fas fa-vials",       label: "Alat Kesehatan" },
-                { icon: "fac-icon orange", ico: "fas fa-mortar-pestle",label: "Racik Resep" },
-            ]
-        },
-        {
-            id: 4,
-            name: "Puskesmas Subang",
-            lat: -6.5690, lng: 107.7640,
-            type: "Puskesmas",
-            bpjs: true,
-            status: "closed",
-            address: "Jl. Kapeh Jaya No.1, Subang",
-            phone: "(0260) 411009",
-            jam: "Senin – Jumat, 07.30 – 14.00 WIB",
-            notes: "Sedang tutup sementara untuk renovasi hingga 20 April 2026.",
-            facilities: [
-                { icon: "fac-icon green",  ico: "fas fa-stethoscope", label: "Poli Umum" },
-                { icon: "fac-icon purple", ico: "fas fa-baby",        label: "Poli Anak" },
-                { icon: "fac-icon orange", ico: "fas fa-tooth",       label: "Poli Gigi" },
-                { icon: "fac-icon teal",   ico: "fas fa-syringe",     label: "Imunisasi" },
-            ]
-        },
-    ];
+    var faskesData = [];
 
-    // =========================================================
-    // INISIALISASI PETA
-    // =========================================================
+    // Peta & marker disiapkan dulu, data diisi setelah fetch selesai
     var map = L.map('map', { zoomControl: false }).setView([-6.5710, 107.7587], 14);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Tile Map OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
         maxZoom: 19
     }).addTo(map);
+
+    // --- Fetch data faskes dari server ---
+    fetch('/api/faskes')
+        .then(res => res.json())
+        .then(data => {
+            if (data.length > 0) {
+                // Transformasi format API ke format yang dibutuhkan UI
+                faskesData = data.map(f => ({
+                    id:       f.id,
+                    name:     f.name,
+                    lat:      f.lat,
+                    lng:      f.lng,
+                    type:     f.type,
+                    bpjs:     f.bpjs,
+                    status:   f.status,
+                    address:  f.address,
+                    phone:    f.phone,
+                    // Jam operasional dari status (db belum punya kolom jam terpisah)
+                    jam:      f.status === 'open' ? 'Sedang Buka' : 'Sedang Tutup',
+                    notes:    f.notes,
+                    // Fasilitas dari array JSON, dikonversi ke format UI
+                    facilities: (f.facilities || []).map(label => ({
+                        icon:  getFacilityIcon(label),
+                        ico:   getFacilityFaIcon(label),
+                        label: label
+                    }))
+                }));
+            } else {
+                // Fallback: data demo jika database masih kosong
+                faskesData = getDemoData();
+            }
+            updateMarkers(); // Render marker setelah data siap
+        })
+        .catch(() => {
+            // Jika fetch gagal (mis. API error), tampilkan data demo
+            faskesData = getDemoData();
+            updateMarkers();
+        });
+
+    // --- Helper: Mapping nama layanan ke class ikon faskes-grid ---
+    function getFacilityIcon(label) {
+        const map = {
+            'UGD 24 Jam': 'fac-icon red', 'Ambulans': 'fac-icon blue',
+            'Rawat Inap': 'fac-icon teal', 'Apotek': 'fac-icon green',
+            'Laboratorium': 'fac-icon yellow', 'Dok. Spesialis': 'fac-icon orange',
+            'Poli Anak': 'fac-icon purple', 'Poli Gigi': 'fac-icon blue',
+            'Poli Umum': 'fac-icon green', 'Imunisasi': 'fac-icon teal',
+        };
+        return map[label] || 'fac-icon orange';
+    }
+    function getFacilityFaIcon(label) {
+        const map = {
+            'UGD 24 Jam': 'fas fa-ambulance', 'Ambulans': 'fas fa-car',
+            'Rawat Inap': 'fas fa-bed', 'Apotek': 'fas fa-pills',
+            'Laboratorium': 'fas fa-flask', 'Dok. Spesialis': 'fas fa-user-md',
+            'Poli Anak': 'fas fa-baby', 'Poli Gigi': 'fas fa-tooth',
+            'Poli Umum': 'fas fa-stethoscope', 'Imunisasi': 'fas fa-syringe',
+        };
+        return map[label] || 'fas fa-clinic-medical';
+    }
+
+    // --- Data Demo (fallback saat database masih kosong) ---
+    function getDemoData() {
+        return [
+            { id:1, name:"RSUD Subang", lat:-6.5710, lng:107.7600, type:"Rumah Sakit",
+              bpjs:true, status:"open", address:"Jl. Brigjen Katamso No.37, Subang",
+              phone:"(0260) 411421", jam:"24 Jam (UGD & Layanan Darurat)",
+              notes:"Antrean poli umum buka pukul 07.00 WIB. Parkiran tersedia luas.",
+              facilities:[
+                {icon:"fac-icon red",ico:"fas fa-ambulance",label:"UGD 24 Jam"},
+                {icon:"fac-icon blue",ico:"fas fa-car",label:"Ambulans"},
+                {icon:"fac-icon teal",ico:"fas fa-bed",label:"Rawat Inap"},
+                {icon:"fac-icon green",ico:"fas fa-pills",label:"Apotek"},
+              ]},
+            { id:2, name:"Klinik Pratama Cibogo", lat:-6.5650, lng:107.7500, type:"Klinik",
+              bpjs:true, status:"open", address:"Jl. Raya Cibogo No.12, Subang",
+              phone:"(0260) 422111", jam:"Senin – Sabtu, 08.00 – 20.00 WIB", notes:null,
+              facilities:[
+                {icon:"fac-icon green",ico:"fas fa-stethoscope",label:"Poli Umum"},
+                {icon:"fac-icon green",ico:"fas fa-pills",label:"Apotek"},
+              ]},
+            { id:3, name:"Apotek Kimia Farma Subang", lat:-6.5730, lng:107.7560, type:"Apotek",
+              bpjs:true, status:"open", address:"Jl. Otista No.4, Subang",
+              phone:"(0260) 417080", jam:"Setiap Hari, 07.00 – 22.00 WIB", notes:null,
+              facilities:[
+                {icon:"fac-icon green",ico:"fas fa-pills",label:"Obat Keras"},
+                {icon:"fac-icon teal",ico:"fas fa-vials",label:"Alat Kesehatan"},
+              ]},
+            { id:4, name:"Puskesmas Subang", lat:-6.5690, lng:107.7640, type:"Puskesmas",
+              bpjs:true, status:"closed", address:"Jl. Kapeh Jaya No.1, Subang",
+              phone:"(0260) 411009", jam:"Senin – Jumat, 07.30 – 14.00 WIB",
+              notes:"Sedang tutup sementara untuk renovasi.",
+              facilities:[
+                {icon:"fac-icon green",ico:"fas fa-stethoscope",label:"Poli Umum"},
+                {icon:"fac-icon teal",ico:"fas fa-syringe",label:"Imunisasi"},
+              ]},
+        ];
+    }
 
     // =========================================================
     // CUSTOM MARKER ICON per kategori Faskes

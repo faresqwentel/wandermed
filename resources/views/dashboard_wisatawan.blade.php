@@ -6,9 +6,9 @@
 
 @section('page_title', 'Dashboard Saya')
 @section('badge_role', 'Wisatawan')
-@section('user_name', 'John Doe')
+@section('user_name', $user->name)
 @section('user_role', 'Wisatawan Umum')
-@section('user_initial', 'J')
+@section('user_initial', substr($user->name, 0, 1))
 @section('topbar_title', 'Dashboard <span>Wisatawan</span>')
 
 @section('sidebar_nav')
@@ -32,7 +32,7 @@
     <a href="/" class="wm-nav-link">
         <i class="fas fa-home"></i> Halaman Utama
     </a>
-    <a href="/login" class="wm-nav-link">
+    <a href="/logout" class="wm-nav-link">
         <i class="fas fa-sign-out-alt"></i> Keluar
     </a>
 @endsection
@@ -55,22 +55,22 @@
         <div class="wm-stat-card green">
             <div class="wm-stat-icon"><i class="fas fa-clinic-medical"></i></div>
             <div>
-                <div class="wm-stat-value">3</div>
+                <div class="wm-stat-value">{{ $totalKunjungan }}</div>
                 <div class="wm-stat-label">Faskes Dikunjungi</div>
             </div>
         </div>
         <div class="wm-stat-card yellow">
             <div class="wm-stat-icon"><i class="fas fa-star"></i></div>
             <div>
-                <div class="wm-stat-value">2</div>
+                <div class="wm-stat-value">{{ $rekomendasiCount }}</div>
                 <div class="wm-stat-label">Sangat Direkomendasikan</div>
             </div>
         </div>
         <div class="wm-stat-card orange">
-            <div class="wm-stat-icon"><i class="fas fa-sticky-note"></i></div>
+            <div class="wm-stat-icon"><i class="fas fa-calendar-check"></i></div>
             <div>
-                <div class="wm-stat-value">3</div>
-                <div class="wm-stat-label">Catatan Tersimpan</div>
+                <div class="wm-stat-value">{{ $kunjunganBulan }}</div>
+                <div class="wm-stat-label">Kunjungan Bulan Ini</div>
             </div>
         </div>
     </div>
@@ -96,68 +96,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-label="green">
-                                <td class="bold">RSUD Subang</td>
-                                <td>15 Okt 2026</td>
+                            @forelse($riwayats as $r)
+                            <tr data-label="{{ $r->label_warna }}">
+                                <td class="bold">{{ $r->faskes ? $r->faskes->nama_faskes : 'Faskes Dihapus' }}</td>
+                                <td>{{ $r->tanggal_kunjungan->format('d M Y') }}</td>
                                 <td>
-                                    <span class="wm-badge green">
-                                        <i class="fas fa-star"></i> Sangat Direk.
+                                    <span class="wm-badge {{ $r->label_warna }}">
+                                        @if($r->label_warna == 'green') <i class="fas fa-star"></i>
+                                        @elseif($r->label_warna == 'yellow') <i class="fas fa-check"></i>
+                                        @else <i class="fas fa-times"></i> @endif
+                                        {{ $r->labelTeks }}
                                     </span>
                                 </td>
                                 <td>
                                     <!-- Mode View -->
                                     <div class="note-view" onclick="startEditNote(this)">
-                                        <span class="note-text">Pelayanan IGD cepat, dokter ramah.</span>
+                                        <span class="note-text">{{ $r->catatan_pribadi ?? 'Belum ada catatan...' }}</span>
                                         <i class="fas fa-pencil-alt note-edit-icon"></i>
                                     </div>
                                     <!-- Mode Edit -->
                                     <div class="note-edit-active">
-                                        <input type="text" value="Pelayanan IGD cepat, dokter ramah.">
+                                        <input type="text" value="{{ $r->catatan_pribadi }}" data-id="{{ $r->id }}">
                                         <button class="wm-btn success sm" onclick="saveNote(this)"><i class="fas fa-check"></i></button>
                                         <button class="wm-btn ghost sm" onclick="cancelNote(this)"><i class="fas fa-times"></i></button>
                                     </div>
                                 </td>
                             </tr>
-                            <tr data-label="yellow">
-                                <td class="bold">Klinik Pratama Sehat</td>
-                                <td>22 Nov 2026</td>
-                                <td>
-                                    <span class="wm-badge yellow">
-                                        <i class="fas fa-check"></i> Standar
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="note-view" onclick="startEditNote(this)">
-                                        <span class="note-text">Buka 24 jam, parkiran sempit.</span>
-                                        <i class="fas fa-pencil-alt note-edit-icon"></i>
-                                    </div>
-                                    <div class="note-edit-active">
-                                        <input type="text" value="Buka 24 jam, parkiran sempit.">
-                                        <button class="wm-btn success sm" onclick="saveNote(this)"><i class="fas fa-check"></i></button>
-                                        <button class="wm-btn ghost sm" onclick="cancelNote(this)"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </td>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center" style="padding: 20px; color: #888;">Belum ada riwayat kunjungan.</td>
                             </tr>
-                            <tr data-label="green">
-                                <td class="bold">Apotek Kimia Farma</td>
-                                <td>01 Des 2026</td>
-                                <td>
-                                    <span class="wm-badge green">
-                                        <i class="fas fa-star"></i> Sangat Direk.
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="note-view" onclick="startEditNote(this)">
-                                        <span class="note-text">Obat lengkap, apoteker sigap.</span>
-                                        <i class="fas fa-pencil-alt note-edit-icon"></i>
-                                    </div>
-                                    <div class="note-edit-active">
-                                        <input type="text" value="Obat lengkap, apoteker sigap.">
-                                        <button class="wm-btn success sm" onclick="saveNote(this)"><i class="fas fa-check"></i></button>
-                                        <button class="wm-btn ghost sm" onclick="cancelNote(this)"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -172,21 +141,24 @@
                     <div class="wm-card-title"><i class="fas fa-user-cog"></i> Pengaturan Akun</div>
                 </div>
                 <div class="wm-card-body">
-                    <div class="wm-form-group">
-                        <label class="wm-label">Nama Lengkap</label>
-                        <input type="text" class="wm-input" value="John Doe Wisatawan">
-                    </div>
-                    <div class="wm-form-group">
-                        <label class="wm-label">Email</label>
-                        <input type="email" class="wm-input" value="johndoe@example.com">
-                    </div>
-                    <div class="wm-form-group">
-                        <label class="wm-label">Password Baru</label>
-                        <input type="password" class="wm-input" placeholder="Kosongkan jika tidak diubah">
-                    </div>
-                    <button class="wm-btn orange" style="width:100%;" onclick="showToast('Profil berhasil diperbarui!')">
-                        <i class="fas fa-save"></i> Simpan Profil
-                    </button>
+                    <form action="{{ route('wisatawan.profil.update') }}" method="POST">
+                        @csrf
+                        <div class="wm-form-group">
+                            <label class="wm-label">Nama Lengkap</label>
+                            <input type="text" name="name" class="wm-input" value="{{ $user->name }}" required>
+                        </div>
+                        <div class="wm-form-group">
+                            <label class="wm-label">Email</label>
+                            <input type="email" class="wm-input" value="{{ $user->email }}" disabled style="background:#f1f3f5;">
+                        </div>
+                        <div class="wm-form-group">
+                            <label class="wm-label">Password Baru</label>
+                            <input type="password" name="password" class="wm-input" placeholder="Kosongkan jika tidak diubah">
+                        </div>
+                        <button type="submit" class="wm-btn orange" style="width:100%;">
+                            <i class="fas fa-save"></i> Simpan Profil
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -198,22 +170,31 @@
                     </div>
                 </div>
                 <div class="wm-card-body">
-                    <div class="wm-form-group">
-                        <label class="wm-label" style="color: #e74a3b80;">Golongan Darah</label>
-                        <select class="wm-select" style="background: rgba(231,74,59,0.05); border-color: rgba(231,74,59,0.25);">
-                            <option value="A" selected>A</option>
-                            <option value="B">B</option>
-                            <option value="AB">AB</option>
-                            <option value="O">O</option>
-                        </select>
-                    </div>
-                    <div class="wm-form-group">
-                        <label class="wm-label" style="color: #e74a3b80;">Alergi (Obat/Makanan)</label>
-                        <textarea class="wm-textarea" style="background: rgba(231,74,59,0.05); border-color: rgba(231,74,59,0.25);">Alergi obat Amoxicillin</textarea>
-                    </div>
-                    <button class="wm-btn danger" style="width:100%;" onclick="showToast('Data medis diperbarui!')">
-                        <i class="fas fa-shield-alt"></i> Update Data Medis
-                    </button>
+                    <form action="{{ route('wisatawan.profil.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="name" value="{{ $user->name }}">
+                        <div class="wm-form-group">
+                            <label class="wm-label" style="color: #e74a3b80;">Golongan Darah</label>
+                            <select name="gol_darah" class="wm-select" style="background: rgba(231,74,59,0.05); border-color: rgba(231,74,59,0.25);">
+                                <option value="">Belum Memilih</option>
+                                <option value="A" {{ $user->gol_darah == 'A' ? 'selected' : '' }}>A</option>
+                                <option value="B" {{ $user->gol_darah == 'B' ? 'selected' : '' }}>B</option>
+                                <option value="AB" {{ $user->gol_darah == 'AB' ? 'selected' : '' }}>AB</option>
+                                <option value="O" {{ $user->gol_darah == 'O' ? 'selected' : '' }}>O</option>
+                            </select>
+                        </div>
+                        <div class="wm-form-group">
+                            <label class="wm-label" style="color: #e74a3b80;">Alergi (Obat/Makanan)</label>
+                            <textarea name="riwayat_alergi" class="wm-textarea" style="background: rgba(231,74,59,0.05); border-color: rgba(231,74,59,0.25);">{{ $user->riwayat_alergi }}</textarea>
+                        </div>
+                        <div class="wm-form-group">
+                            <label class="wm-label" style="color: #e74a3b80;">Kontak Darurat</label>
+                            <input type="text" name="kontak_darurat" class="wm-input" style="background: rgba(231,74,59,0.05); border-color: rgba(231,74,59,0.25);" value="{{ $user->kontak_darurat }}">
+                        </div>
+                        <button type="submit" class="wm-btn danger" style="width:100%;">
+                            <i class="fas fa-shield-alt"></i> Update Data Medis
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -242,16 +223,43 @@
         input.focus();
     }
 
-    // Simpan catatan
+    // Simpan catatan (Fetch API)
     function saveNote(btn) {
         const td = btn.closest('td');
         const editEl = btn.closest('.note-edit-active');
         const viewEl = td.querySelector('.note-view');
         const input = editEl.querySelector('input');
-        viewEl.querySelector('.note-text').textContent = input.value;
-        editEl.classList.remove('show');
-        viewEl.style.display = '';
-        showToast('Catatan berhasil diperbarui!');
+        
+        const noteId = input.getAttribute('data-id');
+        const newText = input.value;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+        // Tampilkan loading state jika mau
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        fetch(`/wisatawan/catatan/${noteId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ catatan_pribadi: newText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                viewEl.querySelector('.note-text').textContent = newText || 'Belum ada catatan...';
+                editEl.classList.remove('show');
+                viewEl.style.display = '';
+                showToast(data.message);
+            }
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+        })
+        .catch(err => {
+            console.error(err);
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            showToast('Terjadi kesalahan saat menyimpan.');
+        });
     }
 
     // Batal edit

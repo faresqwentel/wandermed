@@ -27,7 +27,7 @@
                     <a href="/daftar/pariwisata" class="card glass-premier card-opsi-landscape text-decoration-none shadow-sm">
                         <div class="card-body p-4 text-center">
                             <div class="icon-kesehatan"><i class="fas fa-mountain fa-2x text-hnb-orange"></i></div>
-                            <h6 class="font-weight-bold text-white mb-2">Mitra Pariwisata</h6>
+                            <h6 class="font-weight-bold text-white mb-2">Destinasi Pariwisata</h6>
                             <p class="text-white-50 small mb-0">Daftarkan lokasi wisata Anda.</p>
                         </div>
                     </a>

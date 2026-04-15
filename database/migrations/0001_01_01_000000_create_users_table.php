@@ -17,6 +17,15 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // --- Kolom Rekam Medis Wisatawan ---
+            // Golongan darah (A, B, AB, O) — wajib diisi saat registrasi
+            $table->string('gol_darah', 2)->nullable();
+            // Riwayat alergi terhadap obat atau makanan tertentu
+            $table->text('riwayat_alergi')->nullable();
+            // Nomor kontak darurat (keluarga/pendamping wisata)
+            $table->string('kontak_darurat')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });
