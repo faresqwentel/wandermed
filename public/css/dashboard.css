@@ -10,20 +10,20 @@
  * 1. ROOT VARIABLES & RESET
  * ============================== */
 :root {
-    --navy:         #0d1b2e;
-    --navy-light:   #1a2a44;
-    --navy-card:    #1e3354;
-    --navy-hover:   #243d5c;
+    --navy:         #f4f7fe;
+    --navy-light:   #ffffff;
+    --navy-card:    #ffffff;
+    --navy-hover:   #f8f9fa;
     --orange:       #ff7a00;
     --orange-hover: #e06900;
-    --orange-glow:  rgba(255, 122, 0, 0.25);
-    --text-primary:   #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.6);
-    --text-muted:     rgba(255, 255, 255, 0.35);
-    --border:       rgba(255, 255, 255, 0.08);
+    --orange-glow:  rgba(255, 122, 0, 0.15);
+    --text-primary:   #2b3674;
+    --text-secondary: #707eae;
+    --text-muted:     #a3aed1;
+    --border:       #e2e8f0;
     --sidebar-w:    260px;
     --topbar-h:     70px;
-    --radius:       14px;
+    --radius:       16px;
     --transition:   all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -138,13 +138,14 @@ button { cursor: pointer; }
     flex-shrink: 0;
 }
 .wm-nav-link:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: #f4f7fe;
     color: var(--text-primary);
 }
 .wm-nav-link.active {
     background: var(--orange-glow);
     color: var(--orange);
-    border: 1px solid rgba(255, 122, 0, 0.2);
+    border: none;
+    font-weight: 600;
 }
 .wm-nav-link.active i { color: var(--orange); }
 .wm-nav-link .badge-pill-side {
@@ -254,7 +255,7 @@ button { cursor: pointer; }
     position: relative;
     width: 40px;
     height: 40px;
-    background: rgba(255,255,255,0.05);
+    background: #f4f7fe;
     border: 1px solid var(--border);
     border-radius: 10px;
     display: flex;
@@ -265,7 +266,7 @@ button { cursor: pointer; }
     transition: var(--transition);
     cursor: pointer;
 }
-.wm-topbar-icon:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+.wm-topbar-icon:hover { background: #e2e8f0; color: var(--text-primary); }
 .wm-topbar-icon .dot {
     position: absolute;
     top: 8px; right: 8px;
@@ -309,7 +310,7 @@ button { cursor: pointer; }
 }
 .wm-stat-card {
     background: var(--navy-card);
-    border: 1px solid var(--border);
+    border: none;
     border-radius: var(--radius);
     padding: 22px 22px;
     display: flex;
@@ -318,6 +319,7 @@ button { cursor: pointer; }
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
 }
 .wm-stat-card::before {
     content: '';
@@ -326,7 +328,7 @@ button { cursor: pointer; }
     width: 4px; height: 100%;
     border-radius: 14px 0 0 14px;
 }
-.wm-stat-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.wm-stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
 
 .wm-stat-card.orange::before  { background: var(--orange); }
 .wm-stat-card.blue::before    { background: #4e73df; }
@@ -357,10 +359,11 @@ button { cursor: pointer; }
  * ============================== */
 .wm-card {
     background: var(--navy-card);
-    border: 1px solid var(--border);
+    border: none;
     border-radius: var(--radius);
     overflow: hidden;
     margin-bottom: 22px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
 }
 .wm-card-header {
     display: flex;
@@ -389,14 +392,14 @@ button { cursor: pointer; }
     font-size: 13.5px;
 }
 .wm-table thead th {
-    padding: 12px 16px;
-    background: rgba(0,0,0,0.2);
-    color: var(--text-muted);
-    font-weight: 600;
+    padding: 14px 16px;
+    background: #f4f7fe;
+    color: var(--text-secondary);
+    font-weight: 700;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.7px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
     white-space: nowrap;
 }
 .wm-table tbody tr { border-bottom: 1px solid var(--border); transition: var(--transition); }
@@ -435,11 +438,11 @@ button { cursor: pointer; }
 }
 .wm-btn.orange:hover { background: var(--orange-hover); transform: translateY(-2px); box-shadow: 0 8px 25px var(--orange-glow); }
 .wm-btn.ghost {
-    background: rgba(255,255,255,0.06);
+    background: #f4f7fe;
     color: var(--text-secondary);
-    border: 1px solid var(--border);
+    border: none;
 }
-.wm-btn.ghost:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+.wm-btn.ghost:hover { background: #e2e8f0; color: var(--text-primary); }
 .wm-btn.success { background: rgba(28, 200, 138, 0.15); color: #1cc88a; border: 1px solid rgba(28, 200, 138, 0.3); }
 .wm-btn.success:hover { background: rgba(28, 200, 138, 0.25); }
 .wm-btn.danger { background: rgba(231, 74, 59, 0.15); color: #e74a3b; border: 1px solid rgba(231, 74, 59, 0.3); }
@@ -454,7 +457,7 @@ button { cursor: pointer; }
 .wm-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 8px; }
 .wm-input, .wm-select, .wm-textarea {
     width: 100%;
-    background: rgba(255,255,255,0.04);
+    background: #f4f7fe;
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 11px 16px;
