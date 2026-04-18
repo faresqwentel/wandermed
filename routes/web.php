@@ -35,8 +35,12 @@ Route::get('/daftar/wisatawan', [HomeController::class, 'daftarWisatawan']);
 Route::get('/daftar/faskes', [HomeController::class, 'daftarFaskes']);
 Route::get('/daftar/pariwisata', [HomeController::class, 'daftarPariwisata']);
 
-// API publik: data faskes untuk Leaflet.js (bisa dipanggil tanpa login)
+// API publik: data faskes untuk Leaflet.js
 Route::get('/api/faskes', [AdminController::class, 'getFaskesJson']);
+// API publik: data pariwisata yang disetujui untuk Peta
+Route::get('/api/pariwisata', [AdminController::class, 'getPariwisataJson']);
+// API publik: faskes terdekat berdasarkan koordinat (Haversine)
+Route::get('/api/faskes/nearby', [AdminController::class, 'getNearbyFaskes']);
 
 
 // =========================================================
@@ -123,6 +127,12 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
          ->name('admin.faskes.update');
     Route::post('/admin/pariwisata/{id}/update-lokasi', [AdminController::class, 'updatePariwisataData'])
          ->name('admin.pariwisata.update');
+    // Hapus data pariwisata
+    Route::delete('/admin/pariwisata/{id}', [AdminController::class, 'destroyPariwisata'])
+         ->name('admin.pariwisata.destroy');
+    // Toggle status operasional faskes
+    Route::post('/admin/faskes/{id}/toggle-status', [AdminController::class, 'toggleStatusFaskes'])
+         ->name('admin.faskes.toggle-status');
 });
 
 // Rute lama untuk backward compatibility (redirect ke rute baru)

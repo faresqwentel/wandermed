@@ -651,10 +651,20 @@
                 </button>
             </div>
 
-            {{-- Filter Kategori --}}
-            <div class="filter-row-unified">
-                <div class="filter-chip active" data-type="All">
-                    <i class="fas fa-th-large"></i> Semua
+            {{-- Filter Kategori Master --}}
+            <div class="filter-row-unified" style="display: flex; gap: 10px; align-items: center; background: #fff; padding: 10px; border-radius: 12px; margin-top: 10px;">
+                <label for="masterFilter" style="font-weight: 600; color: #1e293b; margin: 0;"><i class="fas fa-filter"></i> Kategori:</label>
+                <select id="masterFilter" class="form-control filter-select" style="width: auto; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    <option value="All">Semua Destinasi</option>
+                    <option value="Faskes">Hanya Faskes</option>
+                    <option value="Pariwisata">Hanya Pariwisata</option>
+                </select>
+            </div>
+            
+            {{-- Filter Faskes Sub-Kategori --}}
+            <div class="filter-row-unified" id="faskesSubFilter" style="margin-top: 10px;">
+                <div class="filter-chip active" data-type="AllFaskes">
+                    <i class="fas fa-th-large"></i> Semua Faskes
                 </div>
                 <div class="filter-chip" data-type="Rumah Sakit">
                     <i class="fas fa-hospital-alt" style="color: #e74a3b;"></i> RS / UGD
@@ -773,13 +783,64 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     // =========================================================
-    // DATA FASKES — Diambil dari database via API Laravel
-    // Endpoint: GET /api/faskes (AdminController@getFaskesJson)
-    // Jika API kosong (DB belum ada data), gunakan data fallback demo
+    // DATA MARKER
+    // Diisi langsung dari Controller via compact()
     // =========================================================
-    var faskesData = [];
+    var faskesDataRaw = @json($daftarFaskes ?? []);
+    var pariwisataDataRaw = @json($daftarPariwisata ?? []);
 
-    // Peta & marker disiapkan dulu, data diisi setelah fetch selesai
+    var faskesData = [];
+    if (faskesDataRaw.length > 0) {
+        faskesData = faskesDataRaw.map(f => ({
+            id:       f.id,
+            name:     f.name,
+            lat:      f.lat,
+            lng:      f.lng,
+            type:     f.type,
+            bpjs:     f.bpjs,
+            status:   f.status,
+            address:  f.address,
+            phone:    f.phone,
+            jam:      f.status === 'open' ? 'Sedang Buka' : 'Sedang Tutup',
+            notes:    f.notes,
+            facilities: (f.facilities || []).map(label => ({
+                icon:  getFacilityIcon(label),
+                ico:   getFacilityFaIcon(label),
+                label: label
+            }))
+        }));
+    } else {
+        faskesData = getDemoData();
+    }
+
+    var pariwisataData = pariwisataDataRaw;
+    var wisataMarkers  = [];
+    var activeMarkers  = [];
+
+    // =========================================================
+    // MARKER ICON untuk Pariwisata (ungu)
+    // =========================================================
+    function createWisataMarkerIcon() {
+        return L.divIcon({
+            className: '',
+            html: `
+                <div style="
+                    width: 38px; height: 38px;
+                    background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+                    border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    box-shadow: 0 4px 14px rgba(109,40,217,0.5);
+                    border: 3px solid rgba(255,255,255,0.4);
+                ">
+                    <i class="fas fa-mountain" style="color: #fff; font-size: 13px;"></i>
+                </div>`,
+            iconSize: [38, 38],
+            iconAnchor: [19, 19],
+            popupAnchor: [0, -24]
+        });
+    }
+
+    // Inisialisasi Peta
     var map = L.map('map', { zoomControl: false }).setView([-6.5710, 107.7587], 14);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -787,44 +848,6 @@ document.addEventListener("DOMContentLoaded", function() {
         attribution: '© OpenStreetMap contributors',
         maxZoom: 19
     }).addTo(map);
-
-    // --- Fetch data faskes dari server ---
-    fetch('/api/faskes')
-        .then(res => res.json())
-        .then(data => {
-            if (data.length > 0) {
-                // Transformasi format API ke format yang dibutuhkan UI
-                faskesData = data.map(f => ({
-                    id:       f.id,
-                    name:     f.name,
-                    lat:      f.lat,
-                    lng:      f.lng,
-                    type:     f.type,
-                    bpjs:     f.bpjs,
-                    status:   f.status,
-                    address:  f.address,
-                    phone:    f.phone,
-                    // Jam operasional dari status (db belum punya kolom jam terpisah)
-                    jam:      f.status === 'open' ? 'Sedang Buka' : 'Sedang Tutup',
-                    notes:    f.notes,
-                    // Fasilitas dari array JSON, dikonversi ke format UI
-                    facilities: (f.facilities || []).map(label => ({
-                        icon:  getFacilityIcon(label),
-                        ico:   getFacilityFaIcon(label),
-                        label: label
-                    }))
-                }));
-            } else {
-                // Fallback: data demo jika database masih kosong
-                faskesData = getDemoData();
-            }
-            updateMarkers(); // Render marker setelah data siap
-        })
-        .catch(() => {
-            // Jika fetch gagal (mis. API error), tampilkan data demo
-            faskesData = getDemoData();
-            updateMarkers();
-        });
 
     // --- Helper: Mapping nama layanan ke class ikon faskes-grid ---
     function getFacilityIcon(label) {
@@ -919,7 +942,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =========================================================
-    // RENDER MARKER
+    // RENDER MARKER & FILTERING
     // =========================================================
     var activeMarkers = [];
 
@@ -927,41 +950,91 @@ document.addEventListener("DOMContentLoaded", function() {
         // Bersihkan marker sebelumnya
         activeMarkers.forEach(m => map.removeLayer(m));
         activeMarkers = [];
+        wisataMarkers.forEach(m => map.removeLayer(m));
+        wisataMarkers = [];
 
+        const masterFilter = document.getElementById('masterFilter').value; // 'All', 'Faskes', 'Pariwisata'
         const activeChip = document.querySelector('.filter-chip.active');
-        const typeFilter  = activeChip ? activeChip.dataset.type : 'All';
+        const typeFilter  = activeChip ? activeChip.dataset.type : 'AllFaskes';
         const bpjsActive  = document.getElementById('bpjsChip').classList.contains('active');
         const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
 
+        // Toggle subfilter UI
+        const faskesSubFilter = document.getElementById('faskesSubFilter');
+        if (masterFilter === 'Pariwisata') {
+            faskesSubFilter.style.display = 'none';
+        } else {
+            faskesSubFilter.style.display = 'flex';
+        }
+
         let count = 0;
+        let bounds = [];
 
-        faskesData.forEach(f => {
-            const matchType   = (typeFilter === 'All' || f.type === typeFilter);
-            const matchBPJS   = (!bpjsActive || f.bpjs);
-            const matchSearch = !searchQuery || f.name.toLowerCase().includes(searchQuery) || f.address.toLowerCase().includes(searchQuery);
+        // 1. Render Faskes
+        if (masterFilter === 'All' || masterFilter === 'Faskes') {
+            faskesData.forEach(f => {
+                const matchType   = (typeFilter === 'AllFaskes' || f.type === typeFilter);
+                const matchBPJS   = (!bpjsActive || f.bpjs);
+                const matchSearch = !searchQuery || f.name.toLowerCase().includes(searchQuery) || f.address.toLowerCase().includes(searchQuery);
 
-            if (matchType && matchBPJS && matchSearch) {
-                const marker = L.marker([f.lat, f.lng], { icon: createMarkerIcon(f.type) }).addTo(map);
+                if (matchType && matchBPJS && matchSearch) {
+                    const marker = L.marker([f.lat, f.lng], { icon: createMarkerIcon(f.type) }).addTo(map);
 
-                // Tooltip nama di hover
-                marker.bindTooltip(`<b style="font-size:13px;">${f.name}</b><br><small style="color:rgba(0,0,0,0.5)">${f.type}</small>`, {
-                    direction: 'top',
-                    offset: [0, -45],
-                    className: 'wm-tooltip'
-                });
+                    marker.bindTooltip(`<b style="font-size:13px;">${f.name}</b><br><small style="color:rgba(0,0,0,0.5)">${f.type}</small>`, {
+                        direction: 'top', offset: [0, -45], className: 'wm-tooltip'
+                    });
 
-                marker.on('click', function () {
-                    showDetail(f);
-                    map.flyTo([f.lat, f.lng], 16, { duration: 1 });
-                });
+                    marker.on('click', function () {
+                        showDetail(f);
+                        map.flyTo([f.lat, f.lng], 16, { duration: 1 });
+                    });
 
-                activeMarkers.push(marker);
-                count++;
-            }
-        });
+                    activeMarkers.push(marker);
+                    bounds.push([f.lat, f.lng]);
+                    count++;
+                }
+            });
+        }
+
+        // 2. Render Pariwisata
+        if (masterFilter === 'All' || masterFilter === 'Pariwisata') {
+            pariwisataData.forEach(w => {
+                if (!w.lat || !w.lng) return;
+                
+                const matchSearch = !searchQuery || w.name.toLowerCase().includes(searchQuery) || (w.kategori && w.kategori.toLowerCase().includes(searchQuery));
+                
+                if (matchSearch) {
+                    const marker = L.marker([w.lat, w.lng], { icon: createWisataMarkerIcon() }).addTo(map);
+
+                    marker.bindTooltip(`<b style="font-size:13px;">${w.name}</b><br><small style="color:#8B5CF6;">${w.kategori}</small>`, {
+                        direction: 'top', offset: [0, -24], className: 'wm-tooltip'
+                    });
+
+                    marker.on('click', function() {
+                        map.flyTo([w.lat, w.lng], 14, { duration: 1 });
+                        showWisataDetail(w);
+                    });
+
+                    wisataMarkers.push(marker);
+                    bounds.push([w.lat, w.lng]);
+                    count++;
+                }
+            });
+        }
 
         document.getElementById('resultCount').textContent = count;
+        
+        // Auto-zoom jika kategori Pariwisata dipilih (Berdasarkan instruksi)
+        if (masterFilter === 'Pariwisata' && bounds.length > 0) {
+            map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+        }
     }
+
+    // Listener Master Filter
+    document.getElementById('masterFilter').addEventListener('change', function() {
+        closeDetail();
+        updateMarkers();
+    });
 
     // =========================================================
     // TAMPILKAN DETAIL FASKES DI BOTTOM SHEET
@@ -1101,6 +1174,47 @@ document.addEventListener("DOMContentLoaded", function() {
     // INISIALISASI PERTAMA
     // =========================================================
     updateMarkers();
+
+    // Tampilkan panel detail wisata (reuse bottom sheet atau popup sederhana)
+    function showWisataDetail(w) {
+        // Pakai bottom panel yang sama dengan faskes tapi header ungu
+        const name    = document.getElementById('detailName');
+        const type    = document.getElementById('detailType');
+        const address = document.getElementById('detailAddress');
+        const phone   = document.getElementById('detailPhone');
+        const badges  = document.getElementById('detailBadges');
+        const fac     = document.getElementById('detailFacilities');
+        const notes   = document.getElementById('rowNotes');
+
+        name.textContent    = w.name;
+        type.textContent    = '🏔 ' + w.kategori;
+        address.textContent = w.alamat;
+        phone.textContent   = w.telp || '-';
+        document.getElementById('detailJam').textContent = 'Harga tiket: ' + (w.tiket ? 'Rp ' + parseInt(w.tiket).toLocaleString('id-ID') : 'Gratis');
+
+        // Status UI
+        document.getElementById('rowJam').classList.remove('jam-open');
+        document.getElementById('rowJam').querySelector('i').className = 'fas fa-ticket-alt';
+
+        badgesEl = document.getElementById('detailBadges');
+        badgesEl.innerHTML = `<span class="info-chip" style="background:rgba(139, 92, 246, 0.2); color:#C4B5FD;"><i class="fas fa-camera"></i> Pariwisata</span>`;
+
+        fac.innerHTML = '';
+        if (w.foto) {
+             fac.innerHTML = `<img src="${w.foto}" style="width:100%; border-radius:12px; height:150px; object-fit:cover;">`;
+        }
+
+        if (w.deskripsi) {
+            notes.style.display = 'block';
+            document.getElementById('detailNotes').textContent = w.deskripsi;
+        } else {
+            notes.style.display = 'none';
+        }
+
+        document.getElementById('btnDirection').href = `https://www.google.com/maps/dir/?api=1&destination=${w.lat},${w.lng}`;
+        document.getElementById('btnCall').href = `tel:${(w.telp || '').replace(/\D/g, '')}`;
+        document.getElementById('faskesDetailPanel').classList.add('active');
+    }
 });
 </script>
 @endpush

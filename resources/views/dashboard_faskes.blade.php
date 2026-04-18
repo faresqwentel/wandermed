@@ -90,6 +90,27 @@
         </div>
     </div>
 
+    <!-- Pesan dari Admin (tampil hanya jika ada pesan) -->
+    @if(!empty($faskes->pesan_admin))
+    <div class="wm-card mt-4" style="border-left: 4px solid #f6c23e; background: rgba(246,194,62,0.06);">
+        <div class="wm-card-header" style="border-bottom: 1px solid rgba(246,194,62,0.2);">
+            <div class="wm-card-title">
+                <i class="fas fa-envelope-open-text" style="color: #f6c23e;"></i>
+                Pesan dari Admin
+                <span class="wm-badge yellow" style="margin-left: 8px; font-size: 10px; animation: pulse 2s infinite;">Baru</span>
+            </div>
+        </div>
+        <div class="wm-card-body" style="padding: 16px 22px;">
+            <p style="font-size: 14px; line-height: 1.6; margin: 0; color: var(--text-secondary);">
+                {{ $faskes->pesan_admin }}
+            </p>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px;">
+                <i class="fas fa-clock"></i> Dikirim oleh Administrator WanderMed
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Info ringkas faskes -->
     <div class="wm-card mt-4">
         <div class="wm-card-header">

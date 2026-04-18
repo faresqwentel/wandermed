@@ -3,121 +3,100 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 use App\Models\Mitra;
 use App\Models\Faskes;
 use App\Models\LaporanMasalah;
 use App\Models\User;
 use App\Models\PendaftaranPariwisata;
+use App\Services\MitraService;
+use App\Http\Requests\ResolveLaporanRequest;
+use Exception;
 
 /**
  * AdminController
  *
- * Mengelola semua operasi untuk Administrator WanderMed:
- * - Dashboard statistik global
- * - Verifikasi / penolakan mitra baru
- * - Manajemen laporan masalah dari wisatawan
+ * Mengelola semua operasi untuk Administrator WanderMed.
  */
 class AdminController extends Controller
 {
-    // =========================================================
-    // DASHBOARD ADMIN
-    // Statistik global sistem + antrean validasi + laporan masalah
-    // =========================================================
-    public function dashboard()
+    private MitraService $mitraService;
+
+    public function __construct(MitraService $mitraService)
     {
-        // --- Statistik Global (Stat Cards) ---
-        $totalWisatawan = User::count();
-        $totalFaskes    = Faskes::count();
-        $totalPariwisata = PendaftaranPariwisata::disetujui()->count();
-        
-        $pendingFaskes = Mitra::pending()->where('jenis_mitra', 'faskes')->count();
-        $pendingWisata = PendaftaranPariwisata::menunggu()->count();
-        $pendingMitra  = $pendingFaskes + $pendingWisata;
-
-        // --- Antrean Validasi Mitra Faskes ---
-        $mitraPending = Mitra::pending()
-                             ->where('jenis_mitra', 'faskes')
-                             ->with('faskes')
-                             ->orderBy('created_at', 'asc')
-                             ->get();
-                             
-        // --- Antrean Validasi Pariwisata ---
-        $wisataPending = PendaftaranPariwisata::menunggu()
-                             ->orderBy('created_at', 'asc')
-                             ->get();
-
-        // --- Laporan Masalah Terbaru ---
-        $laporans = LaporanMasalah::with(['user', 'faskes'])
-                       ->orderByRaw("FIELD(status, 'pending', 'on_review', 'resolved')")
-                       ->orderBy('created_at', 'desc')
-                       ->get();
-
-        // --- Data Master ---
-        $users = User::all();
-        $faskesList = Faskes::all();
-        // Fallback for Pariwisata model since it's probably not fully built or same structure but I'll query if exists.
-        $pariwisataList = PendaftaranPariwisata::disetujui()->get();
-
-        return view('dashboard_admin', compact(
-            'totalWisatawan',
-            'totalFaskes',
-            'totalPariwisata',
-            'pendingMitra',
-            'mitraPending',
-            'wisataPending',
-            'laporans',
-            'users',
-            'faskesList',
-            'pariwisataList'
-        ));
+        $this->mitraService = $mitraService;
     }
 
-    // =========================================================
-    // APPROVE MITRA (AJAX)
-    // Endpoint: POST /admin/mitra/{id}/approve
-    // =========================================================
-    public function approveMitra(int $id)
+    /**
+     * Menampilkan antarmuka Dashboard Admin.
+     */
+    public function dashboard(): View
     {
-        $mitra = Mitra::findOrFail($id);
-        $mitra->update([
-            'is_verified'   => true,
-            'catatan_admin' => null,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => "Mitra '{$mitra->nama_penanggung_jawab}' berhasil disetujui!",
+        return view('dashboard_admin', [
+            'totalWisatawan'  => User::count(),
+            'totalFaskes'     => Faskes::count(),
+            'totalPariwisata' => PendaftaranPariwisata::disetujui()->count(),
+            
+            'pendingMitra'    => Mitra::pending()->where('jenis_mitra', 'faskes')->count() + PendaftaranPariwisata::menunggu()->count(),
+            'mitraPending'    => Mitra::pending()->where('jenis_mitra', 'faskes')->with('faskes')->oldest()->get(),
+            'wisataPending'   => PendaftaranPariwisata::menunggu()->oldest()->get(),
+            
+            'laporans'        => LaporanMasalah::with(['user', 'faskes'])
+                                    ->orderByRaw("FIELD(status, 'pending', 'on_review', 'resolved')")
+                                    ->latest()->get(),
+                                    
+            'users'           => User::all(),
+            'faskesList'      => Faskes::all(),
+            'wisataApproved'  => PendaftaranPariwisata::disetujui()->get(),
         ]);
     }
 
-    // =========================================================
-    // REJECT MITRA (AJAX)
-    // Endpoint: POST /admin/mitra/{id}/reject
-    // =========================================================
-    public function rejectMitra(Request $request, int $id)
+    /**
+     * Menyetujui pendaftaran Mitra Faskes.
+     */
+    public function approveMitra(int $id): JsonResponse
     {
-        $mitra = Mitra::findOrFail($id);
-        $mitra->update([
-            'is_verified'   => false,
-            'catatan_admin' => $request->input('alasan', 'Dokumen tidak lengkap atau tidak valid.'),
-        ]);
+        try {
+            $mitra = $this->mitraService->approveMitra($id);
 
-        // Hapus data mitra (opsional: bisa juga hanya soft-reject tanpa hapus)
-        $mitra->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => "Mitra '{$mitra->nama_penanggung_jawab}' telah ditolak dan dihapus.",
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => "Mitra '{$mitra->nama_penanggung_jawab}' berhasil disetujui!",
+            ]);
+        } catch (Exception $e) {
+            Log::error("Approve Mitra failed: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem.'], 500);
+        }
     }
 
-    // =========================================================
-    // SELESAIKAN LAPORAN MASALAH (AJAX)
-    // Endpoint: POST /admin/laporan/{id}/resolve
-    // =========================================================
-    public function resolveLaporan(Request $request, int $id)
+    /**
+     * Menolak pendaftaran Mitra Faskes.
+     */
+    public function rejectMitra(Request $request, int $id): JsonResponse
+    {
+        try {
+            $alasan = $request->input('alasan', 'Dokumen tidak lengkap atau tidak valid.');
+            $mitra = $this->mitraService->rejectMitra($id, $alasan);
+
+            return response()->json([
+                'success' => true,
+                'message' => "Mitra '{$mitra->nama_penanggung_jawab}' telah ditolak dan dihapus.",
+            ]);
+        } catch (Exception $e) {
+            Log::error("Reject Mitra failed: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem.'], 500);
+        }
+    }
+
+    /**
+     * Menyelesaikan status laporan masalah.
+     */
+    public function resolveLaporan(ResolveLaporanRequest $request, int $id): JsonResponse
     {
         $laporan = LaporanMasalah::findOrFail($id);
+        
         $laporan->update([
             'status'               => 'resolved',
             'catatan_penyelesaian' => $request->input('catatan', 'Masalah telah ditinjau dan diselesaikan oleh admin.'),
@@ -129,104 +108,205 @@ class AdminController extends Controller
         ]);
     }
 
-    // =========================================================
-    // DATA FASKES untuk Peta (API Endpoint)
-    // Endpoint: GET /api/faskes
-    // Mengembalikan JSON koordinat semua faskes yang aktif
-    // untuk dirender oleh Leaflet.js di halaman peta publik
-    // =========================================================
-    public function getFaskesJson()
+    /**
+     * API: Mengambil data faskes untuk Leaflet JS.
+     */
+    public function getFaskesJson(): JsonResponse
     {
         $faskesData = Faskes::with('mitra')
-                        ->select([
-                            'id', 'nama_faskes', 'jenis_faskes', 'alamat',
-                            'no_telp', 'latitude', 'longitude',
-                            'status_operasional', 'dukungan_bpjs',
-                            'layanan_tersedia', 'pengumuman',
-                        ])
-                        ->get()
-                        ->map(function ($f) {
-                            return [
-                                'id'                 => $f->id,
-                                'name'               => $f->nama_faskes,
-                                'type'               => $f->jenis_faskes,
-                                'address'            => $f->alamat,
-                                'phone'              => $f->no_telp,
-                                'lat'                => (float) $f->latitude,
-                                'lng'                => (float) $f->longitude,
-                                'status'             => $f->status_operasional,
-                                'bpjs'               => (bool) $f->dukungan_bpjs,
-                                'facilities'         => $f->layanan_tersedia ?? [],
-                                'notes'              => $f->pengumuman,
-                            ];
-                        });
+            ->whereHas('mitra', fn($query) => $query->where('is_verified', true))
+            ->select([
+                'id', 'nama_faskes', 'jenis_faskes', 'alamat',
+                'no_telp', 'latitude', 'longitude',
+                'status_operasional', 'dukungan_bpjs',
+                'layanan_tersedia', 'pengumuman',
+            ])
+            ->get()
+            ->map(fn($f) => [
+                'id'         => $f->id,
+                'name'       => $f->nama_faskes,
+                'type'       => $f->jenis_faskes,
+                'address'    => $f->alamat,
+                'phone'      => $f->no_telp,
+                'lat'        => (float) $f->latitude,
+                'lng'        => (float) $f->longitude,
+                'status'     => $f->status_operasional,
+                'bpjs'       => (bool) $f->dukungan_bpjs,
+                'facilities' => $f->layanan_tersedia ?? [],
+                'notes'      => $f->pengumuman,
+            ]);
 
         return response()->json($faskesData);
     }
 
-    // =========================================================
-    // MANGEMENT DATA MASTER
-    // =========================================================
-    
-    // Toggle Status Wisatawan
-    public function toggleUserActive($id)
+    /**
+     * Toggle status aktif pengguna (wisatawan).
+     */
+    public function toggleUserActive(int $id): JsonResponse
     {
         $user = User::findOrFail($id);
         $user->is_active = !$user->is_active;
         $user->save();
 
         return response()->json([
-            'success' => true,
-            'message' => "Status Wisatawan {$user->name} berhasil diubah.",
+            'success'   => true,
+            'message'   => "Status Wisatawan {$user->name} berhasil diubah.",
             'is_active' => $user->is_active
         ]);
     }
 
-    // Update Data Faskes (Koordinat, dll)
-    public function updateFaskesData(Request $request, $id)
+    /**
+     * Memperbarui detail operasional faskes via Admin.
+     */
+    public function updateFaskesData(Request $request, int $id): JsonResponse
     {
         $faskes = Faskes::findOrFail($id);
-        
+
         $request->validate([
-            'latitude' => 'required|numeric',
+            'latitude'  => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        $faskes->update([
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'nama_faskes' => $request->nama_faskes ?? $faskes->nama_faskes
-        ]);
+        $updateData = [
+            'latitude'    => $request->latitude,
+            'longitude'   => $request->longitude,
+            'pesan_admin' => $request->pesan_admin ?? $faskes->pesan_admin,
+        ];
+
+        if ($request->has('dukungan_bpjs')) {
+            $updateData['dukungan_bpjs'] = (bool) $request->dukungan_bpjs;
+        }
+        if ($request->has('pengumuman')) {
+            $updateData['pengumuman'] = $request->pengumuman;
+        }
+
+        $faskes->update($updateData);
 
         return response()->json([
             'success' => true,
-            'message' => "Data Faskes {$faskes->nama_faskes} berhasil diperbarui."
+            'message' => "Data Faskes \"{$faskes->nama_faskes}\" berhasil disimpan ✅"
         ]);
     }
 
-    // Update Data Pariwisata (Koordinat, dll)
-    public function updatePariwisataData(Request $request, $id)
+    /**
+     * Toggle Buka / Tutup fasilitas kesehatan.
+     */
+    public function toggleStatusFaskes(int $id): JsonResponse
+    {
+        $faskes = Faskes::findOrFail($id);
+
+        $newStatus = ($faskes->status_operasional === 'open') ? 'closed' : 'open';
+
+        try {
+            $faskes->update(['status_operasional' => $newStatus]);
+        } catch (Exception $e) {
+            Log::error("Toggle status faskes failed: " . $e->getMessage());
+        }
+
+        return response()->json([
+            'success'            => true,
+            'status_operasional' => $newStatus,
+            'is_open'            => ($newStatus === 'open'),
+            'message'            => "Status {$faskes->nama_faskes} diubah ke: " . (($newStatus === 'open') ? 'Buka' : 'Tutup')
+        ]);
+    }
+
+    /**
+     * Memperbarui data lokasi pariwisata.
+     */
+    public function updatePariwisataData(Request $request, int $id): JsonResponse
     {
         if (!class_exists(\App\Models\Pariwisata::class)) {
-            return response()->json(['success' => false, 'message' => 'Model Pariwisata tidak ditemukan.']);
+            return response()->json(['success' => false, 'message' => 'Model Pariwisata tidak ditemukan.'], 400);
         }
-        
-        $pariwisata = \App\Models\Pariwisata::findOrFail($id);
+
+        $wisata = \App\Models\Pariwisata::findOrFail($id);
         
         $request->validate([
-            'latitude' => 'required|numeric',
+            'latitude'  => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        $pariwisata->update([
-            'latitude' => $request->latitude,
+        $wisata->update([
+            'latitude'  => $request->latitude,
             'longitude' => $request->longitude,
-            'nama_pariwisata' => $request->nama_pariwisata ?? $pariwisata->nama_pariwisata
         ]);
 
         return response()->json([
             'success' => true,
             'message' => "Data Pariwisata berhasil diperbarui."
         ]);
+    }
+
+    /**
+     * API: Menggabungkan data pariwisata untuk peta Leaflet (gabungan form tanpa akun & via Mitra).
+     */
+    public function getPariwisataJson(): JsonResponse
+    {
+        return response()->json($this->getMergedPariwisataData());
+    }
+
+    private function getMergedPariwisataData()
+    {
+        $pendaftaranData = PendaftaranPariwisata::disetujui()->get()->map(fn($w) => [
+            'id'         => 'p_' . $w->id,
+            'name'       => $w->nama_wisata,
+            'kategori'   => $w->kategori,
+            'deskripsi'  => $w->deskripsi,
+            'alamat'     => $w->alamat,
+            'lat'        => (float) $w->latitude,
+            'lng'        => (float) $w->longitude,
+            'tiket'      => $w->harga_tiket ?? 0,
+            'pengelola'  => $w->nama_pengelola,
+            'telp'       => $w->no_telp,
+            'foto'       => $w->foto_path ? asset('storage/' . $w->foto_path) : null,
+        ]);
+
+        $mitraData = collect();
+        if (class_exists(\App\Models\Pariwisata::class)) {
+            $mitraData = \App\Models\Pariwisata::with('mitra')
+                ->whereHas('mitra', fn($query) => $query->where('is_verified', true))
+                ->get()
+                ->map(fn($w) => [
+                    'id'         => 'm_' . $w->id,
+                    'name'       => $w->nama_wisata,
+                    'kategori'   => $w->kategori ?? 'Lainnya',
+                    'deskripsi'  => $w->deskripsi,
+                    'alamat'     => $w->alamat,
+                    'lat'        => (float) $w->latitude,
+                    'lng'        => (float) $w->longitude,
+                    'tiket'      => 0,
+                    'pengelola'  => $w->mitra->nama_penanggung_jawab ?? 'Pengelola',
+                    'telp'       => $w->kontak_wisata ?? $w->mitra->no_telp ?? '',
+                    'foto'       => $w->foto_path ? asset('storage/' . $w->foto_path) : null,
+                ]);
+        }
+
+        return $pendaftaranData->merge($mitraData)->values();
+    }
+
+    /**
+     * API: Mengambil Nearby Faskes menggunakan scope Haversine.
+     */
+    public function getNearbyFaskes(Request $request): JsonResponse
+    {
+        $lat    = (float) $request->input('lat', 0);
+        $lng    = (float) $request->input('lng', 0);
+        $radius = (float) $request->input('radius', 5);
+
+        $faskes = Faskes::with('mitra')
+            ->whereHas('mitra', fn($q) => $q->where('is_verified', true))
+            ->nearby($lat, $lng, $radius) // Menggunakan Clean Code Scope 
+            ->get()
+            ->map(fn($f) => [
+                'id'       => $f->id,
+                'name'     => $f->nama_faskes,
+                'type'     => $f->jenis_faskes,
+                'lat'      => (float) $f->latitude,
+                'lng'      => (float) $f->longitude,
+                'distance' => round($f->distance, 2)
+            ]);
+
+        return response()->json($faskes);
     }
 }
