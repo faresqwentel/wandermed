@@ -18,30 +18,14 @@
                         Sistem pemetaan pintar yang membantu wisatawan menemukan UGD, Klinik, atau Apotek terdekat dalam hitungan detik
                     </p>
 
-                    <form action="/peta-faskes" method="GET" class="w-100 pr-lg-4">
-                        <div class="glass-premier radius-hnb p-3 mb-3 w-100" style="border-radius: 12px !important;">
-                            <p class="text-white-50 mb-2 font-weight-bold" style="font-size: 11px; text-transform: uppercase;">Cari Faskes Terdekat</p>
-                            <div class="d-flex align-items-center bg-transparent border-bottom pb-2" style="border-color: rgba(255,255,255,0.15) !important;">
-                                <i class="fas fa-search text-hnb-orange mr-2"></i>
-                                <input type="text" name="q" class="form-control border-0 bg-transparent input-dark text-white shadow-none p-0" placeholder="Ketik nama klinik atau apotek..." style="font-size: 14px;">
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center mb-4">
-                            <button type="submit" class="btn btn-hnb-orange radius-hnb font-weight-bold shadow-lg mr-3 px-4 py-3" style="font-size: 15px;">
-                                Cari Bantuan
-                            </button>
-
-                            <div class="glass-premier rounded-pill px-3 py-2 d-inline-flex align-items-center shadow-sm">
-                                <i class="fas fa-shield-alt mr-2" style="color: #00A651;"></i>
-                                <span class="text-white font-weight-bold mr-3" style="font-size: 12px;">BPJS</span>
-                                <div class="custom-control custom-switch m-0" style="padding-left: 2.2rem !important;">
-                                    <input type="checkbox" name="bpjs" value="1" class="custom-control-input" id="bpjsSwitch">
-                                    <label class="custom-control-label" for="bpjsSwitch">&nbsp;</label>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                    <div class="mt-4 mb-4">
+                        <a href="/peta-faskes" class="btn btn-hnb-orange radius-hnb font-weight-bold shadow-lg py-3 px-5" style="border-radius: 12px; font-size: 1.15rem; display: inline-flex; align-items: center;">
+                            <i class="fas fa-map-marked-alt mr-3" style="font-size: 1.3rem;"></i> Cari Faskes Terdekat Sekarang
+                        </a>
+                    </div>
+                    <p class="text-white-50 mt-3" style="font-size: 0.95rem;">
+                        <i class="fas fa-check-circle text-success mr-1"></i> Mendukung rute pencarian BPJS & UGD 24 Jam
+                    </p>
                 </div>
 
                 <div class="col-lg-6 d-none d-lg-flex justify-content-center">
@@ -119,15 +103,37 @@
     <section id="panduan" class="py-5 section-scroll">
         <div class="container px-4 my-5 d-flex flex-column align-items-center">
             <div class="text-center mb-5 pb-2">
-                <h2 class="teks-judul font-weight-bold mb-3 text-white">Buku Panduan</h2>
+                <h2 class="teks-judul font-weight-bold mb-3 text-white">Panduan Penggunaan</h2>
                 <div style="width: 60px; height: 3px; background-color: var(--hnb-orange); margin: 0 auto 20px auto; border-radius: 2px;"></div>
-                <p class="teks-subjudul mx-auto text-white-50">Langkah-langkah menggunakan aplikasi WanderMed.</p>
+                <p class="teks-subjudul mx-auto text-white-50">3 Langkah mudah berburu faskes dan destinasi dengan WanderMed.</p>
             </div>
-            <div class="w-100" style="max-width: 800px;">
-                <div class="glass-premier radius-hnb p-5 text-center d-flex flex-column justify-content-center align-items-center shadow-sm" style="min-height: 400px; border: 2px dashed rgba(255,255,255,0.2);">
-                    <i class="fas fa-tools fa-3x text-white-50 mb-4"></i>
-                    <h5 class="text-white font-weight-bold mb-2">Area Konten Panduan</h5>
-                    <p class="text-white-50 mb-0">Tutorial penggunaan dan infografis akan segera ditambahkan di sini secara lengkap.</p>
+            <div class="row w-100 justify-content-center" style="max-width: 1000px; gap: 20px;">
+                <div class="col-md-4 mb-4">
+                    <div class="glass-premier radius-hnb p-4 h-100 text-center shadow-sm" style="border-top: 4px solid var(--hnb-orange);">
+                        <div class="mb-3">
+                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,122,0,0.1); color: var(--hnb-orange); font-size: 1.5rem; font-weight: bold;">1</span>
+                        </div>
+                        <h5 class="text-white font-weight-bold mb-3">Buka Peta Digital</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 0.95rem;">Klik tombol "Cari Faskes" di halaman utama untuk memuat peta pintar responsif di layar perangkat Anda.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="glass-premier radius-hnb p-4 h-100 text-center shadow-sm" style="border-top: 4px solid var(--hnb-orange);">
+                        <div class="mb-3">
+                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,122,0,0.1); color: var(--hnb-orange); font-size: 1.5rem; font-weight: bold;">2</span>
+                        </div>
+                        <h5 class="text-white font-weight-bold mb-3">Atur Filter</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 0.95rem;">Pilih apakah Anda ingin mencari "Semua Destinasi", "Faskes khusus", atau "Pariwisata". Peta akan menyesuaikan diri.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="glass-premier radius-hnb p-4 h-100 text-center shadow-sm" style="border-top: 4px solid var(--hnb-orange);">
+                        <div class="mb-3">
+                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,122,0,0.1); color: var(--hnb-orange); font-size: 1.5rem; font-weight: bold;">3</span>
+                        </div>
+                        <h5 class="text-white font-weight-bold mb-3">Rute Navigasi</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 0.95rem;">Klik lokasi target di peta dan otomatis dapatkan panduan rute (Google Maps) dan nomor penting yang bisa dihubungi.</p>
+                    </div>
                 </div>
             </div>
         </div>

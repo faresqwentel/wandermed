@@ -3,36 +3,51 @@
 @section('content')
     @include('theme.navbar')
 
-    <div class="page-registration">
-        <div class="container px-4">
+    <section class="hero-slanted" style="min-height: 100vh; display: flex; align-items: center; padding-top: 50px; padding-bottom: 50px;">
+        <div class="container px-4" style="position: relative; z-index: 5;">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-7">
 
                     <div class="text-center mb-4">
-                        <h3 class="font-weight-bold text-white teks-judul" id="formTitle">Profil Wisatawan</h3>
-                        <p class="text-white-50 small teks-subjudul" id="formSubtitle">Langkah 1 dari 3</p>
-                        <div class="progress mt-3 radius-hnb" style="height: 6px; background: rgba(255,255,255,0.1);">
-                            <div class="progress-bar bg-hnb-orange" id="formProgress" style="width: 33%;"></div>
+                        <h3 class="font-weight-bold text-white teks-judul pb-1" id="formTitle">Profil Wisatawan</h3>
+                        <p class="text-white-50 teks-subjudul" style="font-size: 0.95rem;" id="formSubtitle">Langkah 1 dari 3</p>
+                        <div class="progress mt-3 radius-hnb shadow-sm" style="height: 6px; background: rgba(255,255,255,0.1);">
+                            <div class="progress-bar transition-all" id="formProgress" style="width: 33%; background-color: var(--hnb-orange);"></div>
                         </div>
                     </div>
 
-                    <div class="glass-premier shadow-lg border-0 radius-hnb overflow-hidden">
+                    <div class="glass-premier shadow-lg border-0 radius-hnb overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); border-top: 4px solid var(--hnb-orange); border-radius: 16px;">
                         <div class="card-body p-4 p-md-5">
                             <form id="wizardForm" action="#" method="POST">
 
                                 <div id="step1" class="step-content">
                                     <div class="form-group mb-4">
-                                        <label class="text-white font-weight-bold small ml-1 opacity-75">Nama Lengkap</label>
-                                        <input type="text" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Masukkan nama sesuai KTP..." required>
+                                        <label class="text-white font-weight-bold ml-1 mb-2" style="font-size: 0.9rem; opacity: 0.9;">Nama Lengkap</label>
+                                        <div class="input-group" style="border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-user"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Masukkan nama sesuai KTP..." required style="font-size: 1.05rem;">
+                                        </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="text-white font-weight-bold small ml-1 opacity-75">Nomor WhatsApp</label>
-                                            <input type="tel" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="0812xxx" required>
+                                        <div class="col-md-6 mb-4">
+                                            <label class="text-white font-weight-bold ml-1 mb-2" style="font-size: 0.9rem; opacity: 0.9;">Nomor WhatsApp</label>
+                                            <div class="input-group" style="border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-phone-alt"></i></span>
+                                                </div>
+                                                <input type="tel" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="0812xxx" required style="font-size: 1.05rem;">
+                                            </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="text-white font-weight-bold small ml-1 opacity-75">Kota Asal</label>
-                                            <input type="text" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Contoh: Bekasi" required>
+                                        <div class="col-md-6 mb-4">
+                                            <label class="text-white font-weight-bold ml-1 mb-2" style="font-size: 0.9rem; opacity: 0.9;">Kota Asal</label>
+                                            <div class="input-group" style="border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-map-marker-alt"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Contoh: Bekasi" required style="font-size: 1.05rem;">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +121,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     @include('theme.footer')
     <script src="{{ asset('js/wizard-wisatawan.js') }}"></script>

@@ -13,7 +13,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <<ul class="navbar-nav mr-auto align-items-center">
+            <ul class="navbar-nav mr-auto align-items-center">
                 <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#page-top">Beranda</a></li>
                 <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#tentang">Tentang</a></li>
                 <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#panduan">Panduan</a></li>

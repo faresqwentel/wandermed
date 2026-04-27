@@ -62,14 +62,14 @@
         </div>
     </div>
 
-    <div class="bg-hnb-navy page-registration">
-        <div class="container px-4">
+    <section class="hero-slanted" style="min-height: 100vh; display: flex; align-items: center; padding-top: 50px; padding-bottom: 50px;">
+        <div class="container px-4" style="position: relative; z-index: 5;">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-7 animate-fade-up">
 
                     {{-- Flash sukses --}}
                     @if(session('success'))
-                    <div class="alert radius-hnb mb-4 d-flex align-items-start" style="background:rgba(40,167,69,0.15); border:1px solid rgba(40,167,69,0.4); color:#6fcf97;">
+                    <div class="alert mb-4 d-flex align-items-start" style="border-radius: 10px; background:rgba(40,167,69,0.15); border:1px solid rgba(40,167,69,0.4); color:#6fcf97;">
                         <i class="fas fa-check-circle mr-3 mt-1 fa-lg"></i>
                         <div class="small">{!! session('success') !!}</div>
                     </div>
@@ -77,7 +77,7 @@
 
                     {{-- Flash error validasi --}}
                     @if($errors->any())
-                    <div class="alert radius-hnb mb-4" style="background:rgba(231,74,59,0.15); border:1px solid rgba(231,74,59,0.4); color:#ff6b6b; font-size:13px;">
+                    <div class="alert mb-4" style="border-radius: 10px; background:rgba(231,74,59,0.15); border:1px solid rgba(231,74,59,0.4); color:#ff6b6b; font-size:13px;">
                         <i class="fas fa-exclamation-circle mr-2"></i> <strong>Terjadi kesalahan:</strong>
                         <ul class="mb-0 mt-1">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
                     </div>
@@ -88,14 +88,14 @@
                             <i class="fas fa-info-circle text-primary mr-1"></i>
                             Form ini <strong class="text-white">tidak memerlukan akun</strong>. Setelah terverifikasi, Admin akan menghubungi Anda melalui email yang dicantumkan.
                         </div>
-                        <h3 class="font-weight-bold text-white teks-judul" id="formTitle">Profil Destinasi Wisata</h3>
-                        <p class="text-white-50 small teks-subjudul" id="formSubtitle">Langkah 1 dari 4</p>
+                        <h3 class="font-weight-bold text-white teks-judul pb-1" id="formTitle">Profil Destinasi Wisata</h3>
+                        <p class="text-white-50 teks-subjudul" style="font-size: 0.95rem;" id="formSubtitle">Langkah 1 dari 4</p>
                         <div class="progress mt-3 radius-hnb shadow-sm" style="height:6px; background:rgba(255,255,255,0.1);">
-                            <div class="progress-bar bg-hnb-orange transition-all" id="formProgress" role="progressbar" style="width:25%;"></div>
+                            <div class="progress-bar transition-all" id="formProgress" role="progressbar" style="width:25%; background-color: var(--hnb-orange);"></div>
                         </div>
                     </div>
 
-                    <div class="glass-premier shadow-lg border-0 radius-hnb overflow-hidden">
+                    <div class="glass-premier shadow-lg border-0 radius-hnb overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); border-top: 4px solid var(--hnb-orange); border-radius: 16px;">
                         <div class="card-body p-4 p-md-5">
                             <form id="wizardForm" action="{{ route('register.pariwisata') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
@@ -105,11 +105,14 @@
                                 {{-- STEP 1: Info Destinasi --}}
                                 <div id="step1" class="step-content">
                                     <div class="row">
-                                        <div class="col-md-7 mb-3">
-                                            <label class="text-white font-weight-bold small ml-1 opacity-75">Nama Destinasi Wisata</label>
-                                            <input type="text" name="nama_wisata" value="{{ old('nama_wisata') }}"
-                                                class="form-control form-control-dark radius-hnb py-4 px-3 input-dark"
-                                                placeholder="Contoh: Curug Cijalu, Kebun Teh Ciater..." required>
+                                        <div class="col-md-7 mb-4">
+                                            <label class="text-white font-weight-bold ml-1 mb-2" style="font-size: 0.9rem; opacity: 0.9;">Nama Destinasi Wisata</label>
+                                            <div class="input-group" style="border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-mountain"></i></span>
+                                                </div>
+                                                <input type="text" name="nama_wisata" value="{{ old('nama_wisata') }}" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Contoh: Curug Cijalu" required style="font-size: 1.05rem;">
+                                            </div>
                                         </div>
                                         <div class="col-md-5 mb-3">
                                             <label class="text-white font-weight-bold small ml-1 opacity-75">Kategori</label>
@@ -266,7 +269,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     @include('theme.footer')
 @endsection

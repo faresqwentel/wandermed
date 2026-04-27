@@ -23,15 +23,15 @@
             height: 100%;
         }
 
-        /* ===================== OVERLAY TOP PANEL ===================== */
+        /* ===================== OVERLAY CENTER-TOP PANEL ===================== */
         .map-overlay-panel {
             position: absolute;
             top: 16px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1000;
-            width: 96%;
-            max-width: 720px;
+            z-index: 1001;
+            width: 94%;
+            max-width: 640px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -39,18 +39,18 @@
         }
         .map-overlay-panel > * { pointer-events: auto; }
 
-        /* Search + BPJS Unified Box */
+        /* ===== Search + Aksi Cepat (Baris 1) ===== */
         .unified-nav-box {
             background: rgba(13, 27, 46, 0.97);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.10);
             border-radius: 16px;
-            padding: 12px 18px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
         .search-input-group {
             flex: 1;
@@ -70,23 +70,18 @@
             outline: none;
         }
         .search-input-group input::placeholder { color: rgba(255,255,255,0.4); }
-
-        /* Separator vertikal */
         .v-separator-map {
-            width: 1px;
-            height: 24px;
-            background: rgba(255,255,255,0.15);
+            width: 1px; height: 22px;
+            background: rgba(255,255,255,0.12);
             flex-shrink: 0;
         }
-
-        /* Tombol Lokasi Saya */
         .btn-my-location {
             background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.14);
             border-radius: 10px;
-            padding: 7px 13px;
+            padding: 6px 12px;
             color: rgba(255,255,255,0.8);
-            font-size: 13px;
+            font-size: 12px;
             font-family: 'Poppins', sans-serif;
             cursor: pointer;
             display: flex;
@@ -94,19 +89,18 @@
             gap: 6px;
             transition: all 0.3s;
             flex-shrink: 0;
+            white-space: nowrap;
         }
-        .btn-my-location:hover { background: rgba(255, 122, 0, 0.2); color: var(--hnb-orange); border-color: var(--hnb-orange); }
-        .btn-my-location i { font-size: 14px; }
-
-        /* BPJS Toggle Chip */
+        .btn-my-location:hover { background: rgba(255,122,0,0.18); color: var(--hnb-orange); border-color: var(--hnb-orange); }
+        .btn-my-location i { font-size: 13px; }
         .bpjs-chip {
             display: flex;
             align-items: center;
-            gap: 7px;
-            padding: 7px 14px;
+            gap: 6px;
+            padding: 6px 12px;
             border-radius: 10px;
-            border: 1.5px solid rgba(28, 200, 138, 0.4);
-            background: rgba(28, 200, 138, 0.08);
+            border: 1.5px solid rgba(28,200,138,0.4);
+            background: rgba(28,200,138,0.08);
             color: #1cc88a;
             font-size: 12px;
             font-weight: 700;
@@ -114,52 +108,80 @@
             transition: all 0.3s;
             font-family: 'Poppins', sans-serif;
             flex-shrink: 0;
-            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
-        .bpjs-chip i { font-size: 13px; }
-        .bpjs-chip.inactive {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.5);
-        }
+        .bpjs-chip i { font-size: 12px; }
+        .bpjs-chip.inactive { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.45); }
 
-        /* ===================== FILTER KATEGORI ===================== */
-        .filter-row-unified {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 2px;
-            scrollbar-width: none;
-        }
-        .filter-row-unified::-webkit-scrollbar { display: none; }
-
-        .filter-chip {
-            cursor: pointer;
-            background: rgba(13, 27, 46, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 9px 16px;
+        /* ===== Filter Baris 2 ===== */
+        .filter-bar {
+            background: rgba(13, 27, 46, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
-            gap: 7px;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            color: rgba(255,255,255,0.65);
-            font-size: 12px;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            gap: 10px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+            flex-wrap: nowrap;
+            overflow: hidden;
         }
-        .filter-chip i { font-size: 14px; }
-        .filter-chip:hover { background: rgba(255,122,0,0.12); border-color: rgba(255,122,0,0.4); color: var(--hnb-orange); }
+        .filter-bar-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .filter-bar select {
+            background: rgba(255,255,255,0.06) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            border-radius: 8px !important;
+            color: #fff !important;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            padding: 5px 10px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .filter-bar select option { background: #0d1b2e; }
+        .filter-chips-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex: 1;
+        }
+        .filter-chips-row::-webkit-scrollbar { display: none; }
+        .filter-chip {
+            cursor: pointer;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 5px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+            color: rgba(255,255,255,0.65);
+            font-size: 11.5px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            flex-shrink: 0;
+        }
+        .filter-chip i { font-size: 11px; }
+        .filter-chip:hover { background: rgba(255,122,0,0.12); border-color: rgba(255,122,0,0.35); color: var(--hnb-orange); }
         .filter-chip.active {
             background: var(--hnb-orange);
             border-color: var(--hnb-orange);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(255,122,0,0.4);
+            box-shadow: 0 3px 10px rgba(255,122,0,0.35);
         }
 
         /* ===================== RESULT COUNT BADGE ===================== */
@@ -188,16 +210,18 @@
             position: fixed;
             bottom: 0;
             left: 50%;
-            transform: translate(-50%, 105%); /* Tersembunyi di bawah */
+            transform: translate(-50%, 105%);
             width: 100%;
-            max-width: 560px;
+            max-width: 540px;
+            max-height: 72vh;           /* Tidak makan seluruh layar */
+            display: flex;
+            flex-direction: column;     /* Header/footer sticky, body scroll */
             background: #0d1b2e;
-            border-radius: 24px 24px 0 0;
+            border-radius: 22px 22px 0 0;
             z-index: 1050;
             box-shadow: 0 -8px 40px rgba(0,0,0,0.7);
-            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Handle geser */
-            padding-top: 8px;
+            transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
         .faskes-detail-panel.active {
             transform: translate(-50%, 0);
@@ -205,20 +229,22 @@
 
         /* Handle tarik */
         .panel-handle {
-            width: 40px;
-            height: 4px;
+            width: 36px; height: 4px;
             background: rgba(255,255,255,0.2);
             border-radius: 2px;
-            margin: 0 auto 14px;
+            margin: 8px auto 8px;
+            flex-shrink: 0;
         }
 
-        /* Header Panel */
+        /* Header — selalu terlihat, tidak ikut scroll */
         .panel-header {
-            padding: 0 20px 16px;
+            padding: 4px 18px 12px;
             border-bottom: 1px solid rgba(255,255,255,0.07);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+            flex-shrink: 0;
+            background: #0d1b2e;
         }
         .panel-faskes-name {
             font-size: 18px;
@@ -275,11 +301,12 @@
         .info-chip.chip-distance { background: rgba(255,122,0,0.12); color: var(--hnb-orange); border: 1px solid rgba(255,122,0,0.25); }
         .info-chip i { font-size: 12px; }
 
-        /* Scrollable body panel */
+        /* Scrollable body — flex:1 agar header & actions tetap sticky */
         .panel-body {
-            padding: 0 20px 24px;
-            max-height: 55vh;
+            padding: 0 18px 14px;
+            flex: 1;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: rgba(255,255,255,0.1) transparent;
         }
@@ -359,14 +386,15 @@
         .fac-icon.yellow{ background: rgba(246,194,62,0.18); color: #f6c23e; }
         .fac-icon.purple{ background: rgba(130,100,200,0.18); color: #a78de8; }
 
-        /* Tombol Aksi Utama */
+        /* Tombol Aksi — sticky di bawah, tidak ikut scroll */
         .panel-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 16px 20px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 18px 18px;
             border-top: 1px solid rgba(255,255,255,0.07);
             background: #0d1b2e;
+            flex-shrink: 0;
         }
         .btn-action-primary {
             display: flex;
@@ -453,12 +481,14 @@
 
         /* ===================== RESPONSIVE ===================== */
         @media (max-width: 576px) {
-            .map-overlay-panel { width: 94%; top: 12px; }
-            .unified-nav-box { padding: 10px 14px; gap: 8px; }
+            .map-overlay-panel { width: 92%; top: 10px; }
+            .unified-nav-box { padding: 8px 12px; gap: 8px; }
             .btn-my-location span { display: none; }
-            .faskes-detail-panel { max-width: 100%; border-radius: 20px 20px 0 0; }
+            .faskes-detail-panel { max-width: 100%; border-radius: 18px 18px 0 0; max-height: 80vh; }
             .facilities-grid { grid-template-columns: 1fr; }
             .result-count-badge { display: none; }
+            .filter-bar { gap: 8px; padding: 8px 12px; }
+            .filter-bar-label { display: none; }
         }
 
         /* =====================================================================
@@ -611,18 +641,123 @@
 
         /* --- Tombol Aksi di Panel Bawah --- */
         body.light-mode .panel-actions {
-            background: #f4f7fb !important;
+            background: #ffffff !important;
             border-top-color: rgba(0, 0, 0, 0.07) !important;
         }
-        body.light-mode .btn-action-primary.share {
-            background: rgba(0, 0, 0, 0.05);
-            color: #1a2a44;
-            border-color: rgba(0, 0, 0, 0.1);
+        body.light-mode .panel-actions .btn-outline-secondary {
+            background: rgba(0, 0, 0, 0.05) !important;
+            color: #1a2a44 !important;
+            border-color: rgba(0, 0, 0, 0.12) !important;
         }
-        body.light-mode .btn-action-primary.share:hover {
-            background: rgba(0, 0, 0, 0.09);
+
+        /* ====================================================
+         * LIGHT MODE — Class Baru (filter-bar, chips, panel)
+         * ==================================================== */
+
+        /* --- Filter Bar (Baris 2) --- */
+        body.light-mode .filter-bar {
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+        }
+        body.light-mode .filter-bar-label {
+            color: rgba(26, 42, 68, 0.5);
+        }
+        body.light-mode .filter-bar select {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border-color: rgba(0, 0, 0, 0.12) !important;
+            color: #1a2a44 !important;
+        }
+        body.light-mode .filter-bar select option {
+            background: #ffffff;
+            color: #1a2a44;
+        }
+        body.light-mode .v-separator-map {
+            background: rgba(0, 0, 0, 0.10);
+        }
+
+        /* --- Filter Chips (pill style baru) dalam filter-bar --- */
+        body.light-mode .filter-chip {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.10);
+            color: #374151;
+            box-shadow: none;
+        }
+        body.light-mode .filter-chip:hover {
+            background: rgba(255, 122, 0, 0.08);
+            border-color: rgba(255, 122, 0, 0.4);
+            color: var(--hnb-orange);
+        }
+        body.light-mode .filter-chip.active {
+            background: var(--hnb-orange);
+            border-color: var(--hnb-orange);
+            color: #fff;
+        }
+
+        /* --- Search Input icon warna di light mode --- */
+        body.light-mode .search-input-group i {
+            color: var(--hnb-orange);
+        }
+
+        /* --- Panel Header & Badge rows bg light mode --- */
+        body.light-mode .panel-header {
+            background: #ffffff !important;
+            border-bottom-color: rgba(0, 0, 0, 0.07);
+        }
+        body.light-mode .panel-faskes-name { color: #1a2a44 !important; }
+        body.light-mode .panel-faskes-type { color: var(--hnb-orange) !important; }
+        body.light-mode .panel-badges {
+            background: transparent;
+        }
+
+        /* --- Panel Body bg --- */
+        body.light-mode .panel-body {
+            background: #f4f7fb;
+        }
+
+        /* --- Panel Close Button --- */
+        body.light-mode .panel-close-btn {
+            background: rgba(0, 0, 0, 0.06);
+            color: #1a2a44;
+        }
+        body.light-mode .panel-close-btn:hover {
+            background: rgba(231, 74, 59, 0.12);
+            color: #e74a3b;
+        }
+
+        /* --- Tombol Lokasi Saya light mode (override lengkap) --- */
+        body.light-mode .btn-my-location {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.12);
+            color: #374151;
+        }
+        body.light-mode .btn-my-location:hover {
+            background: rgba(255, 122, 0, 0.1);
+            border-color: var(--hnb-orange);
+            color: var(--hnb-orange);
+        }
+
+        /* --- BPJS Chip light mode (override lengkap) --- */
+        body.light-mode .bpjs-chip {
+            background: rgba(28, 200, 138, 0.1);
+            border-color: rgba(28, 200, 138, 0.45);
+            color: #059669;
+        }
+        body.light-mode .bpjs-chip.inactive {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.10);
+            color: rgba(26, 42, 68, 0.45);
+        }
+
+        /* --- Result Count Badge light mode --- */
+        body.light-mode .result-count-badge {
+            background: rgba(255, 255, 255, 0.97);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: #374151;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
     </style>
+
 @endpush
 
 @section('content')
@@ -630,14 +765,14 @@
 
     <div class="map-page-wrapper">
 
-        {{-- ========= OVERLAY PANEL ATAS ========= --}}
+        {{-- ========= OVERLAY CENTER-TOP PANEL ========= --}}
         <div class="map-overlay-panel">
 
-            {{-- Search Bar + Tombol Lokasi + BPJS --}}
+            {{-- BARIS 1: Search + Lokasi + BPJS --}}
             <div class="unified-nav-box">
                 <div class="search-input-group">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Cari RS, Klinik, atau Apotek...">
+                    <input type="text" id="searchInput" placeholder="Cari nama faskes, klinik, apotek...">
                 </div>
                 <div class="v-separator-map"></div>
                 <button class="btn-my-location" id="btnMyLocation" title="Gunakan lokasi saya">
@@ -651,32 +786,31 @@
                 </button>
             </div>
 
-            {{-- Filter Kategori Master --}}
-            <div class="filter-row-unified" style="display: flex; gap: 10px; align-items: center; background: #fff; padding: 10px; border-radius: 12px; margin-top: 10px;">
-                <label for="masterFilter" style="font-weight: 600; color: #1e293b; margin: 0;"><i class="fas fa-filter"></i> Kategori:</label>
-                <select id="masterFilter" class="form-control filter-select" style="width: auto; border-radius: 8px; border: 1px solid #cbd5e1;">
-                    <option value="All">Semua Destinasi</option>
-                    <option value="Faskes">Hanya Faskes</option>
-                    <option value="Pariwisata">Hanya Pariwisata</option>
+            {{-- BARIS 2: Filter Destinasi + Sub-kategori Faskes --}}
+            <div class="filter-bar">
+                <span class="filter-bar-label"><i class="fas fa-layer-group"></i> Filter:</span>
+                <select id="masterFilter" style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #fff; font-family: 'Poppins',sans-serif; font-size: 12px; padding: 5px 10px; cursor: pointer; flex-shrink: 0;">
+                    <option value="All">Semua</option>
+                    <option value="Faskes">Faskes</option>
+                    <option value="Pariwisata">Pariwisata</option>
                 </select>
-            </div>
-            
-            {{-- Filter Faskes Sub-Kategori --}}
-            <div class="filter-row-unified" id="faskesSubFilter" style="margin-top: 10px;">
-                <div class="filter-chip active" data-type="AllFaskes">
-                    <i class="fas fa-th-large"></i> Semua Faskes
-                </div>
-                <div class="filter-chip" data-type="Rumah Sakit">
-                    <i class="fas fa-hospital-alt" style="color: #e74a3b;"></i> RS / UGD
-                </div>
-                <div class="filter-chip" data-type="Klinik">
-                    <i class="fas fa-clinic-medical" style="color: #4e73df;"></i> Klinik
-                </div>
-                <div class="filter-chip" data-type="Apotek">
-                    <i class="fas fa-pills" style="color: #1cc88a;"></i> Apotek
-                </div>
-                <div class="filter-chip" data-type="Puskesmas">
-                    <i class="fas fa-heartbeat" style="color: #f6c23e;"></i> Puskesmas
+                <div class="v-separator-map"></div>
+                <div class="filter-chips-row" id="faskesSubFilter">
+                    <div class="filter-chip active" data-type="AllFaskes">
+                        <i class="fas fa-th-large"></i> Semua
+                    </div>
+                    <div class="filter-chip" data-type="Rumah Sakit">
+                        <i class="fas fa-hospital-alt" style="color:#e74a3b;"></i> RS
+                    </div>
+                    <div class="filter-chip" data-type="Klinik">
+                        <i class="fas fa-clinic-medical" style="color:#4e73df;"></i> Klinik
+                    </div>
+                    <div class="filter-chip" data-type="Apotek">
+                        <i class="fas fa-pills" style="color:#1cc88a;"></i> Apotek
+                    </div>
+                    <div class="filter-chip" data-type="Puskesmas">
+                        <i class="fas fa-heartbeat" style="color:#f6c23e;"></i> Puskesmas
+                    </div>
                 </div>
             </div>
         </div>
@@ -713,6 +847,11 @@
             {{-- Body Scrollable --}}
             <div class="panel-body">
 
+                {{-- Modul Foto (Ditampilkan Jika Ada - Misal Pariwisata) --}}
+                <div id="headerPhotoContainer" style="display: none; padding: 0 15px 15px 15px;">
+                    <img id="detailPhoto" src="" alt="Foto Lokasi" style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                </div>
+
                 {{-- Info Utama --}}
                 <div class="panel-section">
                     <div class="panel-section-title">Informasi Lokasi</div>
@@ -726,7 +865,7 @@
                     <div class="info-row jam-open" id="rowJam">
                         <i class="fas fa-clock"></i>
                         <div class="info-row-content">
-                            <div class="info-row-label">Jam Operasional</div>
+                            <div class="info-row-label">Jam Operasional / Status</div>
                             <div class="info-row-value" id="detailJam">—</div>
                         </div>
                     </div>
@@ -740,7 +879,7 @@
                 </div>
 
                 {{-- Fasilitas --}}
-                <div class="panel-section">
+                <div class="panel-section" id="sectionFasilitas">
                     <div class="panel-section-title">Fasilitas Tersedia</div>
                     <div class="facilities-grid" id="detailFacilities">
                         {{-- Diisi oleh JS --}}
@@ -761,16 +900,18 @@
             </div>
 
             {{-- Tombol Aksi --}}
-            <div class="panel-actions">
-                <a id="btnDirection" href="#" target="_blank" class="btn-action-primary navigate">
-                    <i class="fas fa-location-arrow"></i> Navigasi via Google Maps
+            <div class="panel-actions" style="display: flex; flex-direction: column; gap: 8px;">
+                <a id="btnDirection" href="#" target="_blank" class="btn btn-hnb-orange w-100 py-3 font-weight-bold shadow-lg" style="border-radius: 12px; font-size: 1.15rem;">
+                    <i class="fas fa-location-arrow mr-2"></i> Mulai Rute Navigasi
                 </a>
-                <a id="btnCall" href="tel:+62" class="btn-action-primary call">
-                    <i class="fas fa-phone-alt"></i> Hubungi
-                </a>
-                <button class="btn-action-primary share" onclick="shareLocation()">
-                    <i class="fas fa-share-alt"></i> Bagikan
-                </button>
+                <div class="d-flex" style="gap: 10px;">
+                    <a id="btnCall" href="tel:+62" class="btn btn-outline-secondary w-50 py-2" style="border-radius: 10px;">
+                        <i class="fas fa-phone-alt mr-1"></i> Hubungi
+                    </a>
+                    <button class="btn btn-outline-secondary w-50 py-2 share" onclick="shareLocation()" style="border-radius: 10px;">
+                        <i class="fas fa-share-alt mr-1"></i> Bagikan
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1090,6 +1231,10 @@ document.addEventListener("DOMContentLoaded", function() {
         // Tombol telepon
         document.getElementById('btnCall').href = `tel:${data.phone.replace(/\D/g, '')}`;
 
+        // Konfigurasi Visibilitas Section
+        document.getElementById('headerPhotoContainer').style.display = 'none';
+        document.getElementById('sectionFasilitas').style.display = 'block';
+
         // Buka panel
         document.getElementById('faskesDetailPanel').classList.add('active');
     };
@@ -1199,10 +1344,18 @@ document.addEventListener("DOMContentLoaded", function() {
         badgesEl = document.getElementById('detailBadges');
         badgesEl.innerHTML = `<span class="info-chip" style="background:rgba(139, 92, 246, 0.2); color:#C4B5FD;"><i class="fas fa-camera"></i> Pariwisata</span>`;
 
-        fac.innerHTML = '';
+        // Modul Foto
+        const photoContainer = document.getElementById('headerPhotoContainer');
+        const photoImg = document.getElementById('detailPhoto');
         if (w.foto) {
-             fac.innerHTML = `<img src="${w.foto}" style="width:100%; border-radius:12px; height:150px; object-fit:cover;">`;
+             photoContainer.style.display = 'block';
+             photoImg.src = w.foto;
+        } else {
+             photoContainer.style.display = 'none';
         }
+        
+        // Sembunyikan Fasilitas (karena data wisata belum pakai)
+        document.getElementById('sectionFasilitas').style.display = 'none';
 
         if (w.deskripsi) {
             notes.style.display = 'block';

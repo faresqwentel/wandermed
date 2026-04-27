@@ -4,8 +4,8 @@
 
     @include('theme.navbar')
 
-    <div class="bg-hnb-navy page-registration">
-        <div class="container px-5">
+    <section class="hero-slanted" style="min-height: 100vh; display: flex; align-items: center; padding-top: 50px; padding-bottom: 50px;">
+        <div class="container px-5" style="position: relative; z-index: 5;">
 
             <div class="text-center mb-5 animate-fade-up">
                 <h2 class="font-weight-bold text-white teks-judul">Mulai Langkahmu Bersama WanderMed</h2>
@@ -61,7 +61,7 @@
             </div>
 
         </div>
-    </div>
+    </section>
 
     <section class="bg-hnb-navy pt-5 pb-4 mt-5">
         @include('theme.footer')
