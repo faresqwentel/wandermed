@@ -99,7 +99,7 @@ class HomeController extends Controller
                     'telp'       => $w->kontak_wisata ?? $w->mitra->no_telp ?? '',
                     'foto'       => $w->foto_path ? asset('storage/' . $w->foto_path) : null,
                 ]);
-            $pariwisata = $pariwisata->merge($mitraWisata)->values();
+            $pariwisata = $pariwisata->toBase()->merge($mitraWisata->toBase())->values();
         }
 
         $daftarFaskes = $faskes;

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Mitra;
 use App\Models\Faskes;
+use App\Models\Pariwisata;
 use App\Models\RiwayatKunjungan;
 use App\Models\LaporanMasalah;
 use Carbon\Carbon;
@@ -67,6 +68,28 @@ class DatabaseSeeder extends Seeder
 
 
         // =======================================================
+        // 2.5 DATA MITRA PARIWISATA
+        // =======================================================
+        $mitraWisata1 = Mitra::create([
+            'nama_penanggung_jawab' => 'Bapak Asep (Sari Ater)',
+            'email'                 => 'sariater@subang.id',
+            'password'              => Hash::make('mitra123'),
+            'no_telp'               => '081199887766',
+            'jenis_mitra'           => 'pariwisata',
+            'is_verified'           => true,
+        ]);
+
+        $mitraWisata2 = Mitra::create([
+            'nama_penanggung_jawab' => 'Ibu Lilis (Tangkuban Perahu)',
+            'email'                 => 'tangkuban@subang.id',
+            'password'              => Hash::make('mitra123'),
+            'no_telp'               => '082299887766',
+            'jenis_mitra'           => 'pariwisata',
+            'is_verified'           => true,
+        ]);
+
+
+        // =======================================================
         // 3. FASKES MAP DATA
         // =======================================================
         $rsud = Faskes::create([
@@ -94,6 +117,34 @@ class DatabaseSeeder extends Seeder
             'alamat'             => 'Jl. Raya Cibogo No.12, Subang',
             'no_telp'            => '(0260) 422111',
             'layanan_tersedia'   => ['Obat Keras', 'Apotek'],
+        ]);
+
+
+        // =======================================================
+        // 3.5 PARIWISATA MAP DATA
+        // =======================================================
+        Pariwisata::create([
+            'mitra_id'           => $mitraWisata1->id,
+            'nama_wisata'        => 'Sari Ater Hot Spring',
+            'kategori'           => 'Alam',
+            'deskripsi'          => 'Pemandian air panas alami dari kawah Gunung Tangkuban Perahu.',
+            'alamat'             => 'Jl. Raya Ciater, Ciater, Subang',
+            'latitude'           => -6.7360,
+            'longitude'          => 107.6530,
+            'info_keselamatan'   => 'Lantai area kolam sangat licin. Faskes terdekat: Puskesmas Ciater (1km).',
+            'kontak_wisata'      => '081199887766',
+        ]);
+
+        Pariwisata::create([
+            'mitra_id'           => $mitraWisata2->id,
+            'nama_wisata'        => 'Kawah Tangkuban Perahu',
+            'kategori'           => 'Alam',
+            'deskripsi'          => 'Gunung api aktif dengan pemandangan kawah memukau.',
+            'alamat'             => 'Cikahuripan, Lembang, Bandung Barat (Perbatasan Subang)',
+            'latitude'           => -6.7596,
+            'longitude'          => 107.6096,
+            'info_keselamatan'   => 'Asap belerang cukup pekat. Pengunjung asma diharap berhati-hati.',
+            'kontak_wisata'      => '082299887766',
         ]);
 
 
@@ -128,6 +179,6 @@ class DatabaseSeeder extends Seeder
             'status'               => 'pending',
         ]);
         
-        $this->command->info('Database berhasil di-seed dengan data Faskes dan Wisatawan!');
+        $this->command->info('Database berhasil di-seed dengan data Faskes, Pariwisata, dan Wisatawan!');
     }
 }

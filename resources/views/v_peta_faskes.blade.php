@@ -1,4 +1,4 @@
-﻿{{-- ============================================================
+{{-- ============================================================
      Halaman Peta Faskes Wisatawan – WanderMed
      Dirombak total: UI friendly, bottom sheet informatif,
      marker custom, filter visual, dan info fasilitas lengkap.
@@ -163,6 +163,21 @@
                     <button class="btn btn-outline-secondary w-50 py-2 share" onclick="shareLocation()" style="border-radius: 10px;">
                         <i class="fas fa-share-alt mr-1"></i> Bagikan
                     </button>
+                </div>
+            </div>
+        </div>
+
+        {{-- ========= GEOFENCE MODAL ========= --}}
+        <div id="geofenceModal" class="geofence-backdrop">
+            <div class="geofence-modal">
+                <button class="gm-close" onclick="closeGeofenceModal()"><i class="fas fa-times"></i></button>
+                <div class="gm-header">
+                    <div class="gm-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="gm-title">Terdeteksi di Area Wisata!</div>
+                    <div class="gm-subtitle">Anda sedang berada di <br><span id="gfWisataName">Nama Wisata</span>.<br>Membutuhkan bantuan medis terdekat?</div>
+                </div>
+                <div class="gm-list" id="gfFaskesList">
+                    {{-- Diisi oleh JS --}}
                 </div>
             </div>
         </div>
@@ -477,8 +492,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Tombol navigasi Google Maps
-        document.getElementById('btnDirection').href =
-            `https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}`;
+        document.getElementById('btnDirection').href = `https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}`;
+        document.getElementById('btnDirection').onclick = function(e) {
+            e.preventDefault();
+            openSmartNavigation(data.lat, data.lng);
+        };
 
         // Tombol telepon
         document.getElementById('btnCall').href = `tel:${data.phone.replace(/\D/g, '')}`;
@@ -494,6 +512,35 @@ document.addEventListener("DOMContentLoaded", function() {
     // Tutup bottom sheet
     window.closeDetail = function() {
         document.getElementById('faskesDetailPanel').classList.remove('active');
+    };
+
+    // =========================================================
+    // SMART NAVIGATION (Precise Live Routing)
+    // =========================================================
+    window.openSmartNavigation = function(destLat, destLng) {
+        const btn = document.getElementById('btnDirection');
+        const originalText = btn ? btn.innerHTML : '';
+        if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memuat Rute...';
+
+        if (!navigator.geolocation) {
+            if(btn) btn.innerHTML = originalText;
+            window.open(`https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${destLat},${destLng}&travelmode=motorcycle`, '_blank');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                if(btn) btn.innerHTML = originalText;
+                const userLat = pos.coords.latitude;
+                const userLng = pos.coords.longitude;
+                window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${destLat},${destLng}&travelmode=motorcycle`, '_blank');
+            },
+            function(err) {
+                if(btn) btn.innerHTML = originalText;
+                window.open(`https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${destLat},${destLng}&travelmode=motorcycle`, '_blank');
+            },
+            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
     };
 
     // =========================================================
@@ -539,15 +586,106 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // =========================================================
-    // TOMBOL LOKASI SAYA (Geolocation)
+    // GEOFENCING LOGIC (HAVERSINE)
     // =========================================================
-    document.getElementById('btnMyLocation').addEventListener('click', function() {
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2-lat1);
+        var dLon = deg2rad(lon2-lon1); 
+        var a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; // Distance in km
+        return d;
+    }
+
+    function deg2rad(deg) {
+        return deg * (Math.PI/180);
+    }
+
+    window.closeGeofenceModal = function() {
+        document.getElementById('geofenceModal').classList.remove('active');
+    };
+
+    function checkGeofence(userLat, userLng) {
+        if (pariwisataData.length === 0) return;
+
+        let nearestWisata = null;
+        let minWisataDist = Infinity;
+
+        // 1. Cari wisata terdekat
+        pariwisataData.forEach(w => {
+            if(!w.lat || !w.lng) return;
+            let dist = getDistanceFromLatLonInKm(userLat, userLng, w.lat, w.lng);
+            if(dist < minWisataDist) {
+                minWisataDist = dist;
+                nearestWisata = w;
+            }
+        });
+
+        // 2. Jika dalam radius 1km (1.0), trigger modal
+        if (nearestWisata && minWisataDist <= 1.0) {
+            document.getElementById('gfWisataName').textContent = nearestWisata.name;
+            
+            // 3. Cari 3 faskes terdekat dari user/wisata
+            let faskesWithDist = faskesData.map(f => {
+                return {
+                    ...f,
+                    dist: getDistanceFromLatLonInKm(userLat, userLng, f.lat, f.lng)
+                };
+            }).filter(f => f.lat && f.lng); // pastikan ada kordinat
+            
+            // Sort dari yang terdekat
+            faskesWithDist.sort((a, b) => a.dist - b.dist);
+            
+            // Ambil top 3
+            let top3 = faskesWithDist.slice(0, 3);
+            
+            // Render HTML List Faskes
+            let listHtml = '';
+            top3.forEach(f => {
+                let distMeters = Math.round(f.dist * 1000);
+                let distText = distMeters > 1000 ? (f.dist).toFixed(1) + ' km' : distMeters + ' m';
+                
+                let mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lng}`;
+
+                listHtml += `
+                    <div class="gm-item">
+                        <div class="gm-item-icon">
+                            <i class="fas ${f.type === 'Rumah Sakit' ? 'fa-hospital-alt' : (f.type === 'Apotek' ? 'fa-pills' : 'fa-clinic-medical')}"></i>
+                        </div>
+                        <div class="gm-item-info">
+                            <div class="gm-item-name">${f.name}</div>
+                            <div class="gm-item-dist"><i class="fas fa-route"></i> ${distText}</div>
+                        </div>
+                        <a href="${mapsLink}" onclick="event.preventDefault(); openSmartNavigation(${f.lat}, ${f.lng});" class="gm-item-btn">Rute</a>
+                    </div>
+                `;
+            });
+
+            document.getElementById('gfFaskesList').innerHTML = listHtml;
+
+            // Munculkan Modal
+            setTimeout(() => {
+                document.getElementById('geofenceModal').classList.add('active');
+            }, 800);
+        }
+    }
+
+    // =========================================================
+    // TOMBOL LOKASI SAYA (Geolocation) & AUTO CHECK
+    // =========================================================
+    function locateUser(isAuto = false) {
         if (!navigator.geolocation) {
-            alert('Browser Anda tidak mendukung geolocation.');
+            if(!isAuto) alert('Browser Anda tidak mendukung geolocation.');
             return;
         }
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...';
-        const btn = this;
+        
+        const btn = document.getElementById('btnMyLocation');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...';
+        
         navigator.geolocation.getCurrentPosition(
             pos => {
                 const { latitude: lat, longitude: lng } = pos.coords;
@@ -559,18 +697,30 @@ document.addEventListener("DOMContentLoaded", function() {
                 }).addTo(map).bindTooltip('<b>📍 Lokasi Anda</b>', { permanent: false });
 
                 btn.innerHTML = '<i class="fas fa-crosshairs"></i> <span>Lokasi Saya</span>';
+
+                // Jalankan Geofencing Check
+                checkGeofence(lat, lng);
             },
             err => {
-                alert('Gagal mendapatkan lokasi. Pastikan izin lokasi browser aktif.');
+                if(!isAuto) alert('Gagal mendapatkan lokasi. Pastikan izin lokasi browser aktif.');
                 btn.innerHTML = '<i class="fas fa-crosshairs"></i> <span>Lokasi Saya</span>';
             }
         );
+    }
+
+    document.getElementById('btnMyLocation').addEventListener('click', function() {
+        locateUser(false);
     });
 
     // =========================================================
     // INISIALISASI PERTAMA
     // =========================================================
     updateMarkers();
+    
+    // Auto trigger pencarian lokasi saat web dibuka
+    setTimeout(() => {
+        locateUser(true);
+    }, 500);
 
     // Tampilkan panel detail wisata (reuse bottom sheet atau popup sederhana)
     function showWisataDetail(w) {
@@ -617,6 +767,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         document.getElementById('btnDirection').href = `https://www.google.com/maps/dir/?api=1&destination=${w.lat},${w.lng}`;
+        document.getElementById('btnDirection').onclick = function(e) {
+            e.preventDefault();
+            openSmartNavigation(w.lat, w.lng);
+        };
         document.getElementById('btnCall').href = `tel:${(w.telp || '').replace(/\D/g, '')}`;
         document.getElementById('faskesDetailPanel').classList.add('active');
     }
