@@ -29,6 +29,86 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ==============================
+ * PREMIUM ANIMATIONS
+ * ============================== */
+
+/* Page fade-in on load */
+@keyframes wmFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+body { animation: wmFadeIn 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* Section slide-up when activated (admin/faskes SPA sections) */
+@keyframes wmSectionIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.wm-section-animate { animation: wmSectionIn 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* Stat card hover lift */
+.wm-stat-card {
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+}
+.wm-stat-card:hover { transform: translateY(-6px); box-shadow: 0 18px 45px rgba(0,0,0,0.10); }
+
+/* Content card hover lift */
+.wm-card {
+    transition: transform 0.22s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.22s ease;
+}
+.wm-card:hover { transform: translateY(-3px); box-shadow: 0 14px 38px rgba(0,0,0,0.08); }
+
+/* Button spring micro-animation */
+.wm-btn { transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.18s ease, box-shadow 0.18s ease; }
+.wm-btn:active { transform: scale(0.95) !important; }
+
+/* Bootstrap modal slide-in (override) */
+.modal.fade .modal-dialog {
+    transition: transform 0.28s cubic-bezier(0.34,1.2,0.64,1), opacity 0.25s ease;
+    transform: translateY(-18px) scale(0.97);
+    opacity: 0;
+}
+.modal.show .modal-dialog { transform: translateY(0) scale(1); opacity: 1; }
+
+/* Toast success/danger/info variants */
+.wm-toast.toast-danger { background: rgba(231,74,59,0.97) !important; color: #fff !important; }
+.wm-toast.toast-info   { background: rgba(54,185,204,0.97) !important; color: #fff !important; }
+
+/* Leaflet marker bounce animation */
+@keyframes wmMarkerBounce {
+    0%   { transform: translateY(0);    }
+    30%  { transform: translateY(-14px);}
+    55%  { transform: translateY(-5px); }
+    75%  { transform: translateY(-9px); }
+    90%  { transform: translateY(-3px); }
+    100% { transform: translateY(0);    }
+}
+.wm-marker-bounce { animation: wmMarkerBounce 0.7s cubic-bezier(0.36,0.07,0.19,0.97) both; }
+
+/* Leaflet marker fade-in on load */
+@keyframes wmMarkerFade {
+    from { opacity: 0; transform: scale(0.5) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.leaflet-marker-icon { animation: wmMarkerFade 0.35s cubic-bezier(0.34,1.4,0.64,1) both; }
+
+/* Nav link hover smooth */
+.wm-nav-link { transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease; }
+.wm-nav-link:hover:not(.active) { padding-left: 22px; }
+
+/* Bottom sheet / panel slide-in */
+@keyframes wmPanelSlideUp {
+    from { transform: translateY(100%); opacity: 0.6; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+.faskes-detail-panel.active { animation: wmPanelSlideUp 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* AOS stagger utility */
+.wm-stagger-item { opacity: 0; animation: wmFadeIn 0.4s ease both; }
+
+
+
 html, body {
     height: 100%;
     font-family: 'Poppins', sans-serif;

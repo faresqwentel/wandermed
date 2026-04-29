@@ -5,147 +5,141 @@
 /* ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
-    // --- 1. INISIALISASI VARIABEL GLOBAL ---
-    const body = document.body;
-    const html = document.documentElement;
-    const navbar = document.getElementById("mainNavbar");
-    const navLinks = document.querySelectorAll(".scroll-link");
-    const sections = document.querySelectorAll(".section-scroll, #page-top");
+    // --- 1. INISIALISASI ---
+    var body    = document.body;
+    var html    = document.documentElement;
+    var navbar  = document.getElementById("mainNavbar");
+    var navLinks = document.querySelectorAll(".scroll-link");
+    var sections = document.querySelectorAll(".section-scroll, #page-top");
 
-    // Fungsi dinamis untuk mendapatkan tinggi navbar (Offset Scroll)
-    const getNavbarHeight = () => (navbar ? navbar.offsetHeight : 90);
+    var getNavbarHeight = function () { return navbar ? navbar.offsetHeight : 70; };
 
-    // --- 2. MANAJEMEN TEMA (DARK/LIGHT MODE) ---
-    const themeToggleBtn = document.getElementById("themeToggle");
-    const themeIcon = document.getElementById("themeIcon");
+    // =========================================================
+    // 2. DARK / LIGHT MODE TOGGLE
+    // =========================================================
+    var themeToggleBtn = document.getElementById("themeToggle");
+    var themeIcon      = document.getElementById("themeIcon");
 
-    /**
-     * Fungsi untuk memperbarui UI Ikon Tema
-     * Latar belakang sudah ditangani oleh Blocking Script di Layout
-     */
-    const updateThemeUI = () => {
+    var updateThemeUI = function () {
         if (body.classList.contains("light-mode")) {
-            themeIcon?.classList.replace("fa-sun", "fa-moon");
-            themeIcon?.classList.add("text-hnb-navy");
+            if (themeIcon) { themeIcon.classList.remove("fa-sun"); themeIcon.classList.add("fa-moon"); themeIcon.classList.add("text-hnb-navy"); }
         } else {
-            themeIcon?.classList.replace("fa-moon", "fa-sun");
-            themeIcon?.classList.remove("text-hnb-navy");
+            if (themeIcon) { themeIcon.classList.remove("fa-moon"); themeIcon.classList.add("fa-sun"); themeIcon.classList.remove("text-hnb-navy"); }
         }
     };
-
-    // Jalankan sinkronisasi ikon saat halaman dimuat
     updateThemeUI();
 
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener("click", function (e) {
             e.preventDefault();
-
-            // Toggle class pada body dan html
             body.classList.toggle("light-mode");
             html.classList.toggle("light-mode");
-
-            // Simpan preferensi ke LocalStorage
-            if (body.classList.contains("light-mode")) {
-                localStorage.setItem("wanderMedTheme", "light");
-            } else {
-                localStorage.setItem("wanderMedTheme", "dark");
-            }
-
-            // Perbarui ikon
+            localStorage.setItem("wanderMedTheme", body.classList.contains("light-mode") ? "light" : "dark");
             updateThemeUI();
         });
     }
 
-    // --- 3. NAVIGASI SMOOTH SCROLL ---
-    navLinks.forEach((link) => {
+    // =========================================================
+    // 3. SMOOTH SCROLL saat klik nav link
+    // =========================================================
+    navLinks.forEach(function (link) {
         link.addEventListener("click", function (e) {
-            const href = this.getAttribute("href");
-
-            // Pastikan hanya memproses link yang mengandung anchor (#)
-            if (href.includes("#")) {
-                const targetId = href.substring(href.indexOf("#"));
-                const targetElement = document.querySelector(targetId);
-
-                if (targetElement) {
+            var href = this.getAttribute("href");
+            if (href && href.includes("#")) {
+                var targetId      = href.substring(href.indexOf("#"));
+                var targetElement = document.querySelector(targetId);
+                
+                // Pastikan kita berada di halaman beranda. Jika di halaman lain, biarkan link berjalan normal (ke /#target).
+                if (targetElement && window.location.pathname === '/' || window.location.pathname === '') {
                     e.preventDefault();
+                    var targetPosition = targetElement.offsetTop - getNavbarHeight() - 10;
+                    
+                    // Gunakan jQuery animate untuk scroll yang lebih lambat dan sinematik
+                    if (typeof $ !== 'undefined') {
+                        $('html, body').animate({
+                            scrollTop: targetPosition
+                        }, 800); // 800ms duration
+                    } else {
+                        // Fallback
+                        window.scrollTo({ top: targetPosition, behavior: "smooth" });
+                    }
 
-                    // Hitung posisi target dikurangi offset navbar
-                    const targetPosition =
-                        targetElement.offsetTop - getNavbarHeight();
-
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: "smooth",
-                    });
-
-                    // Tutup otomatis menu mobile (Bootstrap Collapse) jika terbuka
-                    const navbarCollapse = document.getElementById("navbarNav");
-                    if (
-                        navbarCollapse &&
-                        navbarCollapse.classList.contains("show")
-                    ) {
-                        $(navbarCollapse).collapse("hide");
+                    // Tutup mobile menu jika terbuka
+                    var navbarCollapse = document.getElementById("navbarNav");
+                    if (navbarCollapse && navbarCollapse.classList.contains("show")) {
+                        if (typeof $ !== 'undefined') { $(navbarCollapse).collapse("hide"); }
                     }
                 }
             }
         });
     });
 
-    // --- 4. SCROLL SPY (HIGHLIGHT MENU AKTIF) ---
-    const handleScrollSpy = () => {
-        let currentSectionId = "";
-        const scrollPosition =
-            window.pageYOffset || document.documentElement.scrollTop;
+    // =========================================================
+    // 4. SCROLL SPY + SCROLL INDICATOR HIDE
+    //    Navbar SELALU fix di atas — tidak ada show/hide logic
+    // =========================================================
+    var ticking = false;
 
-        sections.forEach((section) => {
-            const sectionTop = section.offsetTop;
-            if (scrollPosition >= sectionTop - getOffset() - 100) {
-                currentSectionId = section.getAttribute("id");
+    function onScroll() {
+        var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+        // --- Scroll Spy: highlight nav link aktif ---
+        var currentSectionId = "";
+        sections.forEach(function (section) {
+            if (scrollY >= section.offsetTop - getNavbarHeight() - 80) {
+                currentSectionId = section.getAttribute("id") || "";
             }
         });
-
-        navLinks.forEach((link) => {
+        navLinks.forEach(function (link) {
             link.classList.remove("active");
-            const href = link.getAttribute("href");
-
-            // Perbaikan: Hanya aktifkan jika currentSectionId TIDAK kosong
-            if (
-                currentSectionId !== "" &&
-                href.includes(`#${currentSectionId}`)
-            ) {
+            var href = link.getAttribute("href") || "";
+            if (currentSectionId && href.includes("#" + currentSectionId)) {
                 link.classList.add("active");
             }
         });
 
-        // Efek Navbar Mengecil saat Scroll
-        if (navbar) {
-            if (scrollPosition > 50) {
-                navbar.style.padding = "10px 0";
-                navbar.classList.add("shadow-lg");
+        // --- Sembunyikan scroll indicator saat scroll mulai ---
+        var scrollInd = document.getElementById("heroScrollIndicator");
+        if (scrollInd) {
+            if (scrollY > 80) {
+                scrollInd.style.opacity = "0";
+                scrollInd.style.pointerEvents = "none";
             } else {
-                navbar.style.padding = "15px 0";
-                navbar.classList.remove("shadow-lg");
+                scrollInd.style.opacity = "0.6";
+                scrollInd.style.pointerEvents = "auto";
             }
         }
-    };
 
-    window.addEventListener("scroll", handleScrollSpy);
-    // Jalankan sekali saat load untuk deteksi posisi awal
-    handleScrollSpy();
+        ticking = false;
+    }
 
-    // --- 5. FITUR SHOW/HIDE PASSWORD (LOGIN PAGE) ---
-    const btnToggle = document.getElementById("btnToggle");
-    const inputPassword = document.getElementById("inputPassword");
-    const ikonMata = document.getElementById("ikonMata");
+    window.addEventListener("scroll", function () {
+        if (!ticking) {
+            requestAnimationFrame(onScroll);
+            ticking = true;
+        }
+    }, { passive: true });
+
+    // Jalankan sekali saat load
+    onScroll();
+
+    // =========================================================
+    // 5. SHOW/HIDE PASSWORD (Login Page)
+    // =========================================================
+    var btnToggle     = document.getElementById("btnToggle");
+    var inputPassword = document.getElementById("inputPassword");
+    var ikonMata      = document.getElementById("ikonMata");
 
     if (btnToggle && inputPassword && ikonMata) {
         btnToggle.addEventListener("click", function () {
             if (inputPassword.type === "password") {
                 inputPassword.type = "text";
-                ikonMata.classList.replace("fa-eye", "fa-eye-slash");
+                ikonMata.classList.remove("fa-eye");
+                ikonMata.classList.add("fa-eye-slash");
             } else {
                 inputPassword.type = "password";
-                ikonMata.classList.replace("fa-eye-slash", "fa-eye");
+                ikonMata.classList.remove("fa-eye-slash");
+                ikonMata.classList.add("fa-eye");
             }
         });
     }

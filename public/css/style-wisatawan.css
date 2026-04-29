@@ -14,7 +14,12 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    /* scroll-behavior di-handle oleh JavaScript agar durasinya bisa diatur lambat */
+}
+
+@keyframes wmPageFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 body {
@@ -22,17 +27,19 @@ body {
     background-color: var(--hnb-navy);
     color: #ffffff;
     overflow-x: hidden;
-    transition: var(--transition);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    animation: wmPageFadeIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* 2. NAVBAR & ACTION BOX (FIX TERPOTONG) */
+/* 2. NAVBAR & ACTION BOX */
 .navbar-desktop-premier {
-    background: rgba(17, 34, 64, 0.85); /* Navy transparan */
+    background: rgba(17, 34, 64, 0.92);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 15px 0 !important; /* Spasi agar tidak mepet atas */
-    transition: var(--transition);
+    padding: 15px 0 !important;
+    /* Selalu fix di atas, tanpa animasi scroll */
+    transition: background 0.3s ease;
 }
 
 .nav-pill-link {
@@ -65,15 +72,12 @@ body {
     margin: 0 10px;
 }
 
-/* Update pada public/css/style-wisatawan.css */
 
 /* --- 3. HERO SECTION (SLANTED) --- */
-/* Update pada public/css/style-wisatawan.css */
-
 .hero-slanted {
     position: relative;
     width: 100%;
-    min-height: 70vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     background: linear-gradient(
@@ -81,9 +85,8 @@ body {
         var(--hnb-navy) 0%,
         var(--hnb-navy-light) 100%
     );
-
-    /* Ubah dari 0px ke 40px untuk jarak yang lebih pas sesuai garis merah */
-    padding-top: 70px !important;
+    /* Padding top untuk clearance navbar yang selalu fix */
+    padding-top: 80px !important;
     padding-bottom: 150px;
     clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
 }
@@ -152,7 +155,44 @@ section.section-scroll {
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    transition: var(--transition);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
+}
+
+/* Hover lift effect pada card */
+.glass-premier:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    border-color: rgba(255, 122, 0, 0.25);
+}
+
+/* Scroll Indicator di hero */
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.6;
+    animation: scrollBounce 2s infinite ease-in-out;
+    cursor: pointer;
+    /* Transition untuk fade-out saat scroll */
+    transition: opacity 0.4s ease;
+}
+.scroll-indicator span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+@keyframes scrollBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(8px); }
 }
 
 /* 6. FORMS & INPUTS */
@@ -206,12 +246,19 @@ body.light-mode .teks-subjudul {
 
 /* Navbar Light Mode */
 body.light-mode .navbar-desktop-premier {
-    background: rgba(255, 255, 255, 0.9);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 20px rgba(17, 34, 64, 0.08);
 }
 
 body.light-mode .nav-pill-link {
     color: #475569 !important;
+}
+
+body.light-mode .nav-pill-link:hover,
+body.light-mode .nav-pill-link.active {
+    color: var(--hnb-orange) !important;
 }
 
 /* Hero Light Mode Tetap Berkarakter */

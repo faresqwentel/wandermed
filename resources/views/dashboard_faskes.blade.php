@@ -40,6 +40,12 @@
 
 @section('content')
 
+{{-- Data URLs untuk dashboard-faskes.js (menghindari Blade route helper di file .js statis) --}}
+<div id="faskesApp"
+    data-url-status="{{ route('faskes.status.update') }}"
+    data-url-fasilitas="{{ route('faskes.fasilitas.update') }}"
+    style="display:contents;">
+
 <!-- SESSION ALERT -->
 @if(session('success'))
 <div class="wm-alert success mb-3" style="background: rgba(28,200,138,0.12); border-left: 4px solid #1cc88a; padding: 12px 18px; border-radius: 8px; color: #1cc88a; font-size:13px;">
@@ -392,161 +398,9 @@
 
 @endsection
 
+</div>{{-- /faskesApp --}}
+
 @push('scripts')
-<script>
-    // =========================================================
-    // TAB NAVIGATION (Sidebar Click → Show Section)
-    // =========================================================
-    const faskesNavMap = {
-        'navDashboard':    'sectionDashboard',
-        'navKontrolStatus':'sectionKontrolStatus',
-        'navFasilitas':    'sectionFasilitas',
-        'navProfilFaskes': 'sectionProfil',
-        'navKoordinat':    'sectionKoordinat',
-    };
-
-    function switchSection(navId, sectionId) {
-        // Deactivate all nav links
-        document.querySelectorAll('.wm-nav-link').forEach(l => l.classList.remove('active'));
-        // Hide all sections
-        document.querySelectorAll('.faskes-section').forEach(s => s.style.display = 'none');
-        // Activate selected
-        const navEl = document.getElementById(navId);
-        if (navEl) navEl.classList.add('active');
-        const secEl = document.getElementById(sectionId);
-        if (secEl) secEl.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    document.querySelectorAll('.wm-nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const navId = this.id;
-            if (!faskesNavMap[navId]) return; // external links (peta, logout)
-            e.preventDefault();
-            switchSection(navId, faskesNavMap[navId]);
-        });
-    });
-
-    // =========================================================
-    // AJAX Toggle Status
-    // =========================================================
-    function handleAjaxToggle(field, value, switchId, labelId, textOn, textOff, colorOn, colorOff, toastMsg) {
-        const sw = document.getElementById(switchId);
-        const label = document.getElementById(labelId);
-        if (sw.checked) {
-            label.textContent = textOn;
-            label.style.color = colorOn;
-        } else {
-            label.textContent = textOff;
-            label.style.color = colorOff;
-        }
-
-        fetch("{{ route('faskes.status.update') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ field: field, value: value })
-        })
-        .then(r => r.json())
-        .then(data => {
-            const now = new Date();
-            const el = document.getElementById('lastUpdatedLabel');
-            if (el) el.innerHTML = `<i class="fas fa-clock"></i> Diperbarui ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} WIB`;
-            showToast(data.message || toastMsg);
-            setTimeout(() => location.reload(), 1500);
-        })
-        .catch(e => {
-            console.error(e);
-            showToast('Gagal menyimpan. Coba lagi.', 'danger');
-        });
-    }
-
-    // =========================================================
-    // Simpan Pengumuman
-    // =========================================================
-    function savePengumuman() {
-        const text = document.getElementById('inputPengumuman').value;
-        fetch("{{ route('faskes.status.update') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ field: 'pengumuman', value: text })
-        })
-        .then(r => r.json())
-        .then(data => {
-            showToast("Pengumuman berhasil disiarkan ke peta!");
-            setTimeout(() => location.reload(), 1500);
-        })
-        .catch(() => showToast('Gagal menyimpan pengumuman.', 'danger'));
-    }
-
-    // =========================================================
-    // Toggle Checklist Fasilitas (UI Only)
-    // =========================================================
-    function toggleCheck(item) {
-        item.classList.toggle('checked');
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        checkbox.checked = !checkbox.checked;
-    }
-
-    // =========================================================
-    // Simpan Fasilitas via AJAX
-    // =========================================================
-    function saveFasilitas() {
-        const checkboxes = document.querySelectorAll('#fasilitasGrid input[type="checkbox"]:checked');
-        const checkedValues = Array.from(checkboxes).map(cb => cb.value);
-
-        fetch("{{ route('faskes.fasilitas.update') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ layanan_tersedia: checkedValues })
-        })
-        .then(r => r.json())
-        .then(data => {
-            showToast(data.message || "Fasilitas diperbarui dan tampil di peta!");
-            setTimeout(() => location.reload(), 1500);
-        })
-        .catch(() => showToast('Gagal menyimpan fasilitas.', 'danger'));
-    }
-
-    // =========================================================
-    // GPS Auto-fill Koordinat
-    // =========================================================
-    function fillGPS() {
-        if (!navigator.geolocation) {
-            showToast('Browser tidak mendukung GPS.', 'danger');
-            return;
-        }
-        showToast('Mendeteksi lokasi GPS...');
-        navigator.geolocation.getCurrentPosition(pos => {
-            document.getElementById('quickLat').value = pos.coords.latitude.toFixed(6);
-            document.getElementById('quickLng').value = pos.coords.longitude.toFixed(6);
-            showToast('Koordinat GPS berhasil diisi! Klik Simpan untuk menyimpan.');
-        }, () => {
-            showToast('Gagal mendapat lokasi GPS. Izin ditolak atau tidak tersedia.', 'danger');
-        });
-    }
-
-    function getCurrentLocation() {
-        if (!navigator.geolocation) {
-            showToast('Browser tidak mendukung GPS.', 'danger');
-            return;
-        }
-        showToast('Mendeteksi lokasi GPS...');
-        navigator.geolocation.getCurrentPosition(pos => {
-            document.getElementById('inputLat').value = pos.coords.latitude.toFixed(6);
-            document.getElementById('inputLng').value = pos.coords.longitude.toFixed(6);
-            showToast('Koordinat GPS telah diisi. Klik "Simpan & Perbarui ke Peta".');
-        }, () => {
-            showToast('Gagal mendapat lokasi GPS.', 'danger');
-        });
-    }
-</script>
+<script src="{{ asset('js/dashboard-faskes.js') }}"></script>
 @endpush
+

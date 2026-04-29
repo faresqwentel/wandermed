@@ -18,7 +18,11 @@
     <link href="{{ asset('css/style-wisatawan.css') }}" rel="stylesheet">
     <link href="{{ asset('css/wisatawan-layout.css') }}" rel="stylesheet">
 
+    <!-- AOS Animate On Scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
     @stack('styles')
+
 </head>
 
 
@@ -39,6 +43,12 @@
 
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- WanderMed Animations -->
+    <script src="{{ asset('js/animations.js') }}"></script>
 
     @stack('scripts')
 

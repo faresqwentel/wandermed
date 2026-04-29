@@ -26,9 +26,15 @@
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item">
                     <div class="nav-action-box shadow-sm">
-                        <a href="/login" class="btn btn-sm text-white font-weight-bold px-3 py-2 border-0" style="font-size: 13px;">
-                            Login <i class="fas fa-sign-in-alt ml-1 text-hnb-orange"></i>
-                        </a>
+                        @if(session('auth_user'))
+                            <a href="{{ url('/login') }}" class="btn btn-sm text-white font-weight-bold px-3 py-2 border-0" style="font-size: 13px;">
+                                Enter <i class="fas fa-door-open ml-1 text-hnb-orange"></i>
+                            </a>
+                        @else
+                            <a href="/login" class="btn btn-sm text-white font-weight-bold px-3 py-2 border-0" style="font-size: 13px;">
+                                Login <i class="fas fa-sign-in-alt ml-1 text-hnb-orange"></i>
+                            </a>
+                        @endif
                         <div class="v-separator"></div>
                         <a href="#" class="btn btn-sm text-danger font-weight-bold px-3 py-2 border-0" data-toggle="modal" data-target="#reportModal" style="font-size: 13px;">
                             <i class="fas fa-flag mr-1"></i> Lapor
@@ -41,6 +47,7 @@
                     </a>
                 </li>
             </ul>
+
         </div>
     </div>
 </nav>

@@ -1,4 +1,4 @@
-{{-- ============================================================
+﻿{{-- ============================================================
      Dashboard Wisatawan – WanderMed
      Layout: theme/dashboard_layout.blade.php (Kustom, no SB Admin)
      ============================================================ --}}
@@ -204,80 +204,5 @@
 @endsection
 
 @push('scripts')
-<script>
-    // Highlight baris tabel berdasarkan label
-    document.querySelectorAll('#historyTable tbody tr').forEach(row => {
-        const label = row.getAttribute('data-label');
-        if (label === 'green') row.style.borderLeft = '4px solid #1cc88a';
-        if (label === 'yellow') row.style.borderLeft = '4px solid #f6c23e';
-    });
-
-    // Mulai edit catatan inline
-    function startEditNote(viewEl) {
-        const td = viewEl.closest('td');
-        const editEl = td.querySelector('.note-edit-active');
-        const input = editEl.querySelector('input');
-        input.value = viewEl.querySelector('.note-text').textContent;
-        viewEl.style.display = 'none';
-        editEl.classList.add('show');
-        input.focus();
-    }
-
-    // Simpan catatan (Fetch API)
-    function saveNote(btn) {
-        const td = btn.closest('td');
-        const editEl = btn.closest('.note-edit-active');
-        const viewEl = td.querySelector('.note-view');
-        const input = editEl.querySelector('input');
-        
-        const noteId = input.getAttribute('data-id');
-        const newText = input.value;
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-        // Tampilkan loading state jika mau
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-        fetch(`/wisatawan/catatan/${noteId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({ catatan_pribadi: newText })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                viewEl.querySelector('.note-text').textContent = newText || 'Belum ada catatan...';
-                editEl.classList.remove('show');
-                viewEl.style.display = '';
-                showToast(data.message);
-                setTimeout(() => location.reload(), 1500);
-            }
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-        })
-        .catch(err => {
-            console.error(err);
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            showToast('Terjadi kesalahan saat menyimpan.');
-        });
-    }
-
-    // Batal edit
-    function cancelNote(btn) {
-        const td = btn.closest('td');
-        td.querySelector('.note-edit-active').classList.remove('show');
-        td.querySelector('.note-view').style.display = '';
-    }
-
-    // Quick nav ke profil / medis
-    document.getElementById('navProfileLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('sectionProfil').scrollIntoView({ behavior: 'smooth' });
-    });
-    document.getElementById('navMedisLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('sectionMedis').scrollIntoView({ behavior: 'smooth' });
-    });
-</script>
+<script src="{{ asset('js/dashboard-wisatawan.js') }}"></script>
 @endpush

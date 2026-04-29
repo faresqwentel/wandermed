@@ -21,6 +21,9 @@
     <!-- WanderMed Dashboard CSS Kustom (tanpa SB Admin) -->
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
 
+    <!-- AOS Animate On Scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+
     @stack('styles')
 
     {{-- Dark Mode Init: Terapkan class SEBELUM render untuk hindari flash --}}
@@ -139,52 +142,14 @@
 <!-- Bootstrap 4 Bundle JS (mencakup Popper.js dan Modal component) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 
-<!-- Global JS: Toggle Sidebar + Toast Helper + Dark Mode -->
-<script>
-    // Fungsi buka/tutup sidebar di layar kecil
-    function toggleSidebar() {
-        const sidebar = document.getElementById('wmSidebar');
-        const overlay = document.getElementById('wmOverlay');
-        sidebar.classList.toggle('open');
-        overlay.classList.toggle('show');
-    }
+<!-- AOS Library -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    // Fungsi global menampilkan toast notifikasi
-    function showToast(msg = 'Perubahan tersimpan!') {
-        const toast = document.getElementById('wmToast');
-        const msgEl = document.getElementById('wmToastMsg');
-        msgEl.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
+<!-- WanderMed Global JS (sidebar, toast, dark mode, page transitions) -->
+<script src="{{ asset('js/global.js') }}"></script>
 
-    // ============================================
-    // DARK MODE TOGGLE
-    // Menggunakan class 'dark' pada <html> tag
-    // Preferensi disimpan di localStorage
-    // ============================================
-    function toggleDarkMode() {
-        const html = document.documentElement;
-        const icon = document.getElementById('darkModeIcon');
-        const isDark = html.classList.toggle('dark');
-
-        // Simpan preferensi
-        localStorage.setItem('wm_dark_mode', isDark ? '1' : '0');
-
-        // Update ikon
-        if (icon) {
-            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
-
-    // Set ikon sesuai state saat ini
-    (function() {
-        const icon = document.getElementById('darkModeIcon');
-        if (icon && document.documentElement.classList.contains('dark')) {
-            icon.className = 'fas fa-sun';
-        }
-    })();
-</script>
+<!-- WanderMed Animations (AOS init, counters, stagger) -->
+<script src="{{ asset('js/animations.js') }}"></script>
 
 @stack('scripts')
 </body>
