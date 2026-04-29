@@ -22,6 +22,15 @@
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
 
     @stack('styles')
+
+    {{-- Dark Mode Init: Terapkan class SEBELUM render untuk hindari flash --}}
+    <script>
+        (function() {
+            if (localStorage.getItem('wm_dark_mode') === '1') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
 <body>
 
@@ -100,6 +109,11 @@
                 <span class="dot"></span>
             </div>
 
+            <!-- Dark Mode Toggle -->
+            <button class="wm-darkmode-btn" id="darkModeToggle" title="Ganti tema gelap/terang" onclick="toggleDarkMode()">
+                <i class="fas fa-moon" id="darkModeIcon"></i>
+            </button>
+
             <!-- Map Quick Link -->
             <a href="/peta-faskes" class="wm-btn ghost sm" title="Buka Peta">
                 <i class="fas fa-map-marked-alt"></i>
@@ -125,7 +139,7 @@
 <!-- Bootstrap 4 Bundle JS (mencakup Popper.js dan Modal component) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 
-<!-- Global JS: Toggle Sidebar + Toast Helper -->
+<!-- Global JS: Toggle Sidebar + Toast Helper + Dark Mode -->
 <script>
     // Fungsi buka/tutup sidebar di layar kecil
     function toggleSidebar() {
@@ -143,6 +157,33 @@
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
+
+    // ============================================
+    // DARK MODE TOGGLE
+    // Menggunakan class 'dark' pada <html> tag
+    // Preferensi disimpan di localStorage
+    // ============================================
+    function toggleDarkMode() {
+        const html = document.documentElement;
+        const icon = document.getElementById('darkModeIcon');
+        const isDark = html.classList.toggle('dark');
+
+        // Simpan preferensi
+        localStorage.setItem('wm_dark_mode', isDark ? '1' : '0');
+
+        // Update ikon
+        if (icon) {
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
+
+    // Set ikon sesuai state saat ini
+    (function() {
+        const icon = document.getElementById('darkModeIcon');
+        if (icon && document.documentElement.classList.contains('dark')) {
+            icon.className = 'fas fa-sun';
+        }
+    })();
 </script>
 
 @stack('scripts')

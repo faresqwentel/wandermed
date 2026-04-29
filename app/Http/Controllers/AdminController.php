@@ -212,6 +212,32 @@ class AdminController extends Controller
     }
 
     /**
+     * Menghapus data Faskes beserta akun Mitra-nya.
+     */
+    public function destroyFaskes(int $id): JsonResponse
+    {
+        try {
+            $faskes = Faskes::findOrFail($id);
+            $namaFaskes = $faskes->nama_faskes;
+
+            // Hapus akun Mitra terkait (cascade akan menghapus faskes lewat FK)
+            if ($faskes->mitra) {
+                $faskes->mitra->delete();
+            } else {
+                $faskes->delete();
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Faskes \"{$namaFaskes}\" beserta akun mitra berhasil dihapus."
+            ]);
+        } catch (Exception $e) {
+            Log::error("Destroy Faskes failed: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus data faskes.'], 500);
+        }
+    }
+
+    /**
      * Memperbarui data lokasi pariwisata.
      */
     public function updatePariwisataData(Request $request, int $id): JsonResponse
@@ -228,13 +254,16 @@ class AdminController extends Controller
         ]);
 
         $wisata->update([
-            'latitude'  => $request->latitude,
-            'longitude' => $request->longitude,
+            'latitude'    => $request->latitude,
+            'longitude'   => $request->longitude,
+            'alamat'      => $request->input('alamat', $wisata->alamat),
+            'harga_tiket' => $request->input('harga_tiket', $wisata->harga_tiket),
+            'deskripsi'   => $request->input('deskripsi', $wisata->deskripsi),
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => "Data Pariwisata berhasil diperbarui."
+            'message' => "Data Pariwisata \"{$wisata->nama_wisata}\" berhasil diperbarui."
         ]);
     }
 

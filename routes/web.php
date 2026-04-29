@@ -133,6 +133,9 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
     // Toggle status operasional faskes
     Route::post('/admin/faskes/{id}/toggle-status', [AdminController::class, 'toggleStatusFaskes'])
          ->name('admin.faskes.toggle-status');
+    // Hapus data faskes (admin)
+    Route::delete('/admin/faskes/{id}', [AdminController::class, 'destroyFaskes'])
+         ->name('admin.faskes.destroy');
 });
 
 // Rute lama untuk backward compatibility (redirect ke rute baru)

@@ -419,7 +419,10 @@ button { cursor: pointer; }
 .wm-badge.green  { background: rgba(28, 200, 138, 0.15); color: #1cc88a; border: 1px solid rgba(28, 200, 138, 0.3); }
 .wm-badge.yellow { background: rgba(246, 194, 62, 0.15);  color: #f6c23e; border: 1px solid rgba(246, 194, 62, 0.3); }
 .wm-badge.red    { background: rgba(231, 74, 59, 0.15);   color: #e74a3b; border: 1px solid rgba(231, 74, 59, 0.3); }
+.wm-badge.danger { background: rgba(231, 74, 59, 0.15);   color: #e74a3b; border: 1px solid rgba(231, 74, 59, 0.3); }
 .wm-badge.blue   { background: rgba(78, 115, 223, 0.15);  color: #4e73df; border: 1px solid rgba(78, 115, 223, 0.3); }
+.wm-badge.info   { background: rgba(54, 185, 204, 0.15);  color: #36b9cc; border: 1px solid rgba(54, 185, 204, 0.3); }
+.wm-badge.teal   { background: rgba(54, 185, 204, 0.15);  color: #36b9cc; border: 1px solid rgba(54, 185, 204, 0.3); }
 .wm-badge.orange { background: rgba(255, 122, 0, 0.15);   color: var(--orange); border: 1px solid var(--orange-glow); }
 
 /* ==============================
@@ -431,6 +434,7 @@ button { cursor: pointer; }
     font-size: 13px; font-weight: 600;
     border: none; transition: var(--transition);
     font-family: 'Poppins', sans-serif;
+    cursor: pointer;
 }
 .wm-btn.orange {
     background: var(--orange); color: #fff;
@@ -446,8 +450,9 @@ button { cursor: pointer; }
 .wm-btn.success { background: rgba(28, 200, 138, 0.15); color: #1cc88a; border: 1px solid rgba(28, 200, 138, 0.3); }
 .wm-btn.success:hover { background: rgba(28, 200, 138, 0.25); }
 .wm-btn.danger { background: rgba(231, 74, 59, 0.15); color: #e74a3b; border: 1px solid rgba(231, 74, 59, 0.3); }
-.wm-btn.danger:hover { background: rgba(231, 74, 59, 0.25); }
+.wm-btn.danger:hover { background: rgba(231, 74, 59, 0.28); transform: translateY(-1px); }
 .wm-btn.info { background: rgba(54, 185, 204, 0.15); color: #36b9cc; border: 1px solid rgba(54, 185, 204, 0.3); }
+.wm-btn.info:hover { background: rgba(54, 185, 204, 0.28); transform: translateY(-1px); }
 .wm-btn.sm { padding: 6px 14px; font-size: 12px; border-radius: 8px; }
 
 /* ==============================
@@ -627,3 +632,216 @@ button { cursor: pointer; }
     z-index: 998;
 }
 .wm-overlay.show { display: block; }
+
+/* ==============================
+ * 19. DARK MODE
+ * Toggle via class "dark" pada <html>
+ * Diaktifkan oleh JS di dashboard_layout.blade.php
+ * Preferensi disimpan di localStorage key: wm_dark_mode
+ * ============================== */
+html.dark {
+    --navy:         #0f172a;
+    --navy-light:   #1e293b;
+    --navy-card:    #1e293b;
+    --navy-hover:   #334155;
+    --text-primary:   #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted:     #64748b;
+    --border:       #334155;
+    --orange-glow:  rgba(255, 122, 0, 0.25);
+}
+
+/* Body & Background */
+html.dark body {
+    background-color: var(--navy);
+    color: var(--text-primary);
+}
+
+/* Sidebar dark */
+html.dark .wm-sidebar {
+    background: var(--navy-light);
+    border-right-color: var(--border);
+}
+html.dark .wm-sidebar-brand { border-bottom-color: var(--border); }
+html.dark .wm-sidebar-footer { border-top-color: var(--border); }
+html.dark .wm-nav-link { color: var(--text-secondary); }
+html.dark .wm-nav-link:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+html.dark .wm-nav-link.active { background: var(--orange-glow); color: var(--orange); }
+
+/* Topbar dark */
+html.dark .wm-topbar {
+    background: var(--navy-light);
+    border-bottom-color: var(--border);
+}
+html.dark .wm-search input {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+html.dark .wm-topbar-icon {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+html.dark .wm-topbar-icon:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+html.dark .wm-topbar-icon .dot { border-color: var(--navy-light); }
+
+/* Cards dark */
+html.dark .wm-card {
+    background: var(--navy-card);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+html.dark .wm-card-header { border-bottom-color: var(--border); }
+
+/* Stat cards dark */
+html.dark .wm-stat-card {
+    background: var(--navy-card);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Tables dark */
+html.dark .wm-table thead th { background: rgba(255,255,255,0.03); color: var(--text-secondary); }
+html.dark .wm-table tbody tr { border-bottom-color: var(--border); }
+html.dark .wm-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+html.dark .wm-table tbody td { color: var(--text-secondary); }
+html.dark .wm-table tbody td.bold { color: var(--text-primary); }
+
+/* Form controls dark */
+html.dark .wm-input,
+html.dark .wm-select,
+html.dark .wm-textarea {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+html.dark .wm-input::placeholder,
+html.dark .wm-textarea::placeholder { color: var(--text-muted); }
+html.dark .wm-input:focus,
+html.dark .wm-select:focus,
+html.dark .wm-textarea:focus {
+    border-color: rgba(255,122,0,0.5);
+    background: rgba(255,122,0,0.05);
+}
+
+/* Buttons dark */
+html.dark .wm-btn.ghost {
+    background: rgba(255,255,255,0.07);
+    color: var(--text-secondary);
+}
+html.dark .wm-btn.ghost:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
+
+/* Toggle row dark */
+html.dark .wm-toggle-row {
+    background: rgba(255,255,255,0.03);
+    border-color: var(--border);
+}
+html.dark .wm-toggle-row:hover { border-color: rgba(255,255,255,0.15); }
+
+/* Checkbox items dark */
+html.dark .wm-check-item {
+    background: rgba(255,255,255,0.03);
+    border-color: var(--border);
+}
+html.dark .wm-check-item:hover { border-color: rgba(255,255,255,0.18); }
+html.dark .wm-check-item.checked { background: rgba(28,200,138,0.08); border-color: rgba(28,200,138,0.3); }
+html.dark .wm-check-box { border-color: var(--border); }
+
+/* Toast dark */
+html.dark .wm-toast {
+    background: var(--navy-card);
+    border-color: var(--border);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+/* Nav link + logout */
+html.dark .wm-logout-btn {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+/* User mini */
+html.dark .wm-user-mini:hover { background: rgba(255,255,255,0.04); }
+
+/* Dark Mode Toggle Button */
+.wm-darkmode-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 15px;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+.wm-darkmode-btn:hover {
+    background: var(--orange-glow);
+    color: var(--orange);
+    border-color: rgba(255,122,0,0.3);
+}
+
+/* Smooth transition untuk dark mode */
+body, .wm-sidebar, .wm-topbar, .wm-card, .wm-stat-card,
+.wm-input, .wm-select, .wm-textarea, .wm-table, .wm-toast,
+.wm-nav-link, .wm-toggle-row, .wm-check-item {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+}
+
+/* ==============================
+ * DARK MODE – MODAL EDIT FASKES & PARIWISATA
+ * ============================== */
+html.dark .modal-content {
+    background: #1a2035 !important;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+html.dark .modal-body {
+    background: #1a2035 !important;
+    color: var(--text-primary);
+}
+html.dark .modal-body label {
+    color: #a3aed1 !important;
+}
+html.dark .modal-body textarea,
+html.dark .modal-body input[type="number"],
+html.dark .modal-body input[type="text"],
+html.dark .modal-body select {
+    background: rgba(255,255,255,0.05) !important;
+    border-color: rgba(255,255,255,0.1) !important;
+    color: var(--text-primary) !important;
+}
+html.dark .modal-body textarea:focus,
+html.dark .modal-body input:focus,
+html.dark .modal-body select:focus {
+    border-color: rgba(255,122,0,0.5) !important;
+}
+/* Footer modal dark */
+html.dark [id^="modalEdit"] [style*="background:#f8f9fa"] {
+    background: rgba(255,255,255,0.04) !important;
+    border-top-color: rgba(255,255,255,0.08) !important;
+}
+html.dark [id^="modalEdit"] [data-dismiss="modal"] {
+    background: rgba(255,255,255,0.06) !important;
+    color: var(--text-secondary) !important;
+    border-color: rgba(255,255,255,0.1) !important;
+}
+/* Pesan Admin box dark mode */
+html.dark [style*="background:#fffbeb"] {
+    background: rgba(246,194,62,0.07) !important;
+    border-color: rgba(246,194,62,0.2) !important;
+}
+html.dark [style*="background:#fffff0"] {
+    background: rgba(246,194,62,0.05) !important;
+    border-color: rgba(246,194,62,0.15) !important;
+}
+/* Tabel row hover di light mode lebih jelas */
+.wm-table tbody tr:hover { background: rgba(43, 54, 116, 0.04); }
+/* Card header tidak wrap, search box tetap di kanan */
+.wm-card-header {
+    flex-wrap: nowrap;
+    gap: 12px;
+}

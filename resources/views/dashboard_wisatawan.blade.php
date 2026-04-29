@@ -252,6 +252,7 @@
                 editEl.classList.remove('show');
                 viewEl.style.display = '';
                 showToast(data.message);
+                setTimeout(() => location.reload(), 1500);
             }
             btn.innerHTML = '<i class="fas fa-check"></i>';
         })

@@ -2,17 +2,9 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<style>
-    #miniMapPariwisata {
-        height: 220px !important;
-        width: 100% !important;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.1);
-        z-index: 1;
-    }
-    .leaflet-container { background: #1a2035; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/daftar-pariwisata.css') }}">
 @endpush
+
 
 @section('content')
     @include('theme.navbar')

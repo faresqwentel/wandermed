@@ -112,16 +112,23 @@ class FaskesController extends Controller
             'jenis_faskes' => 'required|in:Rumah Sakit,Klinik,Apotek,Puskesmas,Lainnya',
             'alamat'       => 'required|string',
             'no_telp'      => 'nullable|string|max:20',
-            'latitude'     => 'required|numeric|between:-90,90',
-            'longitude'    => 'required|numeric|between:-180,180',
+            'latitude'     => 'nullable|numeric|between:-90,90',
+            'longitude'    => 'nullable|numeric|between:-180,180',
             'dukungan_bpjs'=> 'nullable|boolean',
         ]);
 
         $faskes = Faskes::where('mitra_id', session('auth_user.id'))->firstOrFail();
-        $faskes->update($request->only([
-            'nama_faskes', 'jenis_faskes', 'alamat', 'no_telp',
-            'latitude', 'longitude', 'dukungan_bpjs',
-        ]));
+
+        // Field profil dasar selalu diupdate
+        $data = $request->only(['nama_faskes', 'jenis_faskes', 'alamat', 'no_telp', 'dukungan_bpjs']);
+
+        // Koordinat hanya diupdate jika dikirim (dari menu Update Koordinat)
+        if ($request->filled('latitude') && $request->filled('longitude')) {
+            $data['latitude']  = $request->latitude;
+            $data['longitude'] = $request->longitude;
+        }
+
+        $faskes->update($data);
 
         return back()->with('success', 'Profil faskes berhasil diperbarui!');
     }

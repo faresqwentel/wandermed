@@ -324,95 +324,81 @@
     <div class="wm-page-header">
         <div>
             <div class="wm-page-title">Fasilitas Kesehatan</div>
-            <div class="wm-page-subtitle">Kelola lokasi, status, fasilitas, dan pesan untuk setiap mitra faskes</div>
+            <div class="wm-page-subtitle">Kelola seluruh mitra faskes — klik Detail untuk edit lokasi, BPJS, dan pesan admin</div>
         </div>
     </div>
-
-    @foreach($faskesList as $faskesItem)
-    <div class="wm-card" style="margin-bottom: 20px;" id="faskesCard-{{ $faskesItem->id }}">
-        {{-- Header Card --}}
+    <div class="wm-card">
         <div class="wm-card-header">
             <div class="wm-card-title">
-                <i class="fas fa-clinic-medical" style="color:#ff7a00;"></i>
-                {{ $faskesItem->nama_faskes }}
-                <span class="wm-badge" style="margin-left:8px;background:rgba(56,161,105,0.1);color:#38a169;border:1px solid rgba(56,161,105,0.3);font-size:10px;">
-                    {{ $faskesItem->jenis_faskes }}
-                </span>
+                <i class="fas fa-clinic-medical" style="color:#ff7a00;"></i> Daftar Mitra Faskes
+                <span class="wm-badge orange" style="margin-left:8px;font-size:10px;">{{ $faskesList->count() }} Faskes</span>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;">
-                {{-- Status Operasional --}}
-                @if($faskesItem->status_operasional == 'open')
-                    <span class="wm-badge green" id="statusBadge-{{ $faskesItem->id }}"><i class="fas fa-circle" style="font-size:8px;"></i> Buka</span>
-                @else
-                    <span class="wm-badge danger" id="statusBadge-{{ $faskesItem->id }}"><i class="fas fa-circle" style="font-size:8px;"></i> Tutup</span>
-                @endif
-                {{-- Toggle Status Operasional --}}
-                <button class="wm-btn ghost sm" onclick="toggleStatusFaskes(this, {{ $faskesItem->id }})" title="Toggle Status Operasional">
-                    <i class="fas fa-power-off"></i>
-                </button>
+            <div style="position:relative;flex:0 0 200px;">
+                <i class="fas fa-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px;"></i>
+                <input type="text" id="filterFaskesInput" class="wm-input" style="padding-left:32px;height:34px;font-size:12px;" placeholder="Cari faskes..." onkeyup="filterTable('filterFaskesInput','faskesTable','col-nama-faskes')">
             </div>
         </div>
-
-        <div class="modal-body" style="padding: 16px 20px;">
-            <div class="row">
-                {{-- Kolom Kiri: Koordinat + BPJS --}}
-                <div class="col-md-6">
-                    <div style="margin-bottom:16px;">
-                        <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">
-                            <i class="fas fa-map-pin" style="color:#ff7a00;"></i> Koordinat Lokasi
-                        </label>
-                        <div style="display:flex;gap:8px;align-items:center;">
-                            <input type="number" step="any" id="lat-{{ $faskesItem->id }}" value="{{ $faskesItem->latitude }}"
-                                class="wm-input" style="width:130px;padding:6px 10px;font-size:12px;" placeholder="Latitude">
-                            <input type="number" step="any" id="lng-{{ $faskesItem->id }}" value="{{ $faskesItem->longitude }}"
-                                class="wm-input" style="width:130px;padding:6px 10px;font-size:12px;" placeholder="Longitude">
-                        </div>
-                    </div>
-                    <div style="margin-bottom:16px;">
-                        <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">
-                            <i class="fas fa-id-card" style="color:#3182ce;"></i> Dukungan BPJS
-                        </label>
-                        <select id="bpjs-{{ $faskesItem->id }}" class="wm-input" style="font-size:12px;padding:6px 10px;">
-                            <option value="1" {{ ($faskesItem->dukungan_bpjs ?? false) ? 'selected' : '' }}>✅ Menerima BPJS</option>
-                            <option value="0" {{ !($faskesItem->dukungan_bpjs ?? false) ? 'selected' : '' }}>❌ Non-BPJS</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">
-                            <i class="fas fa-stethoscope" style="color:#805ad5;"></i> Layanan / Fasilitas Utama
-                        </label>
-                        <textarea id="layanan-{{ $faskesItem->id }}" class="wm-input" rows="2"
-                            style="font-size:12px;padding:8px 10px;resize:vertical;width:100%;"
-                            placeholder="Contoh: IGD 24 Jam, Poli Umum, Rawat Inap...">{{ $faskesItem->pengumuman ?? '' }}</textarea>
-                    </div>
-                </div>
-
-                {{-- Kolom Kanan: Pesan Admin --}}
-                <div class="col-md-6">
-                    <div style="background:#fffbeb;border:1px solid #f6e05e;border-radius:10px;padding:14px;margin-bottom:16px;">
-                        <label style="font-size:11px;font-weight:700;color:#d69e2e;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px;">
-                            <i class="fas fa-comment-dots"></i> Pesan untuk Mitra Faskes
-                        </label>
-                        <textarea id="pesan-{{ $faskesItem->id }}" rows="4"
-                            style="width:100%;border:1px solid #f6e05e;border-radius:8px;padding:10px;font-size:12px;background:#fffff0;resize:vertical;font-family:inherit;"
-                            placeholder="Ketik catatan/instruksi untuk mitra ini... (akan tampil di dashboard mereka)">{{ $faskesItem->pesan_admin ?? '' }}</textarea>
-                        @if($faskesItem->pesan_admin)
-                        <div style="font-size:10px;color:#d69e2e;margin-top:4px;"><i class="fas fa-info-circle"></i> Pesan terakhir telah dikirimkan</div>
-                        @endif
-                    </div>
-                    <div style="display:flex;justify-content:flex-end;gap:8px;">
-                        <button class="wm-btn ghost sm" onclick="resetFaskes({{ $faskesItem->id }})">
-                            <i class="fas fa-undo"></i> Reset
-                        </button>
-                        <button class="wm-btn orange" onclick="saveFaskesData(this, {{ $faskesItem->id }})" style="padding:8px 20px;font-size:13px;">
-                            <i class="fas fa-save"></i> Simpan Semua
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="wm-table-wrap">
+            <table class="wm-table" id="faskesTable">
+                <thead>
+                    <tr>
+                        <th>Nama Faskes</th>
+                        <th>Jenis</th>
+                        <th>Alamat</th>
+                        <th>Status</th>
+                        <th>BPJS</th>
+                        <th class="text-center" width="130">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($faskesList as $faskesItem)
+                    <tr id="faskesTableRow-{{ $faskesItem->id }}">
+                        <td class="bold col-nama-faskes">
+                            <i class="fas fa-hospital-alt" style="color:#ff7a00;margin-right:6px;"></i>
+                            {{ $faskesItem->nama_faskes }}
+                        </td>
+                        <td>
+                            <span class="wm-badge" style="background:rgba(56,161,105,0.1);color:#38a169;border:1px solid rgba(56,161,105,0.3);font-size:10px;">
+                                {{ $faskesItem->jenis_faskes }}
+                            </span>
+                        </td>
+                        <td style="color:var(--text-muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            {{ $faskesItem->alamat ?? '-' }}
+                        </td>
+                        <td id="statusBadge-{{ $faskesItem->id }}">
+                            @if($faskesItem->status_operasional == 'open')
+                                <span class="wm-badge green"><i class="fas fa-circle" style="font-size:8px;"></i> Buka</span>
+                            @else
+                                <span class="wm-badge danger"><i class="fas fa-circle" style="font-size:8px;"></i> Tutup</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($faskesItem->dukungan_bpjs)
+                                <span class="wm-badge info" style="font-size:10px;">✅ BPJS</span>
+                            @else
+                                <span class="wm-badge" style="font-size:10px;background:rgba(255,255,255,0.06);color:var(--text-muted);border:1px solid var(--border);">❌ Non-BPJS</span>
+                            @endif
+                        </td>
+                        <td style="text-align:center;white-space:nowrap;">
+                            <div style="display:inline-flex;align-items:center;gap:6px;">
+                                <button class="wm-btn info sm" onclick='openEditFaskes(@json($faskesItem))' title="Edit Detail">
+                                    <i class="fas fa-edit"></i> Detail
+                                </button>
+                                <button class="wm-btn danger sm" onclick="deleteFaskes(this, {{ $faskesItem->id }}, '{{ addslashes($faskesItem->nama_faskes) }}')" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center" style="padding:20px;color:#888;">Belum ada mitra faskes yang terdaftar.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-    @endforeach
 </div>
 
 {{-- ==================== SECTION: DATA MASTER PARIWISATA ==================== --}}
@@ -420,40 +406,50 @@
     <div class="wm-page-header">
         <div>
             <div class="wm-page-title">Destinasi Pariwisata</div>
-            <div class="wm-page-subtitle">Data destinasi wisata terverifikasi (edit koordinat atau hapus)</div>
+            <div class="wm-page-subtitle">Kelola seluruh destinasi wisata terverifikasi — klik Detail untuk ubah peta lokasi & deskripsi</div>
         </div>
     </div>
     <div class="wm-card">
         <div class="wm-card-header">
             <div class="wm-card-title"><i class="fas fa-mountain" style="color:#805ad5;"></i> Data Destinasi Terverifikasi</div>
+            <div style="position:relative;flex:0 0 200px;">
+                <i class="fas fa-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px;"></i>
+                <input type="text" id="filterWisataInput" class="wm-input" style="padding-left:32px;height:34px;font-size:12px;" placeholder="Cari destinasi..." onkeyup="filterTable('filterWisataInput','wisataTable','col-nama-wisata')">
+            </div>
         </div>
         <div class="wm-table-wrap">
-            <table class="wm-table">
+            <table class="wm-table" id="wisataTable">
                 <thead>
                     <tr>
-                        <th>Nama Destinasi</th><th>Kategori</th><th>Pengelola</th>
-                        <th>Latitude</th><th>Longitude</th><th class="text-center">Aksi</th>
+                        <th>Nama Destinasi</th>
+                        <th>Kategori</th>
+                        <th>Alamat</th>
+                        <th>Pengelola</th>
+                        <th class="text-center" width="130">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($wisataApproved ?? [] as $wi)
                     <tr id="wisataMasterRow-{{ $wi->id }}">
-                        <td class="bold">{{ $wi->nama_wisata }}</td>
+                        <td class="bold col-nama-wisata">{{ $wi->nama_wisata }}</td>
                         <td><span class="wm-badge" style="background:rgba(128,90,213,0.1);color:#805ad5;border:1px solid rgba(128,90,213,0.3);">{{ $wi->kategori }}</span></td>
-                        <td style="color: var(--text-muted);">{{ $wi->nama_pengelola }}</td>
-                        <td><input type="number" step="any" id="wlat-{{ $wi->id }}" value="{{ $wi->latitude }}" class="wm-input" style="width:110px;padding:4px;font-size:12px;"></td>
-                        <td><input type="number" step="any" id="wlng-{{ $wi->id }}" value="{{ $wi->longitude }}" class="wm-input" style="width:110px;padding:4px;font-size:12px;"></td>
-                        <td style="text-align:center;">
-                            <button class="wm-btn orange sm" onclick="updateWisataLokasi(this, {{ $wi->id }})">
-                                <i class="fas fa-save"></i>
-                            </button>
-                            <button class="wm-btn danger sm" onclick="deletePariwisata(this, {{ $wi->id }}, '{{ addslashes($wi->nama_wisata) }}')" style="margin-left:6px;">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        <td style="color:var(--text-muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            {{ $wi->alamat ?? '-' }}
+                        </td>
+                        <td style="color:var(--text-muted);">{{ $wi->nama_pengelola }}</td>
+                        <td style="text-align:center;white-space:nowrap;">
+                            <div style="display:inline-flex;align-items:center;gap:6px;">
+                                <button class="wm-btn info sm" onclick='openEditPariwisata(@json($wi))' title="Edit Detail">
+                                    <i class="fas fa-edit"></i> Detail
+                                </button>
+                                <button class="wm-btn danger sm" onclick="deletePariwisata(this, {{ $wi->id }}, '{{ addslashes($wi->nama_wisata) }}')" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="text-center" style="padding: 20px; color: #888;">Belum ada destinasi yang disetujui.</td></tr>
+                    <tr><td colspan="5" class="text-center" style="padding: 20px; color: #888;">Belum ada destinasi yang disetujui.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -654,6 +650,148 @@
     </div>
 </div>
 
+{{-- ==================== MODAL: EDIT DATA FASKES ==================== --}}
+<div class="modal fade" id="modalEditFaskes" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" style="background:#ffffff;border:none;border-radius:16px;box-shadow:0 25px 60px rgba(43,54,116,0.2);overflow:hidden;">
+            {{-- Header --}}
+            <div style="background:linear-gradient(135deg,#ff7a00 0%,#e53e3e 100%);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="width:42px;height:42px;background:rgba(255,255,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-clinic-medical" style="color:#fff;font-size:18px;"></i>
+                    </div>
+                    <div>
+                        <div style="color:#fff;font-weight:700;font-size:16px;">Edit Data Faskes</div>
+                        <div style="color:rgba(255,255,255,0.8);font-size:12px;" id="editFaskesNamaLabel">-</div>
+                    </div>
+                </div>
+                <button type="button" data-dismiss="modal" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:20px;line-height:1;">&times;</button>
+            </div>
+            {{-- Body --}}
+            <div class="modal-body" style="padding:24px;background:#ffffff;">
+                <div class="row">
+                    {{-- Kolom Kiri: Koordinat + BPJS --}}
+                    <div class="col-md-6">
+                        <div style="margin-bottom:16px;">
+                            <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
+                                <i class="fas fa-map-pin" style="color:#ff7a00;"></i> Koordinat Lokasi (Lat, Lng)
+                            </label>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input type="number" step="any" id="editFaskesLat" class="wm-input" style="padding:6px 10px;font-size:12px;" placeholder="Latitude">
+                                <input type="number" step="any" id="editFaskesLng" class="wm-input" style="padding:6px 10px;font-size:12px;" placeholder="Longitude">
+                            </div>
+                        </div>
+                        <div style="margin-bottom:16px;">
+                            <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
+                                <i class="fas fa-id-card" style="color:#3182ce;"></i> Dukungan BPJS
+                            </label>
+                            <select id="editFaskesBPJS" class="wm-input" style="font-size:12px;padding:6px 10px;">
+                                <option value="1">✅ Menerima BPJS</option>
+                                <option value="0">❌ Non-BPJS</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
+                                <i class="fas fa-stethoscope" style="color:#805ad5;"></i> Layanan / Fasilitas Utama
+                            </label>
+                            <textarea id="editFaskesPengumuman" class="wm-input" rows="3" style="font-size:12px;padding:8px 10px;resize:vertical;"></textarea>
+                        </div>
+                    </div>
+
+                    {{-- Kolom Kanan: Pesan Admin --}}
+                    <div class="col-md-6">
+                        <div style="background:#fffbeb;border:1px solid #f6e05e;border-radius:10px;padding:14px;margin-bottom:16px;height:100%;">
+                            <label style="font-size:11px;font-weight:700;color:#d69e2e;text-transform:uppercase;display:block;margin-bottom:8px;">
+                                <i class="fas fa-comment-dots"></i> Pesan untuk Mitra Faskes
+                            </label>
+                            <textarea id="editFaskesPesanAdmin" rows="5"
+                                style="width:100%;border:1px solid #f6e05e;border-radius:8px;padding:10px;font-size:12px;background:#fffff0;resize:vertical;"
+                                placeholder="Ketik catatan/instruksi yang akan tampil di dashboard faskes ini..."></textarea>
+                            <div style="font-size:10px;color:#d69e2e;margin-top:4px;"><i class="fas fa-info-circle"></i> Hanya terbaca oleh admin dan mitra tersebut.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Footer --}}
+            <div style="background:#f8f9fa;border-top:1px solid #e2e8f0;padding:16px 24px;display:flex;justify-content:flex-end;gap:10px;">
+                <input type="hidden" id="editFaskesId">
+                <button type="button" data-dismiss="modal" style="background:#fff;color:#707eae;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;">Batal</button>
+                <button type="button" id="btnSaveFaskesEdit" onclick="saveFaskesData()" style="background:#ff7a00;color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ==================== MODAL: EDIT DATA PARIWISATA ==================== --}}
+<div class="modal fade" id="modalEditPariwisata" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" style="background:#ffffff;border:none;border-radius:16px;box-shadow:0 25px 60px rgba(43,54,116,0.2);overflow:hidden;">
+            {{-- Header --}}
+            <div style="background:linear-gradient(135deg,#805ad5 0%,#553c9a 100%);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="width:42px;height:42px;background:rgba(255,255,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-mountain" style="color:#fff;font-size:18px;"></i>
+                    </div>
+                    <div>
+                        <div style="color:#fff;font-weight:700;font-size:16px;">Edit Data Pariwisata</div>
+                        <div style="color:rgba(255,255,255,0.8);font-size:12px;" id="editWisataNamaLabel">-</div>
+                    </div>
+                </div>
+                <button type="button" data-dismiss="modal" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:20px;line-height:1;">&times;</button>
+            </div>
+            {{-- Body --}}
+            <div class="modal-body" style="padding:24px;background:#ffffff;">
+                <div class="row">
+                    {{-- Kolom Kiri: Alamat & Koordinat --}}
+                    <div class="col-md-6">
+                        <div style="margin-bottom:16px;">
+                            <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
+                                <i class="fas fa-map-marker-alt"></i> Alamat Lengkap
+                            </label>
+                            <textarea id="editWisataAlamat" class="wm-input" rows="2" style="font-size:12px;padding:8px 10px;resize:vertical;"></textarea>
+                        </div>
+                        <div style="margin-bottom:16px;">
+                            <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
+                                <i class="fas fa-map-pin" style="color:#ff7a00;"></i> Koordinat Lokasi (Lat, Lng)
+                            </label>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input type="number" step="any" id="editWisataLat" class="wm-input" style="padding:6px 10px;font-size:12px;" placeholder="Latitude">
+                                <input type="number" step="any" id="editWisataLng" class="wm-input" style="padding:6px 10px;font-size:12px;" placeholder="Longitude">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Kolom Kanan: Harga & Deskripsi --}}
+                    <div class="col-md-6">
+                        <div style="margin-bottom:16px;">
+                            <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
+                                <i class="fas fa-ticket-alt" style="color:#38a169;"></i> Harga Tiket Masuk (Rp)
+                            </label>
+                            <input type="number" id="editWisataTiket" class="wm-input" style="font-size:12px;padding:6px 10px;" placeholder="Contoh: 15000">
+                        </div>
+                        <div>
+                            <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
+                                <i class="fas fa-align-left" style="color:#3182ce;"></i> Deskripsi & Daya Tarik
+                            </label>
+                            <textarea id="editWisataDeskripsi" rows="4" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;resize:vertical;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Footer --}}
+            <div style="background:#f8f9fa;border-top:1px solid #e2e8f0;padding:16px 24px;display:flex;justify-content:flex-end;gap:10px;">
+                <input type="hidden" id="editWisataId">
+                <button type="button" data-dismiss="modal" style="background:#fff;color:#707eae;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;">Batal</button>
+                <button type="button" id="btnSaveWisataEdit" onclick="updateWisataLokasi()" style="background:#805ad5;color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -840,31 +978,63 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // =========================================================
-    // 5. SIMPAN DATA FASKES (koordinat + layanan + BPJS + pesan)
+    // 5. UPDATE DATA FASKES DARI MODAL
     // =========================================================
-    window.saveFaskesData = function(btn, id) {
+    window.openEditFaskes = function(data) {
+        document.getElementById('editFaskesId').value          = data.id;
+        document.getElementById('editFaskesNamaLabel').textContent = data.nama_faskes + ' (' + data.jenis_faskes + ')';
+        document.getElementById('editFaskesLat').value         = data.latitude || '';
+        document.getElementById('editFaskesLng').value         = data.longitude || '';
+        document.getElementById('editFaskesBPJS').value        = (data.dukungan_bpjs) ? '1' : '0';
+        document.getElementById('editFaskesPengumuman').value  = data.pengumuman || '';
+        document.getElementById('editFaskesPesanAdmin').value  = data.pesan_admin || '';
+        $('#modalEditFaskes').modal('show');
+    };
+
+    window.saveFaskesData = function() {
+        var btn = document.getElementById('btnSaveFaskesEdit');
+        var id  = document.getElementById('editFaskesId').value;
+        if(!id) return;
+        
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
         btn.disabled = true;
-        var lat   = (document.getElementById('lat-'    + id)||{}).value || '';
-        var lng   = (document.getElementById('lng-'    + id)||{}).value || '';
-        var pesan = (document.getElementById('pesan-'  + id)||{}).value || '';
-        var bpjs  = (document.getElementById('bpjs-'   + id)||{}).value || '0';
-        var layanan = (document.getElementById('layanan-'+ id)||{}).value || '';
+        
+        var lat     = document.getElementById('editFaskesLat').value;
+        var lng     = document.getElementById('editFaskesLng').value;
+        var bpjs    = document.getElementById('editFaskesBPJS').value;
+        var layanan = document.getElementById('editFaskesPengumuman').value;
+        var pesan   = document.getElementById('editFaskesPesanAdmin').value;
+
         fetch('/admin/faskes/' + id + '/update-lokasi', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-            body: JSON.stringify({ latitude: lat, longitude: lng, pesan_admin: pesan, dukungan_bpjs: bpjs, pengumuman: layanan })
+            body: JSON.stringify({ latitude: lat, longitude: lng, dukungan_bpjs: bpjs, pengumuman: layanan, pesan_admin: pesan })
         }).then(function(r){return r.json();}).then(function(data){
-            showToast(data.message || 'Data faskes berhasil disimpan!');
+            $('#modalEditFaskes').modal('hide');
+            showToast(data.message || 'Data faskes berhasil diperbarui!');
+            setTimeout(function(){ location.reload(); }, 1500);
         }).catch(function(){
-            showToast('Gagal menyimpan. Cek koneksi.');
+            showToast('Gagal menyimpan. Cek koneksi.', 'danger');
         }).finally(function(){
-            btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Simpan Semua';
+            btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Simpan Perubahan';
         });
     };
 
-    // Backward compat alias
-    window.updateFaskesLocation = window.saveFaskesData;
+    window.deleteFaskes = function(btn, id, nama) {
+        if (!confirm('Yakin HAPUS permanen faskes "' + nama + '" beserta akun mitranya?\n\nData ini tidak dapat dikembalikan.')) return;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+        fetch('/admin/faskes/' + id, {
+            method: 'DELETE', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+        }).then(function(r){return r.json();}).then(function(data){
+            var row = document.getElementById('faskesTableRow-' + id);
+            if(row) { row.style.transition='all .4s'; row.style.opacity='0'; setTimeout(function(){row.remove();},400); }
+            showToast(data.message || 'Faskes berhasil dihapus!');
+            updatePendingCount(); // Update the UI total count visually if needed
+        }).catch(function(){ 
+            btn.disabled=false; btn.innerHTML='<i class="fas fa-trash"></i>'; 
+            showToast('Gagal menghapus.', 'danger'); 
+        });
+    };
 
     // =========================================================
     // 6. TOGGLE STATUS OPERASIONAL FASKES
@@ -888,19 +1058,46 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // =========================================================
-    // 7. UPDATE KOORDINAT PARIWISATA
+    // 7. UPDATE DATA PARIWISATA DARI MODAL
     // =========================================================
-    window.updateWisataLokasi = function(btn, id) {
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        var lat = (document.getElementById('wlat-' + id)||{}).value || '';
-        var lng = (document.getElementById('wlng-' + id)||{}).value || '';
+    window.openEditPariwisata = function(data) {
+        document.getElementById('editWisataId').value          = data.id;
+        document.getElementById('editWisataNamaLabel').textContent = data.nama_wisata + ' (' + data.kategori + ')';
+        document.getElementById('editWisataAlamat').value      = data.alamat || '';
+        document.getElementById('editWisataLat').value         = data.latitude || '';
+        document.getElementById('editWisataLng').value         = data.longitude || '';
+        document.getElementById('editWisataTiket').value       = data.harga_tiket || '';
+        document.getElementById('editWisataDeskripsi').value   = data.deskripsi || '';
+        $('#modalEditPariwisata').modal('show');
+    };
+
+    window.updateWisataLokasi = function() {
+        var btn = document.getElementById('btnSaveWisataEdit');
+        var id  = document.getElementById('editWisataId').value;
+        if(!id) return;
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+        btn.disabled = true;
+
+        var alamat = document.getElementById('editWisataAlamat').value;
+        var lat    = document.getElementById('editWisataLat').value;
+        var lng    = document.getElementById('editWisataLng').value;
+        var tiket  = document.getElementById('editWisataTiket').value;
+        var desk   = document.getElementById('editWisataDeskripsi').value;
+
         fetch('/admin/pariwisata/' + id + '/update-lokasi', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-            body: JSON.stringify({ latitude: lat, longitude: lng })
+            body: JSON.stringify({ latitude: lat, longitude: lng, alamat: alamat, harga_tiket: tiket, deskripsi: desk })
         }).then(function(r){return r.json();}).then(function(data){
-            btn.innerHTML = '<i class="fas fa-save"></i>'; showToast(data.message || 'Koordinat pariwisata diperbarui!');
-        }).catch(function(){ btn.innerHTML='<i class="fas fa-save"></i>'; showToast('Gagal menyimpan.'); });
+            $('#modalEditPariwisata').modal('hide');
+            showToast(data.message || 'Data pariwisata diperbarui!');
+            setTimeout(function(){ location.reload(); }, 1500);
+        }).catch(function(){
+            showToast('Gagal menyimpan. Cek koneksi.', 'danger');
+        }).finally(function(){
+            btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Simpan Perubahan';
+        });
     };
 
     // =========================================================

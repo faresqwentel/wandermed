@@ -9,7 +9,7 @@
 @section('user_name', $faskes && $faskes->nama_faskes ? $faskes->nama_faskes : $mitra->nama_penanggung_jawab)
 @section('user_role', 'Mitra Fasilitas Kesehatan')
 @section('user_initial', $faskes && $faskes->nama_faskes ? substr($faskes->nama_faskes, 0, 1) : substr($mitra->nama_penanggung_jawab, 0, 1))
-@section('topbar_title', 'Dashboard <span>Operasional Faskes</span>')
+@section('topbar_title', 'Dashboard Operasional Faskes')
 
 @section('sidebar_nav')
     <div class="wm-nav-label">Operasional</div>
@@ -308,18 +308,6 @@
                         <textarea name="alamat" class="wm-textarea" rows="2" required>{{ $faskes->alamat ?? '' }}</textarea>
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px;">
-                    <div class="wm-form-group">
-                        <label class="wm-label"><i class="fas fa-map-pin" style="color:#f6c23e"></i> Latitude (Lintang) <span style="color:#e74a3b">*</span></label>
-                        <input type="number" step="any" name="latitude" id="inputLat" class="wm-input" value="{{ $faskes->latitude ?? '' }}" placeholder="-6.571..." required>
-                        <small style="color: var(--text-muted); font-size:11px;">Koordinat vertikal bumi. Contoh: -6.5718</small>
-                    </div>
-                    <div class="wm-form-group">
-                        <label class="wm-label"><i class="fas fa-map-pin" style="color:#f6c23e"></i> Longitude (Bujur) <span style="color:#e74a3b">*</span></label>
-                        <input type="number" step="any" name="longitude" id="inputLng" class="wm-input" value="{{ $faskes->longitude ?? '' }}" placeholder="107.760..." required>
-                        <small style="color: var(--text-muted); font-size:11px;">Koordinat horizontal bumi. Contoh: 107.7600</small>
-                    </div>
-                </div>
                 <div style="margin-top: 18px;">
                     <label class="wm-label">Dukungan BPJS Kesehatan</label>
                     <div style="display:flex; gap: 16px; margin-top: 8px;">
@@ -331,12 +319,14 @@
                         </label>
                     </div>
                 </div>
-                <div style="margin-top: 24px; display:flex; gap:12px;">
-                    <button type="submit" class="wm-btn orange" style="flex:1;">
-                        <i class="fas fa-save"></i> Simpan & Perbarui ke Peta
-                    </button>
-                    <button type="button" class="wm-btn ghost" onclick="getCurrentLocation()" style="flex:1;">
-                        <i class="fas fa-crosshairs"></i> Gunakan Lokasi GPS Saya
+                {{-- Info: koordinat dikelola di menu Update Koordinat --}}
+                <div style="margin-top: 16px; padding: 12px 16px; background: rgba(78,115,223,0.06); border-left: 3px solid #4e73df; border-radius: 8px; font-size: 12px; color: var(--text-muted);">
+                    <i class="fas fa-map-pin mr-1" style="color:#4e73df"></i>
+                    Untuk mengubah koordinat lokasi PIN di peta, gunakan menu <strong style="color: var(--text-primary);">Update Koordinat</strong> di sidebar.
+                </div>
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="wm-btn orange" style="width:100%;">
+                        <i class="fas fa-save"></i> Simpan Perubahan Profil
                     </button>
                 </div>
             </form>
@@ -465,6 +455,7 @@
             const el = document.getElementById('lastUpdatedLabel');
             if (el) el.innerHTML = `<i class="fas fa-clock"></i> Diperbarui ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} WIB`;
             showToast(data.message || toastMsg);
+            setTimeout(() => location.reload(), 1500);
         })
         .catch(e => {
             console.error(e);
@@ -486,7 +477,10 @@
             body: JSON.stringify({ field: 'pengumuman', value: text })
         })
         .then(r => r.json())
-        .then(data => showToast("Pengumuman berhasil disiarkan ke peta!"))
+        .then(data => {
+            showToast("Pengumuman berhasil disiarkan ke peta!");
+            setTimeout(() => location.reload(), 1500);
+        })
         .catch(() => showToast('Gagal menyimpan pengumuman.', 'danger'));
     }
 
@@ -515,7 +509,10 @@
             body: JSON.stringify({ layanan_tersedia: checkedValues })
         })
         .then(r => r.json())
-        .then(data => showToast(data.message || "Fasilitas diperbarui dan tampil di peta!"))
+        .then(data => {
+            showToast(data.message || "Fasilitas diperbarui dan tampil di peta!");
+            setTimeout(() => location.reload(), 1500);
+        })
         .catch(() => showToast('Gagal menyimpan fasilitas.', 'danger'));
     }
 

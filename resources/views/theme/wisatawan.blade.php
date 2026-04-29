@@ -16,20 +16,11 @@
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style-wisatawan.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/wisatawan-layout.css') }}" rel="stylesheet">
 
     @stack('styles')
-
-    <style>
-        html, body {
-            background-color: #112240 !important;
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s ease;
-        }
-        body { padding-top: 100px !important; overflow-x: hidden; }
-        @media (max-width: 991px) { body { padding-top: 85px !important; } }
-    </style>
 </head>
+
 
 <body class="bg-hnb-navy">
     <script>
