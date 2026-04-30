@@ -49,7 +49,7 @@ class AdminController extends Controller
                                     
             'users'           => User::all(),
             'faskesList'      => Faskes::all(),
-            'wisataApproved'  => PendaftaranPariwisata::disetujui()->get(),
+            'wisataApproved'  => $this->getMergedWisataForDashboard(),
         ]);
     }
 
@@ -242,16 +242,21 @@ class AdminController extends Controller
      */
     public function updatePariwisataData(Request $request, int $id): JsonResponse
     {
-        if (!class_exists(\App\Models\Pariwisata::class)) {
-            return response()->json(['success' => false, 'message' => 'Model Pariwisata tidak ditemukan.'], 400);
-        }
-
-        $wisata = \App\Models\Pariwisata::findOrFail($id);
+        $type = $request->input('type');
         
         $request->validate([
             'latitude'  => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
+
+        if ($type === 'mitra') {
+            if (!class_exists(\App\Models\Pariwisata::class)) {
+                return response()->json(['success' => false, 'message' => 'Model Pariwisata tidak ditemukan.'], 400);
+            }
+            $wisata = \App\Models\Pariwisata::findOrFail($id);
+        } else {
+            $wisata = \App\Models\PendaftaranPariwisata::findOrFail($id);
+        }
 
         $wisata->update([
             'latitude'    => $request->latitude,
@@ -268,11 +273,69 @@ class AdminController extends Controller
     }
 
     /**
+     * Menghapus data pariwisata.
+     */
+    public function destroyPariwisata(Request $request, int $id): JsonResponse
+    {
+        try {
+            $type = $request->input('type');
+            
+            if ($type === 'mitra') {
+                $wisata = \App\Models\Pariwisata::findOrFail($id);
+                $nama = $wisata->nama_wisata;
+                
+                // Hapus akun mitra terkait (jika perlu) atau biarkan mitranya kosong. 
+                // Kita asumsikan cascade delete akan menangani jika mitranya ikut dihapus, 
+                // tapi di sini kita hapus pariwisatanya saja atau sekalian mitranya:
+                if ($wisata->mitra) {
+                    $wisata->mitra->delete();
+                } else {
+                    $wisata->delete();
+                }
+            } else {
+                $wisata = \App\Models\PendaftaranPariwisata::findOrFail($id);
+                $nama = $wisata->nama_wisata;
+                $wisata->delete();
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Data Pariwisata \"{$nama}\" berhasil dihapus."
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Destroy Pariwisata failed: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus data pariwisata.'], 500);
+        }
+    }
+
+    /**
      * API: Menggabungkan data pariwisata untuk peta Leaflet (gabungan form tanpa akun & via Mitra).
      */
     public function getPariwisataJson(): JsonResponse
     {
         return response()->json($this->getMergedPariwisataData());
+    }
+
+    private function getMergedWisataForDashboard()
+    {
+        $pendaftaranData = PendaftaranPariwisata::disetujui()->get()->map(function($w) {
+            $w->type = 'public';
+            return $w;
+        });
+
+        $mitraData = collect();
+        if (class_exists(\App\Models\Pariwisata::class)) {
+            $mitraData = \App\Models\Pariwisata::with('mitra')
+                ->whereHas('mitra', fn($query) => $query->where('is_verified', true))
+                ->get()
+                ->map(function($w) {
+                    $w->type = 'mitra';
+                    $w->nama_pengelola = $w->mitra->nama_penanggung_jawab ?? 'Pengelola';
+                    return $w;
+                });
+        }
+
+        return $pendaftaranData->merge($mitraData)->values();
     }
 
     private function getMergedPariwisataData()

@@ -175,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 7. EDIT PARIWISATA MODAL
     window.openEditPariwisata = function(data) {
         document.getElementById('editWisataId').value=data.id;
+        var typeInput=document.getElementById('editWisataType'); if(typeInput) typeInput.value=data.type;
         document.getElementById('editWisataNamaLabel').textContent=data.nama_wisata+' ('+data.kategori+')';
         document.getElementById('editWisataAlamat').value=data.alamat||'';
         document.getElementById('editWisataLat').value=data.latitude||'';
@@ -185,17 +186,18 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     window.updateWisataLokasi = function() {
         var btn=document.getElementById('btnSaveWisataEdit'),id=document.getElementById('editWisataId').value;
+        var typeInput=document.getElementById('editWisataType'),type=typeInput?typeInput.value:'';
         if(!id)return;
         btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Menyimpan...';btn.disabled=true;
-        fetch('/admin/pariwisata/'+id+'/update-lokasi',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({latitude:document.getElementById('editWisataLat').value,longitude:document.getElementById('editWisataLng').value,alamat:document.getElementById('editWisataAlamat').value,harga_tiket:document.getElementById('editWisataTiket').value,deskripsi:document.getElementById('editWisataDeskripsi').value})})
+        fetch('/admin/pariwisata/'+id+'/update-lokasi',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({type:type,latitude:document.getElementById('editWisataLat').value,longitude:document.getElementById('editWisataLng').value,alamat:document.getElementById('editWisataAlamat').value,harga_tiket:document.getElementById('editWisataTiket').value,deskripsi:document.getElementById('editWisataDeskripsi').value})})
         .then(function(r){return r.json();}).then(function(data){$('#modalEditPariwisata').modal('hide');showToast(data.message||'Data pariwisata diperbarui!');setTimeout(function(){location.reload();},1500);})
         .catch(function(){showToast('Gagal menyimpan. Cek koneksi.','danger');})
         .finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Simpan Perubahan';});
     };
-    window.deletePariwisata = function(btn,id,nama) {
+    window.deletePariwisata = function(btn,id,nama,type) {
         if(!confirm('Yakin HAPUS permanen destinasi "'+nama+'"?\n\nData ini tidak bisa dikembalikan.'))return;
         btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;
-        fetch('/admin/pariwisata/'+id,{method:'DELETE',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
+        fetch('/admin/pariwisata/'+id,{method:'DELETE',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({type:type})})
         .then(function(r){return r.json();}).then(function(data){var row=btn.closest('tr');row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);showToast(data.message||'Destinasi dihapus!');})
         .catch(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-trash"></i>';showToast('Gagal menghapus.');});
     };

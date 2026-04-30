@@ -1,4 +1,4 @@
-﻿{{-- ============================================================
+{{-- ============================================================
      Dashboard Administrator – WanderMed
      Layout: theme/dashboard_layout.blade.php
      ============================================================ --}}
@@ -430,9 +430,20 @@
                 </thead>
                 <tbody>
                     @forelse($wisataApproved ?? [] as $wi)
-                    <tr id="wisataMasterRow-{{ $wi->id }}">
-                        <td class="bold col-nama-wisata">{{ $wi->nama_wisata }}</td>
-                        <td><span class="wm-badge" style="background:rgba(128,90,213,0.1);color:#805ad5;border:1px solid rgba(128,90,213,0.3);">{{ $wi->kategori }}</span></td>
+                    <tr id="wisataMasterRow-{{ $wi->type }}-{{ $wi->id }}">
+                        <td class="bold col-nama-wisata">
+                            @if($wi->type == 'mitra')
+                                <i class="fas fa-check-circle" style="color:#38a169; margin-right:4px;" title="Mitra Resmi"></i>
+                            @endif
+                            {{ $wi->nama_wisata }}
+                        </td>
+                        <td>
+                            @if($wi->type == 'mitra')
+                                <span class="wm-badge" style="background:rgba(56,161,105,0.1);color:#38a169;border:1px solid rgba(56,161,105,0.3);">Mitra {{ $wi->kategori }}</span>
+                            @else
+                                <span class="wm-badge" style="background:rgba(128,90,213,0.1);color:#805ad5;border:1px solid rgba(128,90,213,0.3);">Publik {{ $wi->kategori }}</span>
+                            @endif
+                        </td>
                         <td style="color:var(--text-muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                             {{ $wi->alamat ?? '-' }}
                         </td>
@@ -442,7 +453,7 @@
                                 <button class="wm-btn info sm" onclick='openEditPariwisata(@json($wi))' title="Edit Detail">
                                     <i class="fas fa-edit"></i> Detail
                                 </button>
-                                <button class="wm-btn danger sm" onclick='deletePariwisata(this, {{ $wi->id ?? 0 }}, @json($wi->nama_wisata ?? ""))' title="Hapus">
+                                <button class="wm-btn danger sm" onclick='deletePariwisata(this, {{ $wi->id ?? 0 }}, @json($wi->nama_wisata ?? ""), "{{ $wi->type }}")' title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -783,6 +794,7 @@
             {{-- Footer --}}
             <div style="background:#f8f9fa;border-top:1px solid #e2e8f0;padding:16px 24px;display:flex;justify-content:flex-end;gap:10px;">
                 <input type="hidden" id="editWisataId">
+                <input type="hidden" id="editWisataType">
                 <button type="button" data-dismiss="modal" style="background:#fff;color:#707eae;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;">Batal</button>
                 <button type="button" id="btnSaveWisataEdit" onclick="updateWisataLokasi()" style="background:#805ad5;color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;">
                     <i class="fas fa-save"></i> Simpan Perubahan
