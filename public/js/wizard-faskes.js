@@ -67,13 +67,97 @@ document.addEventListener("DOMContentLoaded", function () {
 
         btnNext.addEventListener("click", function () {
             if (currentStep <= totalSteps) {
-                // Step terakhir: validasi dan submit form
+                const form = document.getElementById("wizardForm");
+                
+                // --- VALIDASI PER STEP ---
+                if (currentStep < totalSteps) {
+                    const activeStep = document.getElementById("step" + currentStep);
+                    if (activeStep) {
+                        const stepInputs = activeStep.querySelectorAll('input, select, textarea');
+                        let stepValid = true;
+                        for (let i = 0; i < stepInputs.length; i++) {
+                            if (!stepInputs[i].checkValidity()) {
+                                stepInputs[i].reportValidity();
+                                stepValid = false;
+                                break;
+                            }
+                        }
+                        if (!stepValid) return; // Hentikan jika ada form yang tidak valid di step ini
+                    }
+                    
+                    // Khusus Step 2 (Lokasi): Validasi koordinat peta
+                    if (currentStep === 2) {
+                        const lat = form.querySelector('[name="latitude"]').value;
+                        const lng = form.querySelector('[name="longitude"]').value;
+                        if (!lat.trim() || !lng.trim()) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Lokasi Belum Dipilih',
+                                text: "Koordinat Peta (Latitude & Longitude) belum diisi! Silakan klik 'Pilih Peta' dan tentukan lokasi Anda.",
+                                confirmButtonColor: '#ff6b35'
+                            });
+                            return;
+                        }
+                    }
+                }
+                
+                // --- STEP TERAKHIR (SUBMIT) ---
                 if (currentStep === totalSteps) {
-                    const form = document.getElementById("wizardForm");
+                    // Cek keseluruhan form (sebagai pengaman tambahan)
                     if (form && !form.checkValidity()) {
-                        form.reportValidity();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Data Tidak Lengkap',
+                            text: 'Ada data wajib yang belum diisi. Silakan periksa kembali setiap langkah pendaftaran Anda.',
+                            confirmButtonColor: '#ff6b35'
+                        });
                         return;
                     }
+                    
+                    // Validasi ketat pengaman
+                    const alamat = form.querySelector('[name="alamat"]').value;
+                    const lat = form.querySelector('[name="latitude"]').value;
+                    const lng = form.querySelector('[name="longitude"]').value;
+                    
+                    if (!alamat.trim() || !lat.trim() || !lng.trim()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lokasi Wajib Diisi',
+                            text: 'Alamat Lengkap dan Koordinat (Latitude/Longitude) WAJIB diisi! Silakan kembali ke Langkah 2.',
+                            confirmButtonColor: '#ff6b35'
+                        });
+                        return;
+                    }
+                    
+                    // Peringatan jika ada field opsional yang kosong
+                    let hasEmpty = false;
+                    const inputs = form.querySelectorAll('input:not([type="hidden"]), select, textarea');
+                    inputs.forEach(input => {
+                        if (!input.value.trim() && !input.hasAttribute('required')) {
+                            hasEmpty = true;
+                        }
+                    });
+
+                    if (hasEmpty) {
+                        Swal.fire({
+                            title: 'Data Belum Lengkap',
+                            text: "Beberapa data opsional masih kosong. Apakah Anda yakin ingin mengirimkan form pendaftaran?",
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#ff6b35',
+                            cancelButtonColor: '#a0aec0',
+                            confirmButtonText: 'Ya, Kirim',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                btnNext.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Menyimpan...';
+                                btnNext.disabled = true;
+                                if (form) form.submit();
+                            }
+                        });
+                        return; // Hentikan alur synchronous
+                    }
+
                     btnNext.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Menyimpan...';
                     btnNext.disabled = true;
                     if (form) form.submit();

@@ -120,4 +120,34 @@ class HomeController extends Controller
     public function dashboardAdmin() {
         return view('dashboard_admin');
     }
+
+    /**
+     * Memproses Laporan Masalah dari Wisatawan/Publik
+     */
+    public function submitLaporan(Request $request) {
+        try {
+            $request->validate([
+                'subjek' => 'required|string|max:255',
+                'deskripsi' => 'required|string'
+            ]);
+
+            \App\Models\LaporanMasalah::create([
+                'user_id' => session('auth_user.id'), // null jika tidak login
+                'subjek' => $request->subjek,
+                'deskripsi' => $request->deskripsi,
+                'status' => 'pending'
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Laporan Anda telah berhasil dikirim. Tim kami akan segera meninjaunya.'
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal mengirim laporan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat mengirim laporan.'
+            ], 500);
+        }
+    }
 }

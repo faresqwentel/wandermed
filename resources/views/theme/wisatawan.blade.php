@@ -46,6 +46,9 @@
 
     <!-- AOS Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- WanderMed Animations -->
     <script src="{{ asset('js/animations.js') }}"></script>

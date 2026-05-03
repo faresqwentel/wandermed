@@ -84,11 +84,12 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form id="formLaporMasalah" action="{{ route('lapor.masalah') }}" method="POST">
+                @csrf
                 <div class="modal-body p-4 bg-light text-left">
                     <div class="form-group mb-3">
                         <label class="text-hnb-navy font-weight-bold small">Kategori Masalah</label>
-                        <select class="form-control radius-hnb shadow-sm border-0" required>
+                        <select name="subjek" class="form-control radius-hnb shadow-sm border-0" required>
                             <option value="" disabled selected>Pilih Kategori...</option>
                             <option value="Data Salah">Informasi Faskes Salah</option>
                             <option value="Lokasi">Titik Lokasi Tidak Akurat</option>
@@ -97,17 +98,82 @@
                     </div>
                     <div class="form-group mb-3">
                         <label class="text-hnb-navy font-weight-bold small">Deskripsi Masalah</label>
-                        <textarea class="form-control radius-hnb shadow-sm border-0" rows="4" placeholder="Ceritakan detail masalah..." required></textarea>
-                    </div>
-                    <div class="form-group mb-0">
-                        <label class="text-hnb-navy font-weight-bold small">Unggah Bukti Gambar</label>
-                        <input type="file" class="form-control-file small" accept="image/*">
+                        <textarea name="deskripsi" class="form-control radius-hnb shadow-sm border-0" rows="4" placeholder="Ceritakan detail masalah..." required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-0 bg-light pb-4">
-                    <button type="submit" class="btn btn-danger radius-hnb w-100 font-weight-bold shadow">Kirim Laporan</button>
+                    <button type="submit" id="btnSubmitLaporan" class="btn btn-danger radius-hnb w-100 font-weight-bold shadow">Kirim Laporan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formLapor = document.getElementById('formLaporMasalah');
+    if (formLapor) {
+        formLapor.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitLaporan');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
+            btn.disabled = true;
+
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    $('#reportModal').modal('hide');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terkirim!',
+                            text: data.message,
+                            confirmButtonColor: '#38a169'
+                        });
+                    } else {
+                        alert(data.message);
+                    }
+                    formLapor.reset();
+                } else {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message || 'Gagal mengirim laporan.',
+                            confirmButtonColor: '#e53e3e'
+                        });
+                    } else {
+                        alert(data.message || 'Gagal mengirim laporan.');
+                    }
+                }
+            })
+            .catch(err => {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Kesalahan Sistem',
+                        text: 'Gagal terhubung ke server. Silakan periksa koneksi internet Anda.',
+                        confirmButtonColor: '#e53e3e'
+                    });
+                } else {
+                    alert('Gagal terhubung ke server.');
+                }
+            })
+            .finally(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        });
+    }
+});
+</script>

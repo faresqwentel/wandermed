@@ -61,29 +61,55 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     window.approveFaskesFromModal = function() {
         var id=document.getElementById('faskesModalId').value;
-        if(!id||!confirm('Setujui mitra faskes ini?\n\nData akan otomatis muncul di peta publik.'))return;
-        var btn=document.getElementById('btnApproveFaskesModal');
-        btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Memproses...';
-        fetch('/admin/mitra/'+id+'/approve',{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
-        .then(function(r){return r.json();}).then(function(data){
-            $('#modalDetailFaskes').modal('hide');
-            var row=document.getElementById('mitraRow-'+id);
-            if(row){row.style.opacity='0.4';row.querySelector('td:last-child').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Disetujui</span>';}
-            updatePendingCount();showToast(data.message||'Mitra berhasil disetujui!');
-        }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Setujui Mitra';});
+        if(!id) return;
+        Swal.fire({
+            title: 'Konfirmasi Persetujuan',
+            text: "Setujui mitra faskes ini? Data akan otomatis muncul di peta publik.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#38a169',
+            cancelButtonColor: '#a0aec0',
+            confirmButtonText: 'Ya, Setujui',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var btn=document.getElementById('btnApproveFaskesModal');
+                btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                fetch('/admin/mitra/'+id+'/approve',{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
+                .then(function(r){return r.json();}).then(function(data){
+                    $('#modalDetailFaskes').modal('hide');
+                    var row=document.getElementById('mitraRow-'+id);
+                    if(row){row.style.opacity='0.4';row.querySelector('td:last-child').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Disetujui</span>';}
+                    updatePendingCount();showToast(data.message||'Mitra berhasil disetujui!');
+                }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Setujui Mitra';});
+            }
+        });
     };
     window.rejectFaskesFromModal = function() {
         var id=document.getElementById('faskesModalId').value;
-        if(!id||!confirm('TOLAK mitra faskes ini?\n\nAksi ini tidak dapat dibatalkan.'))return;
-        var btn=document.getElementById('btnRejectFaskesModal');
-        btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
-        fetch('/admin/mitra/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({alasan:'Ditolak setelah peninjauan detail.'})})
-        .then(function(r){return r.json();}).then(function(data){
-            $('#modalDetailFaskes').modal('hide');
-            var row=document.getElementById('mitraRow-'+id);
-            if(row){row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);}
-            updatePendingCount();showToast(data.message||'Mitra ditolak.');
-        }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-times-circle"></i> Tolak Pendaftaran';});
+        if(!id) return;
+        Swal.fire({
+            title: 'Konfirmasi Penolakan',
+            text: "TOLAK mitra faskes ini? Aksi ini tidak dapat dibatalkan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',
+            cancelButtonColor: '#a0aec0',
+            confirmButtonText: 'Ya, Tolak',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var btn=document.getElementById('btnRejectFaskesModal');
+                btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
+                fetch('/admin/mitra/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({alasan:'Ditolak setelah peninjauan detail.'})})
+                .then(function(r){return r.json();}).then(function(data){
+                    $('#modalDetailFaskes').modal('hide');
+                    var row=document.getElementById('mitraRow-'+id);
+                    if(row){row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);}
+                    updatePendingCount();showToast(data.message||'Mitra ditolak.');
+                }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-times-circle"></i> Tolak Pendaftaran';});
+            }
+        });
     };
 
     // 4. MODAL DETAIL PARIWISATA
@@ -107,29 +133,55 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     window.approveFromModal = function() {
         var id=document.getElementById('wisataModalId').value;
-        if(!id||!confirm('Setujui destinasi pariwisata ini?'))return;
-        var btn=document.getElementById('btnApproveWisataModal');
-        btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Memproses...';
-        fetch('/admin/pariwisata/'+id+'/approve',{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
-        .then(function(r){return r.json();}).then(function(data){
-            $('#modalDetailWisata').modal('hide');
-            var row=document.getElementById('wisataRow-'+id);
-            if(row){row.style.opacity='0.4';row.querySelector('td:last-child').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Disetujui</span>';}
-            updatePendingCount();showToast(data.message||'Destinasi disetujui!');
-        }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Setujui Pendaftaran';});
+        if(!id) return;
+        Swal.fire({
+            title: 'Konfirmasi Persetujuan',
+            text: "Setujui destinasi pariwisata ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#38a169',
+            cancelButtonColor: '#a0aec0',
+            confirmButtonText: 'Ya, Setujui',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var btn=document.getElementById('btnApproveWisataModal');
+                btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                fetch('/admin/pariwisata/'+id+'/approve',{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
+                .then(function(r){return r.json();}).then(function(data){
+                    $('#modalDetailWisata').modal('hide');
+                    var row=document.getElementById('wisataRow-'+id);
+                    if(row){row.style.opacity='0.4';row.querySelector('td:last-child').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Disetujui</span>';}
+                    updatePendingCount();showToast(data.message||'Destinasi disetujui!');
+                }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Setujui Pendaftaran';});
+            }
+        });
     };
     window.rejectFromModal = function() {
         var id=document.getElementById('wisataModalId').value;
-        if(!id||!confirm('TOLAK destinasi pariwisata ini?'))return;
-        var btn=document.getElementById('btnRejectWisataModal');
-        btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
-        fetch('/admin/pariwisata/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({catatan:'Ditolak setelah peninjauan detail.'})})
-        .then(function(r){return r.json();}).then(function(data){
-            $('#modalDetailWisata').modal('hide');
-            var row=document.getElementById('wisataRow-'+id);
-            if(row){row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);}
-            updatePendingCount();showToast(data.message||'Destinasi ditolak.');
-        }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-times-circle"></i> Tolak';});
+        if(!id) return;
+        Swal.fire({
+            title: 'Konfirmasi Penolakan',
+            text: "TOLAK destinasi pariwisata ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',
+            cancelButtonColor: '#a0aec0',
+            confirmButtonText: 'Ya, Tolak',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var btn=document.getElementById('btnRejectWisataModal');
+                btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
+                fetch('/admin/pariwisata/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({catatan:'Ditolak setelah peninjauan detail.'})})
+                .then(function(r){return r.json();}).then(function(data){
+                    $('#modalDetailWisata').modal('hide');
+                    var row=document.getElementById('wisataRow-'+id);
+                    if(row){row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);}
+                    updatePendingCount();showToast(data.message||'Destinasi ditolak.');
+                }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-times-circle"></i> Tolak';});
+            }
+        });
     };
 
     // 5. EDIT FASKES MODAL
@@ -153,11 +205,23 @@ document.addEventListener('DOMContentLoaded', function () {
         .finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Simpan Perubahan';});
     };
     window.deleteFaskes = function(btn,id,nama) {
-        if(!confirm('Yakin HAPUS permanen faskes "'+nama+'" beserta akun mitranya?\n\nData ini tidak dapat dikembalikan.'))return;
-        btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;
-        fetch('/admin/faskes/'+id,{method:'DELETE',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
-        .then(function(r){return r.json();}).then(function(data){var row=document.getElementById('faskesTableRow-'+id);if(row){row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);}showToast(data.message||'Faskes berhasil dihapus!');})
-        .catch(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-trash"></i>';showToast('Gagal menghapus.','danger');});
+        Swal.fire({
+            title: 'Hapus Faskes?',
+            text: 'Yakin HAPUS permanen faskes "'+nama+'" beserta akun mitranya? Data ini tidak dapat dikembalikan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',
+            cancelButtonColor: '#a0aec0',
+            confirmButtonText: 'Ya, Hapus Permanen',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;
+                fetch('/admin/faskes/'+id,{method:'DELETE',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
+                .then(function(r){return r.json();}).then(function(data){var row=document.getElementById('faskesTableRow-'+id);if(row){row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);}showToast(data.message||'Faskes berhasil dihapus!');})
+                .catch(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-trash"></i>';showToast('Gagal menghapus.','danger');});
+            }
+        });
     };
 
     // 6. TOGGLE STATUS FASKES
@@ -195,22 +259,46 @@ document.addEventListener('DOMContentLoaded', function () {
         .finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Simpan Perubahan';});
     };
     window.deletePariwisata = function(btn,id,nama,type) {
-        if(!confirm('Yakin HAPUS permanen destinasi "'+nama+'"?\n\nData ini tidak bisa dikembalikan.'))return;
-        btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;
-        fetch('/admin/pariwisata/'+id,{method:'DELETE',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({type:type})})
-        .then(function(r){return r.json();}).then(function(data){var row=btn.closest('tr');row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);showToast(data.message||'Destinasi dihapus!');})
-        .catch(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-trash"></i>';showToast('Gagal menghapus.');});
+        Swal.fire({
+            title: 'Hapus Destinasi?',
+            text: 'Yakin HAPUS permanen destinasi "'+nama+'"? Data ini tidak bisa dikembalikan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',
+            cancelButtonColor: '#a0aec0',
+            confirmButtonText: 'Ya, Hapus Permanen',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;
+                fetch('/admin/pariwisata/'+id,{method:'DELETE',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({type:type})})
+                .then(function(r){return r.json();}).then(function(data){var row=btn.closest('tr');row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);showToast(data.message||'Destinasi dihapus!');})
+                .catch(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-trash"></i>';showToast('Gagal menghapus.');});
+            }
+        });
     };
 
     // 8. RESOLVE TIKET
     window.resolveTicket = function(btn,id,tiket) {
-        if(!confirm('Tandai tiket '+tiket+' sebagai selesai?'))return;
-        btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
-        fetch('/admin/laporan/'+id+'/resolve',{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
-        .then(function(r){return r.json();}).then(function(data){
-            var row=btn.closest('tr');row.querySelector('td:nth-child(5)').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Resolved</span>';
-            btn.outerHTML='<button class="wm-btn ghost sm" disabled style="opacity:0.5;"><i class="fas fa-lock"></i> Closed</button>';
-            showToast(data.message||'Tiket diselesaikan!');
+        Swal.fire({
+            title: 'Selesaikan Tiket?',
+            text: 'Tandai tiket '+tiket+' sebagai selesai?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#38a169',
+            cancelButtonColor: '#a0aec0',
+            confirmButtonText: 'Ya, Selesai',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
+                fetch('/admin/laporan/'+id+'/resolve',{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
+                .then(function(r){return r.json();}).then(function(data){
+                    var row=btn.closest('tr');row.querySelector('td:nth-child(5)').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Resolved</span>';
+                    btn.outerHTML='<button class="wm-btn ghost sm" disabled style="opacity:0.5;"><i class="fas fa-lock"></i> Closed</button>';
+                    showToast(data.message||'Tiket diselesaikan!');
+                });
+            }
         });
     };
 

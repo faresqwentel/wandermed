@@ -26,10 +26,9 @@ use App\Http\Controllers\PariwisataController;
 // =========================================================
 
 Route::get('/', [HomeController::class, 'wisatawanHome']);
-Route::get('/welcome', fn() => view('welcome'));
-
-// Halaman-halaman publik wisatawan
-Route::get('/peta-faskes', [HomeController::class, 'petaFaskes']);
+Route::get('/mitra', fn() => view('v_mitra_home'))->name('mitra.home');
+Route::get('/peta-faskes', [HomeController::class, 'petaFaskes'])->name('peta.faskes');
+Route::post('/lapor-masalah', [HomeController::class, 'submitLaporan'])->name('lapor.masalah');
 Route::get('/daftar', [HomeController::class, 'daftarPilihan']);
 Route::get('/daftar/wisatawan', [HomeController::class, 'daftarWisatawan']);
 Route::get('/daftar/faskes', [HomeController::class, 'daftarFaskes']);

@@ -40,9 +40,9 @@ class MitraRegistrationRequest extends FormRequest
             'deskripsi'             => 'nullable|string',
             
             // Shared attributes
-            'alamat'                => 'nullable|string',
-            'latitude'              => 'nullable|numeric',
-            'longitude'             => 'nullable|numeric',
+            'alamat'                => 'required|string',
+            'latitude'              => 'required|numeric',
+            'longitude'             => 'required|numeric',
             'dokumen_izin'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ];
     }

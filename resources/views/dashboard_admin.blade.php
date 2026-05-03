@@ -178,9 +178,22 @@
                 </thead>
                 <tbody>
                     @foreach($mitraPending as $m)
+                    @php
+                        $isFaskesIncomplete = false;
+                        if($m->faskes) {
+                            $isFaskesIncomplete = empty($m->faskes->alamat) || $m->faskes->alamat === '-'
+                                || empty($m->faskes->latitude) || empty($m->faskes->longitude)
+                                || ($m->faskes->latitude == -6.5718 && $m->faskes->longitude == 107.7600);
+                        }
+                    @endphp
                     <tr id="mitraRow-{{ $m->id }}">
                         <td class="bold col-nama">
                             {{ $m->nama_penanggung_jawab }}
+                            @if($isFaskesIncomplete)
+                                <span title="Data lokasi faskes belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
+                                    <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
+                                </span>
+                            @endif
                             @if($m->faskes)
                             <div style="font-size:11px; color: var(--text-muted); font-weight:400; margin-top:3px;">
                                 <i class="fas fa-hospital-alt mr-1"></i>{{ $m->faskes->nama_faskes }}
@@ -213,9 +226,20 @@
                     @endforeach
 
                     @foreach($wisataPending as $w)
+                    @php
+                        $isWisataIncomplete = empty($w->alamat) || $w->alamat === '-'
+                            || empty($w->latitude) || empty($w->longitude)
+                            || ($w->latitude == -6.5718 && $w->longitude == 107.7600)
+                            || empty($w->deskripsi);
+                    @endphp
                     <tr id="wisataRow-{{ $w->id }}">
                         <td class="bold col-nama">
                             {{ $w->nama_pengelola }}
+                            @if($isWisataIncomplete)
+                                <span title="Data lokasi atau deskripsi belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
+                                    <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
+                                </span>
+                            @endif
                             <div style="font-size:11px; color: var(--text-muted); font-weight:400; margin-top:3px;">
                                 <i class="fas fa-mountain mr-1"></i>{{ $w->nama_wisata }} ({{ $w->kategori }})
                                 &nbsp;|&nbsp;
@@ -352,10 +376,20 @@
                 </thead>
                 <tbody>
                     @forelse($faskesList as $faskesItem)
+                    @php
+                        $faskesIncomplete = empty($faskesItem->alamat) || $faskesItem->alamat === '-'
+                            || empty($faskesItem->latitude) || empty($faskesItem->longitude)
+                            || ($faskesItem->latitude == -6.5718 && $faskesItem->longitude == 107.7600);
+                    @endphp
                     <tr id="faskesTableRow-{{ $faskesItem->id }}">
                         <td class="bold col-nama-faskes">
                             <i class="fas fa-hospital-alt" style="color:#ff7a00;margin-right:6px;"></i>
                             {{ $faskesItem->nama_faskes }}
+                            @if($faskesIncomplete)
+                                <span title="Data lokasi belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
+                                    <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
+                                </span>
+                            @endif
                         </td>
                         <td>
                             <span class="wm-badge" style="background:rgba(56,161,105,0.1);color:#38a169;border:1px solid rgba(56,161,105,0.3);font-size:10px;">
@@ -363,7 +397,11 @@
                             </span>
                         </td>
                         <td style="color:var(--text-muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                            {{ $faskesItem->alamat ?? '-' }}
+                            @if(empty($faskesItem->alamat) || $faskesItem->alamat === '-')
+                                <span style="color:#f6c23e;"><i class="fas fa-exclamation-circle"></i> Belum diisi</span>
+                            @else
+                                {{ $faskesItem->alamat }}
+                            @endif
                         </td>
                         <td id="statusBadge-{{ $faskesItem->id }}">
                             @if($faskesItem->status_operasional == 'open')
@@ -430,12 +468,23 @@
                 </thead>
                 <tbody>
                     @forelse($wisataApproved ?? [] as $wi)
+                    @php
+                        $wisataIncomplete = empty($wi->alamat) || $wi->alamat === '-'
+                            || empty($wi->latitude) || empty($wi->longitude)
+                            || ($wi->latitude == -6.5718 && $wi->longitude == 107.7600)
+                            || empty($wi->deskripsi);
+                    @endphp
                     <tr id="wisataMasterRow-{{ $wi->type }}-{{ $wi->id }}">
                         <td class="bold col-nama-wisata">
                             @if($wi->type == 'mitra')
                                 <i class="fas fa-check-circle" style="color:#38a169; margin-right:4px;" title="Mitra Resmi"></i>
                             @endif
                             {{ $wi->nama_wisata }}
+                            @if($wisataIncomplete)
+                                <span title="Data lokasi atau deskripsi belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
+                                    <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
+                                </span>
+                            @endif
                         </td>
                         <td>
                             @if($wi->type == 'mitra')
@@ -483,14 +532,37 @@
         <div class="wm-table-wrap">
             <table class="wm-table">
                 <thead>
-                    <tr><th>Nama</th><th>Email</th><th>Gol. Darah</th><th>Status Akun</th><th class="text-center">Aksi</th></tr>
+                    <tr><th>Nama</th><th>Email</th><th>Gol. Darah</th><th>Kelengkapan Data</th><th>Status Akun</th><th class="text-center">Aksi</th></tr>
                 </thead>
                 <tbody>
                     @foreach($users as $usr)
+                    @php
+                        $wisatawanIncomplete = empty($usr->gol_darah)
+                            || empty($usr->kontak_darurat);
+                    @endphp
                     <tr>
                         <td class="bold">{{ $usr->name }}</td>
                         <td>{{ $usr->email }}</td>
-                        <td>{{ $usr->gol_darah ?? '-' }}</td>
+                        <td>
+                            @if(empty($usr->gol_darah))
+                                <span style="color:#f6c23e;"><i class="fas fa-exclamation-circle"></i> -</span>
+                            @else
+                                {{ $usr->gol_darah }}
+                            @endif
+                        </td>
+                        <td>
+                            @if($wisatawanIncomplete)
+                                <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:3px 9px;font-size:10px;font-weight:600;">
+                                    <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i>
+                                    @if(empty($usr->gol_darah) && empty($usr->kontak_darurat)) Gol. Darah & Kontak Darurat
+                                    @elseif(empty($usr->gol_darah)) Gol. Darah kosong
+                                    @else Kontak Darurat kosong
+                                    @endif
+                                </span>
+                            @else
+                                <span class="wm-badge green" style="font-size:10px;"><i class="fas fa-check"></i> Lengkap</span>
+                            @endif
+                        </td>
                         <td id="statusUser-{{ $usr->id }}">
                             @if($usr->is_active)
                                 <span class="wm-badge green">Aktif</span>
