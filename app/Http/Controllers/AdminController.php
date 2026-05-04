@@ -47,8 +47,8 @@ class AdminController extends Controller
                                     ->orderByRaw("FIELD(status, 'pending', 'on_review', 'resolved')")
                                     ->latest()->get(),
                                     
-            'users'           => User::all(),
-            'faskesList'      => Faskes::all(),
+            'users'           => User::paginate(10, ['*'], 'page_users'),
+            'faskesList'      => Faskes::paginate(10, ['*'], 'page_faskes'),
             'wisataApproved'  => $this->getMergedWisataForDashboard(),
         ]);
     }
@@ -400,5 +400,43 @@ class AdminController extends Controller
             ]);
 
         return response()->json($faskes);
+    }
+
+    /**
+     * Export data Faskes ke CSV.
+     */
+    public function exportFaskesCsv()
+    {
+        $faskes = Faskes::all();
+        $filename = "laporan_faskes_" . date('Ymd') . ".csv";
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['ID', 'Nama Faskes', 'Jenis', 'Status Operasional', 'Alamat', 'No Telp', 'Latitude', 'Longitude'];
+
+        $callback = function() use($faskes, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            foreach ($faskes as $f) {
+                fputcsv($file, [
+                    $f->id,
+                    $f->nama_faskes,
+                    $f->jenis_faskes,
+                    $f->status_operasional,
+                    $f->alamat,
+                    $f->no_telp,
+                    $f->latitude,
+                    $f->longitude
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

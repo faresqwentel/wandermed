@@ -99,6 +99,7 @@
             {{-- Body Scrollable --}}
             <div class="panel-body">
 
+                <div id="detailInfoSection">
                 {{-- Modul Foto (Ditampilkan Jika Ada - Misal Pariwisata) --}}
                 <div id="headerPhotoContainer" style="display: none; padding: 0 15px 15px 15px;">
                     <img id="detailPhoto" src="" alt="Foto Lokasi" style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
@@ -138,6 +139,8 @@
                     </div>
                 </div>
 
+
+
                 {{-- Catatan Khusus --}}
                 <div class="panel-section" id="rowNotes" style="display:none;">
                     <div class="panel-section-title">Catatan Penting</div>
@@ -149,19 +152,47 @@
                     </div>
                 </div>
 
+                {{-- Form Ulasan --}}
+                <div id="reviewFormSection" style="display:none;">
+                    <div class="panel-section">
+                        <div class="panel-section-title" id="reviewFaskesName">Bagaimana pengalaman Anda?</div>
+                        <p style="font-size:13px; color:#666;">Bantu wisatawan lain dengan memberikan ulasan mengenai pelayanan fasilitas ini.</p>
+                        <div style="text-align:center; margin: 15px 0;" id="starRating">
+                            <i class="fas fa-star rating-star" data-val="1" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
+                            <i class="fas fa-star rating-star" data-val="2" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
+                            <i class="fas fa-star rating-star" data-val="3" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
+                            <i class="fas fa-star rating-star" data-val="4" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
+                            <i class="fas fa-star rating-star" data-val="5" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
+                        </div>
+                        <input type="hidden" id="reviewRating" value="0">
+                        <textarea id="reviewKomentar" rows="3" style="width:100%; border:1px solid #ddd; border-radius:8px; padding:10px; font-size:13px; resize:vertical;" placeholder="Tuliskan kritik, saran, atau pengalaman Anda..."></textarea>
+                    </div>
+                </div>
+
             </div>
 
             {{-- Tombol Aksi --}}
             <div class="panel-actions" style="display: flex; flex-direction: column; gap: 8px;">
-                <a id="btnDirection" href="#" target="_blank" class="btn btn-hnb-orange w-100 py-3 font-weight-bold shadow-lg" style="border-radius: 12px; font-size: 1.15rem;">
-                    <i class="fas fa-location-arrow mr-2"></i> Mulai Rute Navigasi
-                </a>
-                <div class="d-flex" style="gap: 10px;">
-                    <a id="btnCall" href="tel:+62" class="btn btn-outline-secondary w-50 py-2" style="border-radius: 10px;">
-                        <i class="fas fa-phone-alt mr-1"></i> Hubungi
+                <div id="detailActionSection" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                    <a id="btnDirection" href="#" target="_blank" class="btn btn-hnb-orange w-100 py-3 font-weight-bold shadow-lg" style="border-radius: 12px; font-size: 1.15rem;">
+                        <i class="fas fa-location-arrow mr-2"></i> Mulai Rute Navigasi
                     </a>
-                    <button class="btn btn-outline-secondary w-50 py-2 share" onclick="shareLocation()" style="border-radius: 10px;">
-                        <i class="fas fa-share-alt mr-1"></i> Bagikan
+                    <a id="btnJadwal" href="#" target="_blank" class="btn btn-outline-primary w-100 py-2" style="border-radius: 10px; display: none;">
+                        <i class="fas fa-user-md mr-1"></i> Lihat Jadwal Praktik
+                    </a>
+                    <div class="d-flex" style="gap: 10px;">
+                        <a id="btnCall" href="tel:+62" class="btn btn-outline-secondary w-50 py-2" style="border-radius: 10px;">
+                            <i class="fas fa-phone-alt mr-1"></i> Hubungi
+                        </a>
+                        <button class="btn btn-outline-secondary w-50 py-2 share" onclick="shareLocation()" style="border-radius: 10px;">
+                            <i class="fas fa-share-alt mr-1"></i> Bagikan
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="reviewActionSection" style="display:none; width: 100%;">
+                    <button onclick="submitReview()" id="btnSubmitReview" class="btn btn-success w-100 py-3 font-weight-bold shadow-lg" style="border-radius: 12px; font-size: 1.15rem;">
+                        <i class="fas fa-paper-plane mr-2"></i> Kirim Ulasan
                     </button>
                 </div>
             </div>
@@ -187,8 +218,14 @@
 
 @push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+
+    var isLoggedIn = @json(auth()->check());
+    var csrfToken = "{{ csrf_token() }}";
+    var currentFaskesId = null;
+    var globalUserLocation = null;
 
     // =========================================================
     // DATA MARKER
@@ -472,7 +509,18 @@ document.addEventListener("DOMContentLoaded", function() {
         const bpjsChip = data.bpjs
             ? `<span class="info-chip bpjs-yes"><i class="fas fa-shield-alt"></i> Terima BPJS</span>`
             : `<span class="info-chip bpjs-no"><i class="fas fa-times-circle"></i> Non-BPJS</span>`;
-        badgesEl.innerHTML = statusChip + bpjsChip + `<span class="info-chip chip-distance"><i class="fas fa-route"></i> ~850m dari Anda</span>`;
+            
+        let distText = "Jarak tidak diketahui";
+        if (globalUserLocation) {
+            const distKm = getDistanceFromLatLonInKm(globalUserLocation.lat, globalUserLocation.lng, data.lat, data.lng);
+            if (distKm < 1) {
+                distText = `~${Math.round(distKm * 1000)}m dari Anda`;
+            } else {
+                distText = `~${distKm.toFixed(1)}km dari Anda`;
+            }
+        }
+        
+        badgesEl.innerHTML = statusChip + bpjsChip + `<span class="info-chip chip-distance" style="background:#fff3e0; color:#f57c00; border:1px solid #ffe0b2;"><i class="fas fa-route"></i> ${distText}</span>`;
 
         // Fasilitas Grid
         const facEl = document.getElementById('detailFacilities');
@@ -481,6 +529,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="${f.icon}"><i class="${f.ico}"></i></div>
                 ${f.label}
             </div>`).join('');
+
+        // Jadwal Praktik (Selalu tampilkan tombolnya untuk faskes, biar tahu ada fitur ini)
+        const btnJadwal = document.getElementById('btnJadwal');
+        btnJadwal.style.display = 'block';
+        btnJadwal.href = `/faskes/${data.id}/jadwal`;
 
         // Catatan khusus
         const notesSection = document.getElementById('rowNotes');
@@ -495,7 +548,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('btnDirection').href = `https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}`;
         document.getElementById('btnDirection').onclick = function(e) {
             e.preventDefault();
-            openSmartNavigation(data.lat, data.lng);
+            openSmartNavigation(data.lat, data.lng, data.id, data.name, data.type);
         };
 
         // Tombol telepon
@@ -504,6 +557,10 @@ document.addEventListener("DOMContentLoaded", function() {
         // Konfigurasi Visibilitas Section
         document.getElementById('headerPhotoContainer').style.display = 'none';
         document.getElementById('sectionFasilitas').style.display = 'block';
+        document.getElementById('detailInfoSection').style.display = 'block';
+        document.getElementById('reviewFormSection').style.display = 'none';
+        document.getElementById('detailActionSection').style.display = 'flex';
+        document.getElementById('reviewActionSection').style.display = 'none';
 
         // Buka panel
         document.getElementById('faskesDetailPanel').classList.add('active');
@@ -515,16 +572,19 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // =========================================================
-    // SMART NAVIGATION (Precise Live Routing)
+    // SMART NAVIGATION (Precise Live Routing) & TAMPILAN ULASAN
     // =========================================================
-    window.openSmartNavigation = function(destLat, destLng) {
+    window.openSmartNavigation = function(destLat, destLng, id, name, type) {
         const btn = document.getElementById('btnDirection');
         const originalText = btn ? btn.innerHTML : '';
         if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memuat Rute...';
 
+        const mapUrlBase = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=motorcycle`;
+
         if (!navigator.geolocation) {
             if(btn) btn.innerHTML = originalText;
-            window.open(`https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${destLat},${destLng}&travelmode=motorcycle`, '_blank');
+            window.open(mapUrlBase + '&origin=My+Location', '_blank');
+            triggerReviewView(id, name, type);
             return;
         }
 
@@ -533,14 +593,112 @@ document.addEventListener("DOMContentLoaded", function() {
                 if(btn) btn.innerHTML = originalText;
                 const userLat = pos.coords.latitude;
                 const userLng = pos.coords.longitude;
-                window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${destLat},${destLng}&travelmode=motorcycle`, '_blank');
+                window.open(`${mapUrlBase}&origin=${userLat},${userLng}`, '_blank');
+                triggerReviewView(id, name, type);
             },
             function(err) {
                 if(btn) btn.innerHTML = originalText;
-                window.open(`https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${destLat},${destLng}&travelmode=motorcycle`, '_blank');
+                window.open(mapUrlBase + '&origin=My+Location', '_blank');
+                triggerReviewView(id, name, type);
             },
             { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
         );
+    };
+
+    function triggerReviewView(id, name, type) {
+        if (!id || (typeof id === 'string' && id.startsWith('p_'))) {
+            // Jika pariwisata atau ID tidak valid, jangan tampilkan review form faskes
+            return;
+        }
+        currentFaskesId = typeof id === 'string' && id.startsWith('m_') ? id.substring(2) : id;
+        
+        setTimeout(function() {
+            document.getElementById('detailInfoSection').style.display = 'none';
+            document.getElementById('detailActionSection').style.display = 'none';
+            document.getElementById('reviewFormSection').style.display = 'block';
+            document.getElementById('reviewActionSection').style.display = 'flex';
+            document.getElementById('reviewFaskesName').textContent = 'Ulasan untuk ' + name;
+            
+            // Reset form
+            document.getElementById('reviewRating').value = '0';
+            document.getElementById('reviewKomentar').value = '';
+            document.querySelectorAll('.rating-star').forEach(s => s.style.color = '#ddd');
+        }, 1500);
+    }
+
+    // Event listener for stars
+    document.querySelectorAll('.rating-star').forEach(star => {
+        star.addEventListener('click', function() {
+            let val = this.getAttribute('data-val');
+            document.getElementById('reviewRating').value = val;
+            document.querySelectorAll('.rating-star').forEach(s => {
+                if (s.getAttribute('data-val') <= val) {
+                    s.style.color = '#f6c23e';
+                } else {
+                    s.style.color = '#ddd';
+                }
+            });
+        });
+    });
+
+    window.submitReview = function() {
+        if (!isLoggedIn) {
+            Swal.fire({
+                title: 'Anda Harus Login',
+                text: 'Silakan login terlebih dahulu untuk memberikan ulasan dan membagikan pengalaman Anda.',
+                icon: 'warning',
+                confirmButtonText: 'Ke Halaman Login',
+                showCancelButton: true,
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+            return;
+        }
+
+        const rating = document.getElementById('reviewRating').value;
+        const komentar = document.getElementById('reviewKomentar').value;
+
+        if (rating == 0) {
+            Swal.fire('Oops', 'Silakan berikan rating bintang terlebih dahulu.', 'warning');
+            return;
+        }
+
+        if (komentar.trim() === '') {
+            Swal.fire('Oops', 'Silakan tuliskan komentar ulasan Anda.', 'warning');
+            return;
+        }
+
+        const btn = document.getElementById('btnSubmitReview');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
+        btn.disabled = true;
+
+        fetch('/faskes/' + currentFaskesId + '/ulasan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ rating: rating, komentar: komentar })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                Swal.fire('Berhasil', 'Terima kasih atas ulasan Anda!', 'success');
+                closeDetail();
+            } else {
+                Swal.fire('Gagal', data.message || 'Terjadi kesalahan.', 'error');
+                btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Ulasan';
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            Swal.fire('Error', 'Terjadi kesalahan koneksi.', 'error');
+            btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Ulasan';
+            btn.disabled = false;
+        });
     };
 
     // =========================================================
@@ -689,6 +847,7 @@ document.addEventListener("DOMContentLoaded", function() {
         navigator.geolocation.getCurrentPosition(
             pos => {
                 const { latitude: lat, longitude: lng } = pos.coords;
+                globalUserLocation = { lat, lng };
                 map.flyTo([lat, lng], 15, { duration: 1.5 });
 
                 // Tandai posisi pengguna
@@ -743,7 +902,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('rowJam').classList.remove('jam-open');
         document.getElementById('rowJam').querySelector('i').className = 'fas fa-ticket-alt';
 
-        badgesEl = document.getElementById('detailBadges');
+        const badgesEl = document.getElementById('detailBadges');
         badgesEl.innerHTML = `<span class="info-chip" style="background:rgba(139, 92, 246, 0.2); color:#C4B5FD;"><i class="fas fa-camera"></i> Pariwisata</span>`;
 
         // Modul Foto
@@ -756,7 +915,7 @@ document.addEventListener("DOMContentLoaded", function() {
              photoContainer.style.display = 'none';
         }
         
-        // Sembunyikan Fasilitas (karena data wisata belum pakai)
+        // Sembunyikan Fasilitas
         document.getElementById('sectionFasilitas').style.display = 'none';
 
         if (w.deskripsi) {
@@ -766,10 +925,16 @@ document.addEventListener("DOMContentLoaded", function() {
             notes.style.display = 'none';
         }
 
+        document.getElementById('detailInfoSection').style.display = 'block';
+        document.getElementById('reviewFormSection').style.display = 'none';
+        document.getElementById('detailActionSection').style.display = 'flex';
+        document.getElementById('reviewActionSection').style.display = 'none';
+        document.getElementById('btnJadwal').style.display = 'none';
+
         document.getElementById('btnDirection').href = `https://www.google.com/maps/dir/?api=1&destination=${w.lat},${w.lng}`;
         document.getElementById('btnDirection').onclick = function(e) {
             e.preventDefault();
-            openSmartNavigation(w.lat, w.lng);
+            openSmartNavigation(w.lat, w.lng, w.id, w.name, 'Pariwisata');
         };
         document.getElementById('btnCall').href = `tel:${(w.telp || '').replace(/\D/g, '')}`;
         document.getElementById('faskesDetailPanel').classList.add('active');

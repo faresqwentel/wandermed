@@ -47,7 +47,7 @@ class HomeController extends Controller
 
     public function petaFaskes() {
         // Ambil faskes terverifikasi
-        $faskes = \App\Models\Faskes::with('mitra')
+        $faskes = \App\Models\Faskes::with(['mitra', 'jadwals'])
             ->whereHas('mitra', fn($q) => $q->where('is_verified', true))
             ->get()
             ->map(fn($f) => [
@@ -62,6 +62,12 @@ class HomeController extends Controller
                 'bpjs'     => (bool) $f->dukungan_bpjs,
                 'facilities' => $f->layanan_tersedia ?? [],
                 'notes'    => $f->pengumuman,
+                'jadwals'  => $f->jadwals->map(fn($j) => [
+                    'dokter'       => $j->nama_dokter,
+                    'spesialisasi' => $j->spesialisasi,
+                    'hari'         => $j->hari,
+                    'jam'          => substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5),
+                ]),
             ]);
 
         // Ambil pariwisata yang disetujui (Dari model form publik)
@@ -106,6 +112,15 @@ class HomeController extends Controller
         $daftarPariwisata = $pariwisata;
 
         return view('v_peta_faskes', compact('daftarFaskes', 'daftarPariwisata'));
+    }
+
+    public function jadwalFaskes($id) {
+        $faskes = \App\Models\Faskes::with(['jadwals'])
+            ->where('id', $id)
+            ->whereHas('mitra', fn($q) => $q->where('is_verified', true))
+            ->firstOrFail();
+            
+        return view('v_jadwal_faskes', compact('faskes'));
     }
 
     // Dashboard Routes

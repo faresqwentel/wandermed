@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     var row=document.getElementById('mitraRow-'+id);
                     if(row){row.style.opacity='0.4';row.querySelector('td:last-child').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Disetujui</span>';}
                     updatePendingCount();showToast(data.message||'Mitra berhasil disetujui!');
+                    setTimeout(function(){location.reload();}, 1500);
                 }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Setujui Mitra';});
             }
         });
@@ -153,6 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     var row=document.getElementById('wisataRow-'+id);
                     if(row){row.style.opacity='0.4';row.querySelector('td:last-child').innerHTML='<span class="wm-badge green"><i class="fas fa-check-circle"></i> Disetujui</span>';}
                     updatePendingCount();showToast(data.message||'Destinasi disetujui!');
+                    setTimeout(function(){location.reload();}, 1500);
                 }).finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Setujui Pendaftaran';});
             }
         });

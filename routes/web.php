@@ -28,6 +28,7 @@ use App\Http\Controllers\PariwisataController;
 Route::get('/', [HomeController::class, 'wisatawanHome']);
 Route::get('/mitra', fn() => view('v_mitra_home'))->name('mitra.home');
 Route::get('/peta-faskes', [HomeController::class, 'petaFaskes'])->name('peta.faskes');
+Route::get('/faskes/{id}/jadwal', [HomeController::class, 'jadwalFaskes'])->name('faskes.jadwal');
 Route::post('/lapor-masalah', [HomeController::class, 'submitLaporan'])->name('lapor.masalah');
 Route::get('/daftar', [HomeController::class, 'daftarPilihan']);
 Route::get('/daftar/wisatawan', [HomeController::class, 'daftarWisatawan']);
@@ -95,7 +96,16 @@ Route::middleware(['auth.session', 'role:mitra_faskes,mitra_pariwisata'])->group
     // Update profil faskes
     Route::post('/faskes/profil', [FaskesController::class, 'updateProfil'])
          ->name('faskes.profil.update');
+
+    // Ulasan dan Jadwal
+    Route::post('/faskes/ulasan/{id}/reply', [FaskesController::class, 'replyUlasan'])->name('faskes.ulasan.reply');
+    Route::post('/faskes/jadwal', [FaskesController::class, 'storeJadwal'])->name('faskes.jadwal.store');
+    Route::delete('/faskes/jadwal/{id}', [FaskesController::class, 'destroyJadwal'])->name('faskes.jadwal.destroy');
 });
+
+// Route Submit Ulasan Wisatawan (harus login)
+Route::post('/faskes/{faskes_id}/ulasan', [FaskesController::class, 'submitUlasan'])
+     ->middleware(['auth.session'])->name('faskes.ulasan.submit');
 
 
 // --- Dashboard Admin ---
@@ -135,6 +145,9 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
     // Hapus data faskes (admin)
     Route::delete('/admin/faskes/{id}', [AdminController::class, 'destroyFaskes'])
          ->name('admin.faskes.destroy');
+    // Export Faskes
+    Route::get('/admin/faskes/export', [AdminController::class, 'exportFaskesCsv'])
+         ->name('admin.faskes.export');
 });
 
 // Rute lama untuk backward compatibility (redirect ke rute baru)

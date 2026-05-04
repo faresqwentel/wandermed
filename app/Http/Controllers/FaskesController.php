@@ -35,14 +35,18 @@ class FaskesController extends Controller
 
         // Statistik dashboard (kelak dari data nyata)
         $totalPengunjung = $faskes->riwayatKunjungan()->count();
-        $totalUlasan     = $faskes->riwayatKunjungan()
-                                  ->whereNotNull('catatan_pribadi')->count();
+        $totalUlasan     = \App\Models\UlasanFaskes::where('faskes_id', $faskes->id)->count();
+
+        $ulasans = \App\Models\UlasanFaskes::with('user')->where('faskes_id', $faskes->id)->latest()->get();
+        $jadwals = \App\Models\JadwalDokter::where('faskes_id', $faskes->id)->orderBy('hari')->get();
 
         return view('dashboard_faskes', compact(
             'mitra',
             'faskes',
             'totalPengunjung',
-            'totalUlasan'
+            'totalUlasan',
+            'ulasans',
+            'jadwals'
         ));
     }
 
@@ -131,5 +135,57 @@ class FaskesController extends Controller
         $faskes->update($data);
 
         return back()->with('success', 'Profil faskes berhasil diperbarui!');
+    }
+
+    // =========================================================
+    // ULASAN DAN JADWAL
+    // =========================================================
+
+    public function submitUlasan(Request $request, $faskes_id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'komentar' => 'required|string',
+        ]);
+
+        \App\Models\UlasanFaskes::create([
+            'user_id' => session('auth_user.id'),
+            'faskes_id' => $faskes_id,
+            'rating' => $request->rating,
+            'komentar' => $request->komentar,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Ulasan berhasil dikirim!']);
+    }
+
+    public function replyUlasan(Request $request, $id)
+    {
+        $request->validate(['balasan' => 'required|string']);
+        $ulasan = \App\Models\UlasanFaskes::findOrFail($id);
+        $ulasan->update(['balasan_faskes' => $request->balasan]);
+        return back()->with('success', 'Balasan berhasil disimpan!');
+    }
+
+    public function storeJadwal(Request $request)
+    {
+        $request->validate([
+            'nama_dokter' => 'required|string',
+            'spesialisasi' => 'required|string',
+            'hari' => 'required|string',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+        ]);
+
+        $faskes = Faskes::where('mitra_id', session('auth_user.id'))->firstOrFail();
+
+        \App\Models\JadwalDokter::create(array_merge($request->all(), ['faskes_id' => $faskes->id]));
+        return back()->with('success', 'Jadwal dokter berhasil ditambahkan!');
+    }
+
+    public function destroyJadwal($id)
+    {
+        $jadwal = \App\Models\JadwalDokter::findOrFail($id);
+        $jadwal->delete();
+        return back()->with('success', 'Jadwal dokter berhasil dihapus!');
     }
 }

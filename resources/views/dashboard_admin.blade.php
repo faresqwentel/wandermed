@@ -355,11 +355,14 @@
         <div class="wm-card-header">
             <div class="wm-card-title">
                 <i class="fas fa-clinic-medical" style="color:#ff7a00;"></i> Daftar Mitra Faskes
-                <span class="wm-badge orange" style="margin-left:8px;font-size:10px;">{{ $faskesList->count() }} Faskes</span>
+                <span class="wm-badge orange" style="margin-left:8px;font-size:10px;">{{ $faskesList->total() }} Faskes</span>
             </div>
-            <div style="position:relative;flex:0 0 200px;">
-                <i class="fas fa-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px;"></i>
-                <input type="text" id="filterFaskesInput" class="wm-input" style="padding-left:32px;height:34px;font-size:12px;" placeholder="Cari faskes..." onkeyup="filterTable('filterFaskesInput','faskesTable','col-nama-faskes')">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <a href="{{ route('admin.faskes.export') }}" class="wm-btn success sm" style="height:34px; line-height:22px;"><i class="fas fa-file-excel"></i> Export CSV</a>
+                <div style="position:relative;flex:0 0 200px;">
+                    <i class="fas fa-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:12px;"></i>
+                    <input type="text" id="filterFaskesInput" class="wm-input" style="padding-left:32px;height:34px;font-size:12px;" placeholder="Cari faskes (halaman ini)..." onkeyup="filterTable('filterFaskesInput','faskesTable','col-nama-faskes')">
+                </div>
             </div>
         </div>
         <div class="wm-table-wrap">
@@ -435,6 +438,9 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div style="padding: 15px; border-top: 1px solid var(--border);">
+            {{ $faskesList->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>
@@ -583,6 +589,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div style="padding: 15px; border-top: 1px solid var(--border);">
+            {{ $users->links('pagination::bootstrap-4') }}
         </div>
     </div>
 </div>

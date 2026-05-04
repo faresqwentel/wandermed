@@ -17,7 +17,9 @@
     var faskesNavMap = {
         'navDashboard'    : 'sectionDashboard',
         'navKontrolStatus': 'sectionKontrolStatus',
+        'navJadwal'       : 'sectionJadwal',
         'navFasilitas'    : 'sectionFasilitas',
+        'navUlasan'       : 'sectionUlasan',
         'navProfilFaskes' : 'sectionProfil',
         'navKoordinat'    : 'sectionKoordinat',
     };

@@ -19,8 +19,15 @@
     <a href="#" class="wm-nav-link" id="navKontrolStatus">
         <i class="fas fa-toggle-on"></i> Kontrol Status
     </a>
+    <a href="#" class="wm-nav-link" id="navJadwal">
+        <i class="fas fa-calendar-alt"></i> Jadwal Praktik
+    </a>
     <a href="#" class="wm-nav-link" id="navFasilitas">
         <i class="fas fa-clipboard-list"></i> Fasilitas & Layanan
+    </a>
+    <div class="wm-nav-label">Feedback</div>
+    <a href="#" class="wm-nav-link" id="navUlasan">
+        <i class="fas fa-star"></i> Ulasan Wisatawan
     </a>
     <div class="wm-nav-label">Profil</div>
     <a href="#" class="wm-nav-link" id="navProfilFaskes">
@@ -272,6 +279,133 @@
             <button class="wm-btn success" style="width:100%; margin-top: 16px;" onclick="saveFasilitas()">
                 <i class="fas fa-check-double"></i> Simpan Fasilitas ke Peta
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION JADWAL PRAKTIK ===== -->
+<div id="sectionJadwal" class="faskes-section" style="display:none;">
+    <div class="wm-page-header">
+        <div>
+            <div class="wm-page-title">Manajemen Jadwal Praktik</div>
+            <div class="wm-page-subtitle">Atur jadwal dokter yang tersedia di faskes Anda</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="wm-card">
+                <div class="wm-card-header"><div class="wm-card-title">Tambah Jadwal Baru</div></div>
+                <div class="wm-card-body">
+                    <form action="{{ route('faskes.jadwal.store') }}" method="POST">
+                        @csrf
+                        <div class="wm-form-group mb-2">
+                            <label class="wm-label">Nama Dokter</label>
+                            <input type="text" name="nama_dokter" class="wm-input" required>
+                        </div>
+                        <div class="wm-form-group mb-2">
+                            <label class="wm-label">Spesialisasi</label>
+                            <input type="text" name="spesialisasi" class="wm-input" placeholder="Misal: Poli Umum, Dokter Gigi" required>
+                        </div>
+                        <div class="wm-form-group mb-2">
+                            <label class="wm-label">Hari Praktik</label>
+                            <select name="hari" class="wm-input" required>
+                                <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
+                                <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
+                                <option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option>
+                                <option value="Minggu">Minggu</option>
+                            </select>
+                        </div>
+                        <div style="display:flex;gap:10px;" class="mb-3">
+                            <div class="wm-form-group flex-1">
+                                <label class="wm-label">Jam Mulai</label>
+                                <input type="text" name="jam_mulai" class="wm-input" placeholder="08:00" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" title="Format 24 jam (misal 08:00 atau 14:30)" required maxlength="5">
+                            </div>
+                            <div class="wm-form-group flex-1">
+                                <label class="wm-label">Jam Selesai</label>
+                                <input type="text" name="jam_selesai" class="wm-input" placeholder="16:00" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" title="Format 24 jam (misal 08:00 atau 14:30)" required maxlength="5">
+                            </div>
+                        </div>
+                        <button type="submit" class="wm-btn blue w-100"><i class="fas fa-plus"></i> Tambah Jadwal</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="wm-card">
+                <div class="wm-card-header"><div class="wm-card-title">Daftar Jadwal Praktik</div></div>
+                <div class="wm-table-wrap">
+                    <table class="wm-table">
+                        <thead>
+                            <tr><th>Dokter</th><th>Spesialis</th><th>Hari</th><th>Jam</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody>
+                            @forelse($jadwals ?? [] as $jadwal)
+                            <tr>
+                                <td class="bold">{{ $jadwal->nama_dokter }}</td>
+                                <td>{{ $jadwal->spesialisasi }}</td>
+                                <td>{{ $jadwal->hari }}</td>
+                                <td>{{ substr($jadwal->jam_mulai,0,5) }} - {{ substr($jadwal->jam_selesai,0,5) }}</td>
+                                <td>
+                                    <form action="{{ route('faskes.jadwal.destroy', $jadwal->id) }}" method="POST">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="wm-btn danger sm" onclick="return confirm('Hapus jadwal?')"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="5" class="text-center text-muted py-3">Belum ada jadwal praktik ditambahkan.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION ULASAN WISATAWAN ===== -->
+<div id="sectionUlasan" class="faskes-section" style="display:none;">
+    <div class="wm-page-header">
+        <div>
+            <div class="wm-page-title">Ulasan & Feedback Wisatawan</div>
+            <div class="wm-page-subtitle">Baca dan balas ulasan dari wisatawan yang telah berkunjung</div>
+        </div>
+    </div>
+    <div class="wm-card">
+        <div class="wm-card-body">
+            @forelse($ulasans ?? [] as $ulasan)
+            <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <div>
+                        <strong>{{ $ulasan->user->name ?? 'Wisatawan' }}</strong> 
+                        <span style="color:#f6c23e;">
+                            @for($i=1; $i<=5; $i++)
+                                <i class="fas fa-star" style="{{ $i <= $ulasan->rating ? 'color:#f6c23e;' : 'color:#ddd;' }}"></i>
+                            @endfor
+                        </span>
+                    </div>
+                    <small style="color:#999;">{{ $ulasan->created_at->format('d M Y H:i') }}</small>
+                </div>
+                <p style="font-size:13px; color:#555; margin-bottom:10px;">"{{ $ulasan->komentar }}"</p>
+                
+                @if($ulasan->balasan_faskes)
+                <div style="background:#f4f7fe; padding:10px; border-radius:8px; font-size:12px; margin-left:20px; border-left:3px solid #4e73df;">
+                    <strong><i class="fas fa-reply" style="color:#4e73df;"></i> Balasan Anda:</strong><br>
+                    {{ $ulasan->balasan_faskes }}
+                </div>
+                @else
+                <form action="{{ route('faskes.ulasan.reply', $ulasan->id) }}" method="POST" style="margin-left:20px;">
+                    @csrf
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" name="balasan" class="wm-input" placeholder="Balas ulasan ini..." required style="flex:1; font-size:12px; height:32px;">
+                        <button type="submit" class="wm-btn info sm">Balas</button>
+                    </div>
+                </form>
+                @endif
+            </div>
+            @empty
+            <div class="text-center text-muted py-4">Belum ada ulasan masuk.</div>
+            @endforelse
         </div>
     </div>
 </div>
