@@ -63,7 +63,7 @@
                         @endif
                         
                         <div class="mt-5 text-center">
-                            <button onclick="window.close()" class="btn btn-secondary px-4 py-3" style="border-radius: 12px; font-weight: bold; min-width: 200px;">
+                            <button onclick="window.history.back()" class="btn btn-secondary px-4 py-3" style="border-radius: 12px; font-weight: bold; min-width: 200px;">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali ke Peta
                             </button>
                         </div>

@@ -55,9 +55,17 @@
             </div>
 
             <div class="text-center mt-4 animate-fade-up delay-3">
-                <a href="/" class="btn btn-outline-light radius-hnb px-5 py-3 font-weight-bold shadow-sm">
+                <a href="/" class="btn btn-outline-light radius-hnb px-5 py-3 font-weight-bold shadow-sm mb-3">
                     <i class="fas fa-arrow-left mr-2"></i> Kembali ke Beranda
                 </a>
+                <div class="mt-2">
+                    <p class="text-white-50 small">
+                        Sudah punya akun? 
+                        <a href="/login" class="text-hnb-orange font-weight-bold text-decoration-none ml-1">
+                            Masuk Sekarang <i class="fas fa-sign-in-alt ml-1"></i>
+                        </a>
+                    </p>
+                </div>
             </div>
 
         </div>

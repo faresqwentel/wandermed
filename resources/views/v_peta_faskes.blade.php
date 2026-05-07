@@ -177,7 +177,7 @@
                     <a id="btnDirection" href="#" target="_blank" class="btn btn-hnb-orange w-100 py-3 font-weight-bold shadow-lg" style="border-radius: 12px; font-size: 1.15rem;">
                         <i class="fas fa-location-arrow mr-2"></i> Mulai Rute Navigasi
                     </a>
-                    <a id="btnJadwal" href="#" target="_blank" class="btn btn-outline-primary w-100 py-2" style="border-radius: 10px; display: none;">
+                    <a id="btnJadwal" href="#" class="btn btn-outline-primary w-100 py-2" style="border-radius: 10px; display: none;">
                         <i class="fas fa-user-md mr-1"></i> Lihat Jadwal Praktik
                     </a>
                     <div class="d-flex" style="gap: 10px;">

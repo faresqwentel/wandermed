@@ -258,6 +258,14 @@
                             </form>
                         </div>
                     </div>
+                    <div class="text-center mt-4">
+                        <p class="text-white-50 small">
+                            Sudah punya akun? 
+                            <a href="/login" class="text-hnb-orange font-weight-bold text-decoration-none ml-1">
+                                Masuk Sekarang <i class="fas fa-sign-in-alt ml-1"></i>
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

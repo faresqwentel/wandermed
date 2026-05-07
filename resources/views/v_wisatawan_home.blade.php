@@ -85,26 +85,6 @@
                 </div>
             </div>
 
-            <div class="row mt-5 pt-4">
-                <div class="col-12 px-3">
-                    <div class="glass-premier radius-hnb p-4 p-md-5 text-center shadow-sm border-0"
-                         style="background: rgba(255, 122, 0, 0.03) !important; border: 1px dashed rgba(255, 122, 0, 0.2) !important;">
-
-                        <h5 class="text-hnb-orange font-weight-bold mb-3">Special Thanks</h5>
-                        <p class="text-white-50 mx-auto mb-4" style="max-width: 700px; line-height: 1.8;">
-                            Terima kasih telah mempercayakan perjalanan Anda kepada <strong>WanderMed</strong>. Proyek ini adalah dedikasi kami untuk menciptakan ekosistem pariwisata Indonesia yang lebih aman, sehat, dan terintegrasi bagi setiap petualang.
-                        </p>
-
-                        <div class="d-flex align-items-center justify-content-center flex-wrap" style="gap: 20px;">
-                            <div class="d-flex align-items-center">
-                                <img src="{{ asset('img/wdm.png') }}" class="logo-for-light-bg mr-2" style="width: 30px; height: 30px; object-fit: contain;">
-                                <img src="{{ asset('img/wdmlight.png') }}" class="logo-for-dark-bg mr-2" style="width: 30px; height: 30px; object-fit: contain;">
-                                <span class="text-white small font-weight-bold opacity-75">Developed by Hear & Build Studio</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -187,6 +167,31 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container px-4">
+            <div class="row">
+                <div class="col-12 px-3">
+                    <div class="glass-premier radius-hnb p-4 p-md-5 text-center shadow-sm border-0"
+                         style="background: rgba(255, 122, 0, 0.03) !important; border: 1px dashed rgba(255, 122, 0, 0.2) !important;">
+
+                        <h5 class="text-hnb-orange font-weight-bold mb-3">Special Thanks</h5>
+                        <p class="text-white-50 mx-auto mb-4" style="max-width: 700px; line-height: 1.8;">
+                            Terima kasih telah mempercayakan perjalanan Anda kepada <strong>WanderMed</strong>. Proyek ini adalah dedikasi kami untuk menciptakan ekosistem pariwisata Indonesia yang lebih aman, sehat, dan terintegrasi bagi setiap petualang.
+                        </p>
+
+                        <div class="d-flex align-items-center justify-content-center flex-wrap" style="gap: 20px;">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ asset('img/wdm.png') }}" class="logo-for-light-bg mr-2" style="width: 30px; height: 30px; object-fit: contain;">
+                                <img src="{{ asset('img/wdmlight.png') }}" class="logo-for-dark-bg mr-2" style="width: 30px; height: 30px; object-fit: contain;">
+                                <span class="text-white small font-weight-bold opacity-75">Developed by Hear & Build Studio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
