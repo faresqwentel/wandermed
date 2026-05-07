@@ -103,7 +103,51 @@
         </div>
     </div>
 
+    {{-- Rating Summary Card --}}
+    @php
+        $rataRating = isset($ulasans) && $ulasans->count() > 0 ? round($ulasans->avg('rating'), 1) : 0;
+        $persen = $rataRating > 0 ? ($rataRating / 5) * 100 : 0;
+        $totalUlasanCount = $totalUlasan ?? 0;
+    @endphp
+    <div class="wm-card" style="border-left: 4px solid #f6c23e; margin-bottom: 22px;">
+        <div class="wm-card-body" style="padding: 16px 22px; display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+            <div style="text-align:center; min-width:80px;">
+                <div style="font-size:2.8rem; font-weight:800; color:#f6c23e; line-height:1;">{{ $rataRating > 0 ? $rataRating : '–' }}</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">rata-rata</div>
+            </div>
+            <div style="flex:1; min-width:160px;">
+                <div style="margin-bottom:6px;">
+                    @for($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star" style="font-size:16px; {{ $i <= round($rataRating) ? 'color:#f6c23e;' : 'color:rgba(255,255,255,0.15);' }}"></i>
+                    @endfor
+                </div>
+                <div style="background:rgba(255,255,255,0.06); border-radius:20px; height:8px; overflow:hidden; margin-bottom:6px;">
+                    <div style="background:linear-gradient(90deg,#f6c23e,#e5a800); height:100%; width:{{ $persen }}%; border-radius:20px;"></div>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted);">
+                    Berdasarkan <strong style="color:var(--text-primary);">{{ $totalUlasanCount }}</strong> ulasan wisatawan
+                </div>
+            </div>
+            @if($totalUlasanCount > 0 && isset($ulasans))
+            <div style="display:grid; gap:4px; min-width:130px;">
+                @for($b = 5; $b >= 1; $b--)
+                @php $cnt = $ulasans->where('rating', $b)->count(); $pct = $totalUlasanCount > 0 ? ($cnt / $totalUlasanCount) * 100 : 0; @endphp
+                <div style="display:flex; align-items:center; gap:6px; font-size:10px;">
+                    <span style="color:#f6c23e; width:10px; text-align:right;">{{ $b }}</span>
+                    <i class="fas fa-star" style="font-size:8px; color:#f6c23e;"></i>
+                    <div style="flex:1; background:rgba(255,255,255,0.06); border-radius:10px; height:5px; overflow:hidden;">
+                        <div style="background:#f6c23e; height:100%; width:{{ $pct }}%;"></div>
+                    </div>
+                    <span style="color:var(--text-muted); width:16px;">{{ $cnt }}</span>
+                </div>
+                @endfor
+            </div>
+            @endif
+        </div>
+    </div>
+
     <!-- Pesan dari Admin (tampil hanya jika ada pesan) -->
+
     @if(!empty($faskes->pesan_admin))
     <div class="wm-card mt-4" style="border-left: 4px solid #f6c23e; background: rgba(246,194,62,0.06);">
         <div class="wm-card-header" style="border-bottom: 1px solid rgba(246,194,62,0.2);">
@@ -372,43 +416,73 @@
         </div>
     </div>
     <div class="wm-card">
-        <div class="wm-card-body">
+        <div class="wm-card-body" style="padding: 0;">
             @forelse($ulasans ?? [] as $ulasan)
-            <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <div>
-                        <strong>{{ $ulasan->user->name ?? 'Wisatawan' }}</strong> 
-                        <span style="color:#f6c23e;">
-                            @for($i=1; $i<=5; $i++)
-                                <i class="fas fa-star" style="{{ $i <= $ulasan->rating ? 'color:#f6c23e;' : 'color:#ddd;' }}"></i>
-                            @endfor
-                        </span>
+            @php
+                $reviewer = $ulasan->user;
+                $hasAlergi = $reviewer && !empty($reviewer->riwayat_alergi);
+                $hasGolDarah = $reviewer && !empty($reviewer->gol_darah);
+                $initial = $reviewer ? strtoupper(substr($reviewer->name, 0, 1)) : '?';
+            @endphp
+            <div style="padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+
+                {{-- Header: Avatar + Nama + Bintang + Tanggal --}}
+                <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:12px;">
+                    <div style="width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#4e73df,#224abe); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:16px; flex-shrink:0;">
+                        {{ $initial }}
                     </div>
-                    <small style="color:#999;">{{ $ulasan->created_at->format('d M Y H:i') }}</small>
-                </div>
-                <p style="font-size:13px; color:#555; margin-bottom:10px;">"{{ $ulasan->komentar }}"</p>
-                
-                @if($ulasan->balasan_faskes)
-                <div style="background:#f4f7fe; padding:10px; border-radius:8px; font-size:12px; margin-left:20px; border-left:3px solid #4e73df;">
-                    <strong><i class="fas fa-reply" style="color:#4e73df;"></i> Balasan Anda:</strong><br>
-                    {{ $ulasan->balasan_faskes }}
-                </div>
-                @else
-                <form action="{{ route('faskes.ulasan.reply', $ulasan->id) }}" method="POST" style="margin-left:20px;">
-                    @csrf
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" name="balasan" class="wm-input" placeholder="Balas ulasan ini..." required style="flex:1; font-size:12px; height:32px;">
-                        <button type="submit" class="wm-btn info sm">Balas</button>
+                    <div style="flex:1; min-width:0;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                            <div>
+                                <strong style="font-size:14px;">{{ $reviewer->name ?? 'Wisatawan' }}</strong>
+                                <span style="margin-left:8px; color:#f6c23e;">
+                                    @for($i=1; $i<=5; $i++)
+                                        <i class="fas fa-star" style="font-size:11px; {{ $i <= $ulasan->rating ? 'color:#f6c23e;' : 'color:rgba(255,255,255,0.15);' }}"></i>
+                                    @endfor
+                                    <span style="font-size:11px; color:var(--text-muted); margin-left:4px;">({{ $ulasan->rating }}/5)</span>
+                                </span>
+                            </div>
+                            <small style="color:var(--text-muted); font-size:11px; white-space:nowrap;">
+                                <i class="fas fa-clock mr-1"></i>{{ $ulasan->created_at->format('d M Y, H:i') }}
+                            </small>
+                        </div>
+
+                        {{-- Medical Info Chips --}}
+                        @if($hasGolDarah || $hasAlergi)
+                        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+                            @if($hasGolDarah)
+                            <span style="display:inline-flex; align-items:center; gap:4px; background:rgba(231,74,59,0.1); color:#e74a3b; border:1px solid rgba(231,74,59,0.3); border-radius:20px; padding:2px 9px; font-size:10px; font-weight:700;">
+                                <i class="fas fa-tint" style="font-size:9px;"></i> Gol. Darah: {{ $reviewer->gol_darah }}
+                            </span>
+                            @endif
+                            @if($hasAlergi)
+                            <span style="display:inline-flex; align-items:center; gap:4px; background:rgba(246,194,62,0.1); color:#f6c23e; border:1px solid rgba(246,194,62,0.3); border-radius:20px; padding:2px 9px; font-size:10px; font-weight:600;" title="{{ $reviewer->riwayat_alergi }}">
+                                <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i>
+                                Alergi: {{ Str::limit($reviewer->riwayat_alergi, 50) }}
+                            </span>
+                            @endif
+                        </div>
+                        @endif
                     </div>
-                </form>
-                @endif
+                </div>
+
+                {{-- Komentar --}}
+                <div style="background:rgba(255,255,255,0.03); border-radius:10px; padding:12px 14px; font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:12px; border-left:3px solid rgba(255,255,255,0.1);">
+                    "{{ $ulasan->komentar }}"
+                </div>
+
+                {{-- Balasan dihapus sesuai request user (tidak perlu fitur balas) --}}
             </div>
             @empty
-            <div class="text-center text-muted py-4">Belum ada ulasan masuk.</div>
+            <div class="text-center py-5" style="color:var(--text-muted);">
+                <i class="fas fa-comment-slash fa-2x mb-3 d-block" style="opacity:0.3;"></i>
+                Belum ada ulasan masuk dari wisatawan.
+            </div>
             @endforelse
         </div>
     </div>
 </div>
+
 
 <!-- ===== SECTION 4: PROFIL FASKES ===== -->
 <div id="sectionProfil" class="faskes-section" style="display:none;">

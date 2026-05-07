@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         'navDashboard':'sectionDashboard','navValidasi':'sectionValidasi',
         'navLaporan':'sectionLaporan','navDataWisatawan':'sectionWisatawan',
         'navDataFaskes':'sectionFaskes','navDataPariwisata':'sectionPariwisata',
+        'navAllUlasan':'sectionAllUlasan',
     };
     document.querySelectorAll('.wm-nav-link').forEach(function(link) {
         link.addEventListener('click', function(e) {
@@ -29,8 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
     window.filterTable = function(inputId, tableId, colClass) {
         var query = document.getElementById(inputId).value.toLowerCase();
         document.querySelectorAll('#'+tableId+' tbody tr').forEach(function(row){
-            var cell = row.querySelector('.'+colClass);
-            if (cell) row.style.display = cell.textContent.toLowerCase().includes(query)?'':'none';
+            var cells = row.querySelectorAll('.'+colClass);
+            var match = false;
+            cells.forEach(function(c){ if(c.textContent.toLowerCase().includes(query)) match = true; });
+            row.style.display = match ? '' : 'none';
         });
     };
     window.updatePendingCount = function() {

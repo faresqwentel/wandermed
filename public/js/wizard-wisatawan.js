@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const formProgress = document.getElementById("formProgress");
     const navButtons = document.getElementById("navButtons");
     const navFinish = document.getElementById("navFinish");
+    const wizardForm = document.getElementById("wizardForm");
 
     if (btnNext && btnPrev) {
         function updateForm() {
@@ -45,14 +46,52 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         btnNext.addEventListener("click", () => {
-            currentStep++;
-            updateForm();
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            if (currentStep <= totalSteps) {
+                // Validasi input di step aktif
+                const activeStep = document.getElementById("step" + currentStep);
+                const inputs = activeStep.querySelectorAll("input, select, textarea");
+                let isValid = true;
+
+                for (let input of inputs) {
+                    if (!input.checkValidity()) {
+                        input.reportValidity();
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (!isValid) return;
+
+                if (currentStep === totalSteps) {
+                    // Cek password confirmation khusus di step 3
+                    const pass = document.getElementById("inputPass").value;
+                    const confirm = document.getElementById("inputPassConfirm").value;
+                    if (pass !== confirm) {
+                        document.getElementById("inputPassConfirm").setCustomValidity("Kata sandi tidak cocok!");
+                        document.getElementById("inputPassConfirm").reportValidity();
+                        return;
+                    } else {
+                        document.getElementById("inputPassConfirm").setCustomValidity("");
+                    }
+
+                    // Submit form
+                    btnNext.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
+                    btnNext.disabled = true;
+                    wizardForm.submit();
+                    return;
+                }
+
+                currentStep++;
+                updateForm();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
         });
+
         btnPrev.addEventListener("click", () => {
             if (currentStep > 1) {
                 currentStep--;
                 updateForm();
+                window.scrollTo({ top: 0, behavior: "smooth" });
             } else {
                 window.location.href = "/daftar";
             }

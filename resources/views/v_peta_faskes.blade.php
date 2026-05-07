@@ -97,106 +97,134 @@
             </div>
 
             {{-- Body Scrollable --}}
+            {{-- ===== BODY SCROLLABLE ===== --}}
             <div class="panel-body">
-
-                <div id="detailInfoSection">
-                {{-- Modul Foto (Ditampilkan Jika Ada - Misal Pariwisata) --}}
-                <div id="headerPhotoContainer" style="display: none; padding: 0 15px 15px 15px;">
-                    <img id="detailPhoto" src="" alt="Foto Lokasi" style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                </div>
-
-                {{-- Info Utama --}}
-                <div class="panel-section">
-                    <div class="panel-section-title">Informasi Lokasi</div>
-                    <div class="info-row">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div class="info-row-content">
-                            <div class="info-row-label">Alamat</div>
-                            <div class="info-row-value" id="detailAddress">—</div>
-                        </div>
+                
+                {{-- KONTEN DETAIL (Informasi Faskes) --}}
+                <div id="detailContentBlock">
+                    {{-- Modul Foto --}}
+                    <div id="headerPhotoContainer" style="display: none; padding: 0 0 15px 0;">
+                        <img id="detailPhoto" src="" alt="Foto Lokasi" style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
                     </div>
-                    <div class="info-row jam-open" id="rowJam">
-                        <i class="fas fa-clock"></i>
-                        <div class="info-row-content">
-                            <div class="info-row-label">Jam Operasional / Status</div>
-                            <div class="info-row-value" id="detailJam">—</div>
-                        </div>
-                    </div>
-                    <div class="info-row" id="rowPhone">
-                        <i class="fas fa-phone-alt"></i>
-                        <div class="info-row-content">
-                            <div class="info-row-label">Telepon</div>
-                            <div class="info-row-value" id="detailPhone">—</div>
-                        </div>
-                    </div>
-                </div>
 
-                {{-- Fasilitas --}}
-                <div class="panel-section" id="sectionFasilitas">
-                    <div class="panel-section-title">Fasilitas Tersedia</div>
-                    <div class="facilities-grid" id="detailFacilities">
-                        {{-- Diisi oleh JS --}}
-                    </div>
-                </div>
-
-
-
-                {{-- Catatan Khusus --}}
-                <div class="panel-section" id="rowNotes" style="display:none;">
-                    <div class="panel-section-title">Catatan Penting</div>
-                    <div class="info-row" style="background: rgba(246,194,62,0.07); border-color: rgba(246,194,62,0.2);">
-                        <i class="fas fa-exclamation-circle" style="color: #f6c23e;"></i>
-                        <div class="info-row-content">
-                            <div class="info-row-value" id="detailNotes" style="color: #f6c23e;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Form Ulasan --}}
-                <div id="reviewFormSection" style="display:none;">
                     <div class="panel-section">
-                        <div class="panel-section-title" id="reviewFaskesName">Bagaimana pengalaman Anda?</div>
-                        <p style="font-size:13px; color:#666;">Bantu wisatawan lain dengan memberikan ulasan mengenai pelayanan fasilitas ini.</p>
-                        <div style="text-align:center; margin: 15px 0;" id="starRating">
-                            <i class="fas fa-star rating-star" data-val="1" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
-                            <i class="fas fa-star rating-star" data-val="2" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
-                            <i class="fas fa-star rating-star" data-val="3" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
-                            <i class="fas fa-star rating-star" data-val="4" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
-                            <i class="fas fa-star rating-star" data-val="5" style="font-size:24px; color:#ddd; cursor:pointer;"></i>
+                        <div class="panel-section-title">Informasi Lokasi</div>
+                        <div class="info-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="info-row-content">
+                                <div class="info-row-label">Alamat</div>
+                                <div class="info-row-value" id="detailAddress">—</div>
+                            </div>
                         </div>
-                        <input type="hidden" id="reviewRating" value="0">
-                        <textarea id="reviewKomentar" rows="3" style="width:100%; border:1px solid #ddd; border-radius:8px; padding:10px; font-size:13px; resize:vertical;" placeholder="Tuliskan kritik, saran, atau pengalaman Anda..."></textarea>
+                        <div class="info-row jam-open" id="rowJam">
+                            <i class="fas fa-clock"></i>
+                            <div class="info-row-content">
+                                <div class="info-row-label">Jam Operasional</div>
+                                <div class="info-row-value" id="detailJam">—</div>
+                            </div>
+                        </div>
+                        <div class="info-row" id="rowPhone">
+                            <i class="fas fa-phone-alt"></i>
+                            <div class="info-row-content">
+                                <div class="info-row-label">Telepon</div>
+                                <div class="info-row-value" id="detailPhone">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section" id="sectionFasilitas">
+                        <div class="panel-section-title">Fasilitas Tersedia</div>
+                        <div class="facilities-grid" id="detailFacilities"></div>
+                    </div>
+
+                    <div class="panel-section" id="rowNotes" style="display:none;">
+                        <div class="panel-section-title">Catatan Penting</div>
+                        <div class="info-row" style="background: rgba(246,194,62,0.07); border-color: rgba(246,194,62,0.2);">
+                            <i class="fas fa-exclamation-circle" style="color: #f6c23e;"></i>
+                            <div class="info-row-content">
+                                <div class="info-row-value" id="detailNotes" style="color: #f6c23e;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- KONTEN REVIEW (Form Ulasan) --}}
+                <div id="reviewContentBlock" style="display:none;">
+                    <div class="panel-section">
+                        {{-- Profil Reviewer --}}
+                        @if(session('auth_user'))
+                        @php $authUser = \App\Models\User::find(session('auth_user.id')); @endphp
+                        <div style="background:#fff8f0; border:1px solid rgba(255,122,0,0.2); border-radius:12px; padding:12px; margin-bottom:20px; display:flex; align-items:center; gap:12px;">
+                            <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#ff7a00,#e65c00); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:16px;">
+                                {{ strtoupper(substr(session('auth_user.name','?'), 0, 1)) }}
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-weight:700; font-size:14px; color:#333;">{{ session('auth_user.name') }}</div>
+                                <div style="font-size:11px; color:#666;">Member WanderMed</div>
+                            </div>
+                        </div>
+                        @endif
+
+                        {{-- Input Bintang --}}
+                        <div style="text-align:center; padding: 20px 0; background: #fafafa; border-radius: 12px; border: 1px dashed #ddd; margin-bottom: 20px;">
+                            <div id="starRating" style="display:flex; justify-content:center; gap:15px; margin-bottom: 10px;">
+                                <i class="fas fa-star review-star" data-val="1" style="font-size:42px; color:#ddd; cursor:pointer;"></i>
+                                <i class="fas fa-star review-star" data-val="2" style="font-size:42px; color:#ddd; cursor:pointer;"></i>
+                                <i class="fas fa-star review-star" data-val="3" style="font-size:42px; color:#ddd; cursor:pointer;"></i>
+                                <i class="fas fa-star review-star" data-val="4" style="font-size:42px; color:#ddd; cursor:pointer;"></i>
+                                <i class="fas fa-star review-star" data-val="5" style="font-size:42px; color:#ddd; cursor:pointer;"></i>
+                            </div>
+                            <div id="starLabel" style="font-size:15px; font-weight:700; color:#ffc107; height:20px; text-transform:uppercase;"></div>
+                            <input type="hidden" id="reviewRating" value="0">
+                        </div>
+
+                        {{-- Input Teks --}}
+                        <div class="panel-section-title">Ceritakan Pengalaman Anda</div>
+                        <textarea id="reviewKomentar" rows="5" 
+                            style="width:100%; border:2px solid #eee; border-radius:12px; padding:15px; font-size:14px; resize:none; background:#fff; color:#333; outline:none; transition: border-color 0.3s;"
+                            placeholder="Ketik ulasan Anda di sini..."
+                            onfocus="this.style.borderColor='#ff7a00'"
+                            onblur="this.style.borderColor='#eee'"></textarea>
                     </div>
                 </div>
 
             </div>
 
-            {{-- Tombol Aksi --}}
-            <div class="panel-actions" style="display: flex; flex-direction: column; gap: 8px;">
-                <div id="detailActionSection" style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-                    <a id="btnDirection" href="#" target="_blank" class="btn btn-hnb-orange w-100 py-3 font-weight-bold shadow-lg" style="border-radius: 12px; font-size: 1.15rem;">
+            {{-- ===== TOMBOL AKSI ===== --}}
+            <div class="panel-actions">
+                
+                {{-- Aksi Detail --}}
+                <div id="detailActions" style="display:flex; flex-direction:column; gap:10px;">
+                    <button id="btnDirection" class="btn btn-hnb-orange w-100 py-3 font-weight-bold shadow-lg" style="border-radius:14px; font-size:1.1rem;">
                         <i class="fas fa-location-arrow mr-2"></i> Mulai Rute Navigasi
-                    </a>
-                    <a id="btnJadwal" href="#" class="btn btn-outline-primary w-100 py-2" style="border-radius: 10px; display: none;">
-                        <i class="fas fa-user-md mr-1"></i> Lihat Jadwal Praktik
-                    </a>
-                    <div class="d-flex" style="gap: 10px;">
-                        <a id="btnCall" href="tel:+62" class="btn btn-outline-secondary w-50 py-2" style="border-radius: 10px;">
+                    </button>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <a id="btnCall" href="tel:+62" class="btn btn-outline-secondary py-2" style="border-radius:10px;">
                             <i class="fas fa-phone-alt mr-1"></i> Hubungi
                         </a>
-                        <button class="btn btn-outline-secondary w-50 py-2 share" onclick="shareLocation()" style="border-radius: 10px;">
+                        <button class="btn btn-outline-secondary py-2" onclick="shareLocation()" style="border-radius:10px;">
                             <i class="fas fa-share-alt mr-1"></i> Bagikan
                         </button>
                     </div>
+                    <a id="btnJadwal" href="#" class="btn btn-outline-primary py-2" style="border-radius:10px; display:none; border-style: dashed;">
+                        <i class="fas fa-user-md mr-1"></i> Lihat Jadwal Praktik
+                    </a>
                 </div>
-                
-                <div id="reviewActionSection" style="display:none; width: 100%;">
-                    <button onclick="submitReview()" id="btnSubmitReview" class="btn btn-success w-100 py-3 font-weight-bold shadow-lg" style="border-radius: 12px; font-size: 1.15rem;">
+
+                {{-- Aksi Review --}}
+                <div id="reviewActions" style="display:none; flex-direction:column; gap:10px;">
+                    <button onclick="submitReview()" id="btnSubmitReview" class="btn btn-success w-100 py-3 font-weight-bold shadow" style="border-radius:14px; font-size:1.1rem;">
                         <i class="fas fa-paper-plane mr-2"></i> Kirim Ulasan
                     </button>
+                    <button onclick="backToDetail()" class="btn btn-outline-secondary w-100 py-2" style="border-radius:10px;">
+                        <i class="fas fa-arrow-left mr-1"></i> Kembali ke Detail
+                    </button>
                 </div>
+
             </div>
         </div>
+
+
 
         {{-- ========= GEOFENCE MODAL ========= --}}
         <div id="geofenceModal" class="geofence-backdrop">
@@ -222,7 +250,8 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-    var isLoggedIn = @json(auth()->check());
+    var isLoggedIn = @json(session()->has('auth_user'));
+    var isWisatawan = @json(session('auth_user.role') === 'wisatawan');
     var csrfToken = "{{ csrf_token() }}";
     var currentFaskesId = null;
     var globalUserLocation = null;
@@ -485,14 +514,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // TAMPILKAN DETAIL FASKES DI BOTTOM SHEET
     // =========================================================
     window.showDetail = function(data) {
-        // Isi nama & tipe
+        // Isi data dasar
         document.getElementById('detailName').textContent    = data.name;
         document.getElementById('detailType').textContent    = data.type;
         document.getElementById('detailAddress').textContent = data.address;
         document.getElementById('detailJam').textContent     = data.jam;
         document.getElementById('detailPhone').textContent   = data.phone;
 
-        // Warna baris jam (hijau jika buka)
+        // Status visual jam
         const rowJam = document.getElementById('rowJam');
         if (data.status === 'open') {
             rowJam.classList.add('jam-open');
@@ -501,7 +530,7 @@ document.addEventListener("DOMContentLoaded", function() {
             rowJam.classList.remove('jam-open');
         }
 
-        // Badge status chips
+        // Badges
         const badgesEl = document.getElementById('detailBadges');
         const statusChip = data.status === 'open'
             ? `<span class="info-chip status-open"><i class="fas fa-circle" style="font-size:8px;"></i> Buka Sekarang</span>`
@@ -513,29 +542,24 @@ document.addEventListener("DOMContentLoaded", function() {
         let distText = "Jarak tidak diketahui";
         if (globalUserLocation) {
             const distKm = getDistanceFromLatLonInKm(globalUserLocation.lat, globalUserLocation.lng, data.lat, data.lng);
-            if (distKm < 1) {
-                distText = `~${Math.round(distKm * 1000)}m dari Anda`;
-            } else {
-                distText = `~${distKm.toFixed(1)}km dari Anda`;
-            }
+            distText = distKm < 1 ? `~${Math.round(distKm * 1000)}m dari Anda` : `~${distKm.toFixed(1)}km dari Anda`;
         }
-        
-        badgesEl.innerHTML = statusChip + bpjsChip + `<span class="info-chip chip-distance" style="background:#fff3e0; color:#f57c00; border:1px solid #ffe0b2;"><i class="fas fa-route"></i> ${distText}</span>`;
+        badgesEl.innerHTML = statusChip + bpjsChip + `<span class="info-chip chip-distance"><i class="fas fa-route"></i> ${distText}</span>`;
 
-        // Fasilitas Grid
-        const facEl = document.getElementById('detailFacilities');
-        facEl.innerHTML = data.facilities.map(f => `
+        // Fasilitas
+        document.getElementById('detailFacilities').innerHTML = data.facilities.map(f => `
             <div class="facility-item">
                 <div class="${f.icon}"><i class="${f.ico}"></i></div>
                 ${f.label}
             </div>`).join('');
 
-        // Jadwal Praktik (Selalu tampilkan tombolnya untuk faskes, biar tahu ada fitur ini)
+        // Jadwal & Kontak
         const btnJadwal = document.getElementById('btnJadwal');
         btnJadwal.style.display = 'block';
         btnJadwal.href = `/faskes/${data.id}/jadwal`;
+        document.getElementById('btnCall').href = `tel:${data.phone.replace(/\D/g, '')}`;
 
-        // Catatan khusus
+        // Notes
         const notesSection = document.getElementById('rowNotes');
         if (data.notes) {
             notesSection.style.display = 'block';
@@ -544,158 +568,159 @@ document.addEventListener("DOMContentLoaded", function() {
             notesSection.style.display = 'none';
         }
 
-        // Tombol navigasi Google Maps
-        document.getElementById('btnDirection').href = `https://www.google.com/maps/dir/?api=1&destination=${data.lat},${data.lng}`;
+        // Navigasi
         document.getElementById('btnDirection').onclick = function(e) {
             e.preventDefault();
             openSmartNavigation(data.lat, data.lng, data.id, data.name, data.type);
         };
 
-        // Tombol telepon
-        document.getElementById('btnCall').href = `tel:${data.phone.replace(/\D/g, '')}`;
-
-        // Konfigurasi Visibilitas Section
-        document.getElementById('headerPhotoContainer').style.display = 'none';
-        document.getElementById('sectionFasilitas').style.display = 'block';
-        document.getElementById('detailInfoSection').style.display = 'block';
-        document.getElementById('reviewFormSection').style.display = 'none';
-        document.getElementById('detailActionSection').style.display = 'flex';
-        document.getElementById('reviewActionSection').style.display = 'none';
+        // Reset ke Mode Detail
+        backToDetail();
 
         // Buka panel
         document.getElementById('faskesDetailPanel').classList.add('active');
     };
 
-    // Tutup bottom sheet
     window.closeDetail = function() {
         document.getElementById('faskesDetailPanel').classList.remove('active');
     };
 
     // =========================================================
-    // SMART NAVIGATION (Precise Live Routing) & TAMPILAN ULASAN
+    // SMART NAVIGATION & REVIEW TRANSITION
     // =========================================================
     window.openSmartNavigation = function(destLat, destLng, id, name, type) {
         const btn = document.getElementById('btnDirection');
-        const originalText = btn ? btn.innerHTML : '';
-        if(btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memuat Rute...';
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Membuka Rute...';
 
-        const mapUrlBase = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=motorcycle`;
+        const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=motorcycle`;
 
-        if (!navigator.geolocation) {
-            if(btn) btn.innerHTML = originalText;
-            window.open(mapUrlBase + '&origin=My+Location', '_blank');
-            triggerReviewView(id, name, type);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            function(pos) {
-                if(btn) btn.innerHTML = originalText;
-                const userLat = pos.coords.latitude;
-                const userLng = pos.coords.longitude;
-                window.open(`${mapUrlBase}&origin=${userLat},${userLng}`, '_blank');
-                triggerReviewView(id, name, type);
-            },
-            function(err) {
-                if(btn) btn.innerHTML = originalText;
-                window.open(mapUrlBase + '&origin=My+Location', '_blank');
-                triggerReviewView(id, name, type);
-            },
-            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-        );
-    };
-
-    function triggerReviewView(id, name, type) {
-        if (!id || (typeof id === 'string' && id.startsWith('p_'))) {
-            // Jika pariwisata atau ID tidak valid, jangan tampilkan review form faskes
-            return;
-        }
-        currentFaskesId = typeof id === 'string' && id.startsWith('m_') ? id.substring(2) : id;
+        // Redirect & Switch Mode
+        window.open(mapUrl, '_blank');
         
         setTimeout(function() {
-            document.getElementById('detailInfoSection').style.display = 'none';
-            document.getElementById('detailActionSection').style.display = 'none';
-            document.getElementById('reviewFormSection').style.display = 'block';
-            document.getElementById('reviewActionSection').style.display = 'flex';
-            document.getElementById('reviewFaskesName').textContent = 'Ulasan untuk ' + name;
-            
-            // Reset form
-            document.getElementById('reviewRating').value = '0';
-            document.getElementById('reviewKomentar').value = '';
-            document.querySelectorAll('.rating-star').forEach(s => s.style.color = '#ddd');
-        }, 1500);
+            btn.innerHTML = originalText;
+            switchToReviewMode(id, name);
+        }, 800);
+    };
+
+    function switchToReviewMode(id, name) {
+        currentFaskesId = id;
+        document.getElementById('detailContentBlock').style.display = 'none';
+        document.getElementById('detailActions').style.display = 'none';
+        document.getElementById('reviewContentBlock').style.display = 'block';
+        document.getElementById('reviewActions').style.display = 'flex';
+        
+        // Reset form
+        document.getElementById('reviewRating').value = '0';
+        document.getElementById('reviewKomentar').value = '';
+        setStarColor(0);
+        
+        // Scroll body ke atas agar form terlihat
+        document.querySelector('.panel-body').scrollTop = 0;
     }
 
-    // Event listener for stars
-    document.querySelectorAll('.rating-star').forEach(star => {
+    window.backToDetail = function() {
+        document.getElementById('detailContentBlock').style.display = 'block';
+        document.getElementById('detailActions').style.display = 'flex';
+        document.getElementById('reviewContentBlock').style.display = 'none';
+        document.getElementById('reviewActions').style.display = 'none';
+    };
+
+    // =========================================================
+    // REVIEW SYSTEM LOGIC
+    // =========================================================
+    const RATING_LABELS = ['', 'Sangat Buruk 😞', 'Buruk 😕', 'Cukup 😐', 'Baik 😊', 'Sangat Baik ⭐'];
+
+    function setStarColor(val) {
+        document.querySelectorAll('.review-star').forEach(function(s) {
+            var sv = parseInt(s.getAttribute('data-val'));
+            if (sv <= val) {
+                s.style.color = '#ffc107';
+                s.style.transform = 'scale(1.2)';
+            } else {
+                s.style.color = '#ddd';
+                s.style.transform = 'scale(1)';
+            }
+        });
+        var lbl = document.getElementById('starLabel');
+        if (lbl) lbl.textContent = RATING_LABELS[val] || '';
+    }
+
+    document.querySelectorAll('.review-star').forEach(function(star) {
         star.addEventListener('click', function() {
-            let val = this.getAttribute('data-val');
+            var val = parseInt(this.getAttribute('data-val'));
             document.getElementById('reviewRating').value = val;
-            document.querySelectorAll('.rating-star').forEach(s => {
-                if (s.getAttribute('data-val') <= val) {
-                    s.style.color = '#f6c23e';
-                } else {
-                    s.style.color = '#ddd';
-                }
-            });
+            setStarColor(val);
+        });
+        star.addEventListener('mouseenter', function() {
+            setStarColor(parseInt(this.getAttribute('data-val')));
+        });
+        star.addEventListener('mouseleave', function() {
+            setStarColor(parseInt(document.getElementById('reviewRating').value) || 0);
         });
     });
 
     window.submitReview = function() {
         if (!isLoggedIn) {
             Swal.fire({
-                title: 'Anda Harus Login',
-                text: 'Silakan login terlebih dahulu untuk memberikan ulasan dan membagikan pengalaman Anda.',
+                title: 'Login Diperlukan',
+                text: 'Silakan login sebagai wisatawan untuk memberikan ulasan.',
                 icon: 'warning',
-                confirmButtonText: 'Ke Halaman Login',
+                confirmButtonText: 'Login Sekarang',
                 showCancelButton: true,
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if(result.isConfirmed) {
-                    window.location.href = '/login';
-                }
+                confirmButtonColor: '#ff7a00'
+            }).then(function(r) { if (r.isConfirmed) window.location.href = '/login'; });
+            return;
+        }
+        if (!isWisatawan) {
+            Swal.fire({
+                title: 'Akses Ditolak',
+                text: 'Hanya akun wisatawan yang dapat memberikan ulasan.',
+                icon: 'info',
+                confirmButtonColor: '#ff7a00'
             });
             return;
         }
 
-        const rating = document.getElementById('reviewRating').value;
-        const komentar = document.getElementById('reviewKomentar').value;
+        var rating = parseInt(document.getElementById('reviewRating').value);
+        var komentar = document.getElementById('reviewKomentar').value.trim();
 
-        if (rating == 0) {
-            Swal.fire('Oops', 'Silakan berikan rating bintang terlebih dahulu.', 'warning');
+        if (rating < 1) {
+            Swal.fire('Rating Kosong', 'Silakan klik pada bintang untuk memberi skor.', 'warning');
+            return;
+        }
+        if (!komentar) {
+            Swal.fire('Ulasan Kosong', 'Silakan tuliskan komentar pengalaman Anda.', 'warning');
             return;
         }
 
-        if (komentar.trim() === '') {
-            Swal.fire('Oops', 'Silakan tuliskan komentar ulasan Anda.', 'warning');
-            return;
-        }
-
-        const btn = document.getElementById('btnSubmitReview');
+        var btn = document.getElementById('btnSubmitReview');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
         btn.disabled = true;
 
         fetch('/faskes/' + currentFaskesId + '/ulasan', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
             body: JSON.stringify({ rating: rating, komentar: komentar })
         })
-        .then(res => res.json())
-        .then(data => {
-            if(data.success) {
-                Swal.fire('Berhasil', 'Terima kasih atas ulasan Anda!', 'success');
-                closeDetail();
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Berhasil! 🎉',
+                    text: 'Terima kasih atas ulasan Anda.',
+                    icon: 'success',
+                    confirmButtonColor: '#28a745'
+                }).then(function() { closeDetail(); });
             } else {
                 Swal.fire('Gagal', data.message || 'Terjadi kesalahan.', 'error');
                 btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Ulasan';
                 btn.disabled = false;
             }
         })
-        .catch(err => {
-            Swal.fire('Error', 'Terjadi kesalahan koneksi.', 'error');
+        .catch(function() {
+            Swal.fire('Error', 'Masalah koneksi database.', 'error');
             btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Ulasan';
             btn.disabled = false;
         });

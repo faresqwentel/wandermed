@@ -11,6 +11,7 @@ use App\Models\Faskes;
 use App\Models\LaporanMasalah;
 use App\Models\User;
 use App\Models\PendaftaranPariwisata;
+use App\Models\UlasanFaskes;
 use App\Services\MitraService;
 use App\Http\Requests\ResolveLaporanRequest;
 use Exception;
@@ -50,6 +51,7 @@ class AdminController extends Controller
             'users'           => User::paginate(10, ['*'], 'page_users'),
             'faskesList'      => Faskes::paginate(10, ['*'], 'page_faskes'),
             'wisataApproved'  => $this->getMergedWisataForDashboard(),
+            'allUlasan'       => UlasanFaskes::with(['user', 'faskes'])->latest()->get(),
         ]);
     }
 

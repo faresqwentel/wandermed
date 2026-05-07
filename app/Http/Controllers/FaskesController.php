@@ -143,20 +143,37 @@ class FaskesController extends Controller
 
     public function submitUlasan(Request $request, $faskes_id)
     {
+        // Hanya wisatawan yang boleh memberikan ulasan
+        if (session('auth_user.role') !== 'wisatawan') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ulasan hanya dapat diberikan oleh wisatawan yang terdaftar.'
+            ], 403);
+        }
+
+        // Pastikan wisatawan sudah login
+        if (!session()->has('auth_user')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan login terlebih dahulu.'
+            ], 401);
+        }
+
         $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'komentar' => 'required|string',
+            'rating'   => 'required|integer|min:1|max:5',
+            'komentar' => 'required|string|max:1000',
         ]);
 
         \App\Models\UlasanFaskes::create([
-            'user_id' => session('auth_user.id'),
+            'user_id'   => session('auth_user.id'),
             'faskes_id' => $faskes_id,
-            'rating' => $request->rating,
-            'komentar' => $request->komentar,
+            'rating'    => $request->rating,
+            'komentar'  => $request->komentar,
         ]);
 
         return response()->json(['success' => true, 'message' => 'Ulasan berhasil dikirim!']);
     }
+
 
     public function replyUlasan(Request $request, $id)
     {

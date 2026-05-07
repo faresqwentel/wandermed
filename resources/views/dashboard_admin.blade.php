@@ -40,6 +40,9 @@
     <a href="#" class="wm-nav-link" id="navDataWisatawan">
         <i class="fas fa-users"></i> Data Wisatawan
     </a>
+    <a href="#" class="wm-nav-link" id="navAllUlasan">
+        <i class="fas fa-star"></i> Ulasan Faskes
+    </a>
 
     <div class="wm-nav-label">Sistem</div>
     <a href="/peta-faskes" class="wm-nav-link">
@@ -592,6 +595,71 @@
         </div>
         <div style="padding: 15px; border-top: 1px solid var(--border);">
             {{ $users->links('pagination::bootstrap-4') }}
+        </div>
+    </div>
+</div>
+
+
+{{-- ==================== SECTION: SEMUA ULASAN FASKES ==================== --}}
+<div id="sectionAllUlasan" class="admin-section" style="display:none;">
+    <div class="wm-page-header">
+        <div>
+            <div class="wm-page-title">Monitoring Ulasan Faskes</div>
+            <div class="wm-page-subtitle">Pantau seluruh feedback dari wisatawan untuk semua mitra faskes terdaftar</div>
+        </div>
+    </div>
+    <div class="wm-card">
+        <div class="wm-card-header">
+            <div class="wm-card-title">
+                <i class="fas fa-star" style="color: #f6c23e;"></i> 
+                Seluruh Ulasan Wisatawan
+                <span class="wm-badge orange" style="margin-left: 8px; font-size: 10px;">{{ $allUlasan->count() }} Total</span>
+            </div>
+            <div style="position: relative; flex: 0 0 250px;">
+                <i class="fas fa-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color: var(--text-muted);"></i>
+                <input type="text" id="filterUlasanInput" class="wm-input" style="padding-left: 36px; height: 36px; font-size: 12px;"
+                    placeholder="Cari faskes, user, atau isi..." onkeyup="filterTable('filterUlasanInput', 'ulasanTable', 'col-search')">
+            </div>
+        </div>
+        <div class="wm-table-wrap">
+            <table class="wm-table" id="ulasanTable">
+                <thead>
+                    <tr>
+                        <th>Wisatawan</th>
+                        <th>Fasilitas Kesehatan</th>
+                        <th>Rating</th>
+                        <th>Isi Ulasan</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($allUlasan as $ul)
+                    <tr>
+                        <td class="bold col-search">
+                            {{ $ul->user->name ?? 'Anonim' }}
+                            <div style="font-size: 10px; font-weight: 400; color: var(--text-muted);">{{ $ul->user->email ?? '-' }}</div>
+                        </td>
+                        <td class="col-search">
+                            <span class="wm-badge info" style="font-size: 11px;"><i class="fas fa-hospital-alt"></i> {{ $ul->faskes->nama_faskes ?? 'Faskes Terhapus' }}</span>
+                        </td>
+                        <td>
+                            @for($i=1; $i<=5; $i++)
+                                <i class="fas fa-star" style="font-size:10px; {{ $i <= $ul->rating ? 'color:#f6c23e;' : 'color:rgba(255,255,255,0.1);' }}"></i>
+                            @endfor
+                            <span style="font-size:11px; margin-left:4px;">{{ $ul->rating }}/5</span>
+                        </td>
+                        <td class="col-search" style="max-width: 300px; font-size: 12px; line-height: 1.4; font-style: italic;">
+                            "{{ $ul->komentar }}"
+                        </td>
+                        <td style="font-size: 11px; color: var(--text-muted);">
+                            {{ $ul->created_at->format('d/m/Y H:i') }}
+                        </td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="5" class="text-center" style="padding: 30px; color: #888;">Belum ada ulasan yang masuk.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
