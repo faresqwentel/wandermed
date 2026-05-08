@@ -20,55 +20,65 @@
         {{-- ========= OVERLAY CENTER-TOP PANEL ========= --}}
         <div class="map-overlay-panel">
 
-            {{-- BARIS 1: Search + Lokasi + BPJS --}}
-            <div style="position: relative;">
-                <div class="unified-nav-box">
-                    <div class="search-input-group">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Cari nama faskes, klinik, apotek, atau wisata..." autocomplete="off">
-                    </div>
-                    <div class="v-separator-map"></div>
+            {{-- PANEL UTAMA: Search + Tombol Aksi --}}
+            <div class="map-search-card" style="position: relative;">
+
+                {{-- Search Bar --}}
+                <div class="search-input-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput"
+                        placeholder="Cari faskes, klinik, apotek, atau wisata..."
+                        autocomplete="off">
                     <button class="btn-my-location" id="btnMyLocation" title="Gunakan lokasi saya">
                         <i class="fas fa-crosshairs"></i>
                         <span>Lokasi Saya</span>
                     </button>
-                    <div class="v-separator-map"></div>
-                    <button class="bpjs-chip" id="bpjsChip">
-                        <i class="fas fa-shield-alt"></i>
-                        BPJS
+                </div>
+
+                {{-- Divider --}}
+                <div class="map-search-divider"></div>
+
+                {{-- Filter Pills Row --}}
+                <div class="map-filter-row">
+                    {{-- Master Filter --}}
+                    <select id="masterFilter" class="map-select">
+                        <option value="All">🗺 Semua</option>
+                        <option value="Faskes">🏥 Faskes</option>
+                        <option value="Pariwisata">🏔 Wisata</option>
+                    </select>
+
+                    <div class="map-filter-separator"></div>
+
+                    {{-- Sub Filter Chips --}}
+                    <div class="filter-chips-row" id="faskesSubFilter">
+                        <div class="filter-chip active" data-type="AllFaskes">Semua</div>
+                        <div class="filter-chip" data-type="Rumah Sakit">
+                            <span class="chip-dot" style="background:#e74a3b;"></span>RS
+                        </div>
+                        <div class="filter-chip" data-type="Klinik">
+                            <span class="chip-dot" style="background:#4e73df;"></span>Klinik
+                        </div>
+                        <div class="filter-chip" data-type="Apotek">
+                            <span class="chip-dot" style="background:#1cc88a;"></span>Apotek
+                        </div>
+                        <div class="filter-chip" data-type="Puskesmas">
+                            <span class="chip-dot" style="background:#f6c23e;"></span>Puskesmas
+                        </div>
+                    </div>
+
+                    <div class="map-filter-separator"></div>
+
+                    {{-- BPJS + Reset --}}
+                    <button class="bpjs-chip" id="bpjsChip" title="Filter BPJS">
+                        <i class="fas fa-shield-alt"></i> BPJS
+                    </button>
+                    <button class="btn-reset-filter" id="btnResetFilter" title="Reset semua filter">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
-                
+
                 {{-- Dropdown Hasil Pencarian --}}
                 <div id="searchResultsDropdown" class="search-dropdown-list" style="display: none;"></div>
-            </div>
-
-            {{-- BARIS 2: Filter Destinasi + Sub-kategori Faskes --}}
-            <div class="filter-bar">
-                <span class="filter-bar-label"><i class="fas fa-layer-group"></i> Filter:</span>
-                <select id="masterFilter" style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #fff; font-family: 'Poppins',sans-serif; font-size: 12px; padding: 5px 10px; cursor: pointer; flex-shrink: 0;">
-                    <option value="All">Semua</option>
-                    <option value="Faskes">Faskes</option>
-                    <option value="Pariwisata">Pariwisata</option>
-                </select>
-                <div class="v-separator-map"></div>
-                <div class="filter-chips-row" id="faskesSubFilter">
-                    <div class="filter-chip active" data-type="AllFaskes">
-                        <i class="fas fa-th-large"></i> Semua
-                    </div>
-                    <div class="filter-chip" data-type="Rumah Sakit">
-                        <i class="fas fa-hospital-alt" style="color:#e74a3b;"></i> RS
-                    </div>
-                    <div class="filter-chip" data-type="Klinik">
-                        <i class="fas fa-clinic-medical" style="color:#4e73df;"></i> Klinik
-                    </div>
-                    <div class="filter-chip" data-type="Apotek">
-                        <i class="fas fa-pills" style="color:#1cc88a;"></i> Apotek
-                    </div>
-                    <div class="filter-chip" data-type="Puskesmas">
-                        <i class="fas fa-heartbeat" style="color:#f6c23e;"></i> Puskesmas
-                    </div>
-                </div>
             </div>
         </div>
 

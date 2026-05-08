@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Model: Mitra
  *
- * Merepresentasikan akun pengelola (Mitra Faskes / Mitra Pariwisata).
+ * Merepresentasikan akun pengelola (Mitra Faskes).
  * Bertindak sebagai "user" khusus untuk aktor mitra — terpisah dari tabel users wisatawan.
  */
 class Mitra extends Model
@@ -49,15 +49,6 @@ class Mitra extends Model
     public function faskes()
     {
         return $this->hasOne(Faskes::class, 'mitra_id');
-    }
-
-    /**
-     * Mitra jenis 'pariwisata' memiliki satu profil destinasi wisata.
-     * Relasi: Mitra -> hasOne -> Pariwisata
-     */
-    public function pariwisata()
-    {
-        return $this->hasOne(Pariwisata::class, 'mitra_id');
     }
 
     // =========================================================

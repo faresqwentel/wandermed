@@ -91,27 +91,7 @@ class HomeController extends Controller
                 'foto'       => $w->foto_path ? asset('storage/' . $w->foto_path) : null,
             ]);
 
-        // Gabungkan pariwisata mitra jika ada modelnya
-        if (class_exists(\App\Models\Pariwisata::class)) {
-            $mitraWisata = \App\Models\Pariwisata::with('mitra')
-                ->whereHas('mitra', fn($q) => $q->where('is_verified', true))
-                ->get()
-                ->map(fn($w) => [
-                    'id'         => 'm_' . $w->id,
-                    'name'       => $w->nama_wisata ?? $w->nama_pariwisata ?? 'Wisata',
-                    'kategori'   => $w->kategori ?? $w->jenis_wisata ?? 'Alam',
-                    'deskripsi'  => $w->deskripsi,
-                    'alamat'     => $w->alamat,
-                    'lat'        => (float) $w->latitude,
-                    'lng'        => (float) $w->longitude,
-                    'tiket'      => 0,
-                    'pengelola'  => $w->mitra->nama_penanggung_jawab ?? 'Pengelola',
-                    'telp'       => $w->kontak_wisata ?? $w->mitra->no_telp ?? '',
-                    'foto'       => $w->foto_path ? asset('storage/' . $w->foto_path) : null,
-                ]);
-            $pariwisata = $pariwisata->toBase()->merge($mitraWisata->toBase())->values();
-        }
-
+        // Gabungkan pariwisata mitra jika ada modelnya (Sudah dihapus: sekarang hanya pakai PendaftaranPariwisata)
         $daftarFaskes = $faskes;
         $daftarPariwisata = $pariwisata;
 

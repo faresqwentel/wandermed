@@ -579,11 +579,8 @@
                             || ($wi->latitude == -6.5718 && $wi->longitude == 107.7600)
                             || empty($wi->deskripsi);
                     @endphp
-                    <tr id="wisataMasterRow-{{ $wi->type }}-{{ $wi->id }}">
+                    <tr id="wisataMasterRow-{{ $wi->id }}">
                         <td class="bold col-nama-wisata">
-                            @if($wi->type == 'mitra')
-                                <i class="fas fa-check-circle" style="color:#38a169; margin-right:4px;" title="Mitra Resmi"></i>
-                            @endif
                             {{ $wi->nama_wisata }}
                             @if($wisataIncomplete)
                                 <span title="Data lokasi atau deskripsi belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
@@ -592,11 +589,7 @@
                             @endif
                         </td>
                         <td>
-                            @if($wi->type == 'mitra')
-                                <span class="wm-badge" style="background:rgba(56,161,105,0.1);color:#38a169;border:1px solid rgba(56,161,105,0.3);">Mitra {{ $wi->kategori }}</span>
-                            @else
-                                <span class="wm-badge" style="background:rgba(128,90,213,0.1);color:#805ad5;border:1px solid rgba(128,90,213,0.3);">Publik {{ $wi->kategori }}</span>
-                            @endif
+                            <span class="wm-badge" style="background:rgba(128,90,213,0.1);color:#805ad5;border:1px solid rgba(128,90,213,0.3);">{{ $wi->kategori }}</span>
                         </td>
                         <td style="color:var(--text-muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                             {{ $wi->alamat ?? '-' }}
@@ -607,7 +600,7 @@
                                 <button class="wm-btn info sm" onclick='openEditPariwisata(@json($wi))' title="Edit Detail">
                                     <i class="fas fa-edit"></i> Detail
                                 </button>
-                                <button class="wm-btn danger sm" onclick='deletePariwisata(this, {{ $wi->id ?? 0 }}, @json($wi->nama_wisata ?? ""), "{{ $wi->type }}")' title="Hapus">
+                                <button class="wm-btn danger sm" onclick='deletePariwisata(this, {{ $wi->id ?? 0 }}, @json($wi->nama_wisata ?? ""))' title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>

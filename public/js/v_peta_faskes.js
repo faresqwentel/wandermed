@@ -35,8 +35,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 label: label
             }))
         }));
-    } else {
-        faskesData = getDemoData();
     }
 
     var pariwisataData = pariwisataDataRaw;
@@ -97,46 +95,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return map[label] || 'fas fa-clinic-medical';
     }
 
-    // --- Data Demo (fallback saat database masih kosong) ---
-    function getDemoData() {
-        return [
-            { id:1, name:"RSUD Subang", lat:-6.5710, lng:107.7600, type:"Rumah Sakit",
-              bpjs:true, status:"open", address:"Jl. Brigjen Katamso No.37, Subang",
-              phone:"(0260) 411421", jam:"24 Jam (UGD & Layanan Darurat)",
-              notes:"Antrean poli umum buka pukul 07.00 WIB. Parkiran tersedia luas.",
-              ratingAvg: 4.8, ratingCount: 125,
-              facilities:[
-                {icon:"fac-icon red",ico:"fas fa-ambulance",label:"UGD 24 Jam"},
-                {icon:"fac-icon blue",ico:"fas fa-car",label:"Ambulans"},
-                {icon:"fac-icon teal",ico:"fas fa-bed",label:"Rawat Inap"},
-                {icon:"fac-icon green",ico:"fas fa-pills",label:"Apotek"},
-              ]},
-            { id:2, name:"Klinik Pratama Cibogo", lat:-6.5650, lng:107.7500, type:"Klinik",
-              bpjs:true, status:"open", address:"Jl. Raya Cibogo No.12, Subang",
-              phone:"(0260) 422111", jam:"Senin – Sabtu, 08.00 – 20.00 WIB", notes:null,
-              ratingAvg: 4.2, ratingCount: 34,
-              facilities:[
-                {icon:"fac-icon green",ico:"fas fa-stethoscope",label:"Poli Umum"},
-                {icon:"fac-icon green",ico:"fas fa-pills",label:"Apotek"},
-              ]},
-            { id:3, name:"Apotek Kimia Farma Subang", lat:-6.5730, lng:107.7560, type:"Apotek",
-              bpjs:true, status:"open", address:"Jl. Otista No.4, Subang",
-              phone:"(0260) 417080", jam:"Setiap Hari, 07.00 – 22.00 WIB", notes:null,
-              ratingAvg: 4.5, ratingCount: 89,
-              facilities:[
-                {icon:"fac-icon green",ico:"fas fa-pills",label:"Obat Keras"},
-                {icon:"fac-icon teal",ico:"fas fa-vials",label:"Alat Kesehatan"},
-              ]},
-            { id:4, name:"Puskesmas Subang", lat:-6.5690, lng:107.7640, type:"Puskesmas",
-              bpjs:true, status:"closed", address:"Jl. Kapeh Jaya No.1, Subang",
-              phone:"(0260) 411009", jam:"Senin – Jumat, 07.30 – 14.00 WIB",
-              notes:"Sedang tutup sementara untuk renovasi.",
-              facilities:[
-                {icon:"fac-icon green",ico:"fas fa-stethoscope",label:"Poli Umum"},
-                {icon:"fac-icon teal",ico:"fas fa-syringe",label:"Imunisasi"},
-              ]},
-        ];
-    }
 
     // =========================================================
     // CUSTOM MARKER ICON per kategori Faskes
@@ -561,7 +519,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         if (results.length === 0) {
-            dropdown.innerHTML = '<div style="padding: 12px 16px; color: rgba(255,255,255,0.6); font-size: 13px; font-family:\'Poppins\', sans-serif;">Pencarian tidak ditemukan.</div>';
+            dropdown.innerHTML = '<div class="search-no-result"><i class="fas fa-search-minus mr-2"></i> Pencarian tidak ditemukan.</div>';
             dropdown.style.display = 'block';
             return;
         }
@@ -629,6 +587,41 @@ document.addEventListener("DOMContentLoaded", function() {
             this.dispatchEvent(new Event('input'));
         }
     });
+
+    // Tombol Reset Filter
+    const btnReset = document.getElementById('btnResetFilter');
+    if (btnReset) {
+        btnReset.addEventListener('click', function() {
+            // Reset Search
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResultsDropdown').style.display = 'none';
+
+            // Reset Master Filter
+            document.getElementById('masterFilter').value = 'All';
+
+            // Reset Chips
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            const allChip = document.querySelector('.filter-chip[data-type="AllFaskes"]');
+            if (allChip) allChip.classList.add('active');
+
+            // Reset BPJS
+            const bpjsChip = document.getElementById('bpjsChip');
+            if (bpjsChip) {
+                bpjsChip.classList.remove('active');
+                bpjsChip.classList.add('inactive');
+            }
+
+            closeDetail();
+            updateMarkers();
+
+            // Kembalikan peta ke posisi awal atau lokasi user
+            if (globalUserLocation) {
+                map.flyTo([globalUserLocation.lat, globalUserLocation.lng], 14, { duration: 1.5 });
+            } else {
+                map.flyTo([-6.5710, 107.7587], 14, { duration: 1.5 });
+            }
+        });
+    }
 
     // =========================================================
     // GEOFENCING LOGIC (HAVERSINE)

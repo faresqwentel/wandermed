@@ -86,7 +86,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Mendaftarkan akun Mitra (Faskes/Pariwisata).
+     * Mendaftarkan akun Mitra (Faskes).
      */
     public function registerMitra(MitraRegistrationRequest $request): RedirectResponse
     {
@@ -100,16 +100,12 @@ class AuthController extends Controller
             'email'                 => $request->email,
             'password'              => Hash::make($request->password),
             'no_telp'               => $request->no_telp,
-            'jenis_mitra'           => $request->jenis_mitra,
+            'jenis_mitra'           => 'faskes',
             'is_verified'           => false,
             'catatan_admin'         => $dokumenPath,
         ]);
 
-        if ($request->jenis_mitra === 'faskes') {
-            $this->createFaskesProfile($mitra, $request);
-        } elseif ($request->jenis_mitra === 'pariwisata' && class_exists(\App\Models\Pariwisata::class)) {
-            $this->createPariwisataProfile($mitra, $request);
-        }
+        $this->createFaskesProfile($mitra, $request);
 
         return redirect('/login')->with('success',
             'Pendaftaran berhasil dikirim! Akun Anda sedang menunggu verifikasi Admin WanderMed.'
@@ -149,14 +145,13 @@ class AuthController extends Controller
         $mitra = Mitra::where('email', $email)->first();
         if ($mitra && Hash::check($password, $mitra->password)) {
             if (!$mitra->is_active) {
-                return back()->with('error', 'Akun Faskes/Pariwisata Anda telah DIBLOKIR oleh Admin.');
+                return back()->with('error', 'Akun Faskes Anda telah DIBLOKIR oleh Admin.');
             }
             if (!$mitra->is_verified) {
                 return back()->with('error', 'Akun Anda belum diverifikasi oleh admin. Silakan tunggu konfirmasi.');
             }
             
-            $role = ($mitra->jenis_mitra === 'faskes') ? 'mitra_faskes' : 'mitra_pariwisata';
-            $this->setSession($role, $mitra->id, $mitra->nama_penanggung_jawab, $mitra->email, $mitra->jenis_mitra);
+            $this->setSession('mitra_faskes', $mitra->id, $mitra->nama_penanggung_jawab, $mitra->email, 'faskes');
             
             return redirect('/dashboard/faskes')->with('success', "Selamat datang, {$mitra->nama_penanggung_jawab}!");
         }
@@ -184,20 +179,6 @@ class AuthController extends Controller
         ]);
     }
 
-    private function createPariwisataProfile(Mitra $mitra, Request $request): void
-    {
-        \App\Models\Pariwisata::create([
-            'mitra_id'        => $mitra->id,
-            'nama_pariwisata' => $request->nama_pariwisata ?? "{$mitra->nama_penanggung_jawab} Wisata",
-            'jenis_wisata'    => $request->jenis_wisata ?? 'Alam',
-            'alamat'          => $request->alamat ?? '-',
-            'no_telp'         => $request->no_telp,
-            'latitude'        => $request->latitude ?? -6.5718,
-            'longitude'       => $request->longitude ?? 107.7600,
-            'deskripsi'       => $request->deskripsi,
-            'status'          => 'tutup',
-        ]);
-    }
 
     private function setSession(string $role, int $id, string $name, string $email, ?string $jenisMitra = null): void
     {

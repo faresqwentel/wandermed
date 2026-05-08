@@ -244,21 +244,12 @@ class AdminController extends Controller
      */
     public function updatePariwisataData(Request $request, int $id): JsonResponse
     {
-        $type = $request->input('type');
-        
         $request->validate([
             'latitude'  => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        if ($type === 'mitra') {
-            if (!class_exists(\App\Models\Pariwisata::class)) {
-                return response()->json(['success' => false, 'message' => 'Model Pariwisata tidak ditemukan.'], 400);
-            }
-            $wisata = \App\Models\Pariwisata::findOrFail($id);
-        } else {
-            $wisata = \App\Models\PendaftaranPariwisata::findOrFail($id);
-        }
+        $wisata = PendaftaranPariwisata::findOrFail($id);
 
         $wisata->update([
             'latitude'    => $request->latitude,
@@ -277,28 +268,12 @@ class AdminController extends Controller
     /**
      * Menghapus data pariwisata.
      */
-    public function destroyPariwisata(Request $request, int $id): JsonResponse
+    public function destroyPariwisata(int $id): JsonResponse
     {
         try {
-            $type = $request->input('type');
-            
-            if ($type === 'mitra') {
-                $wisata = \App\Models\Pariwisata::findOrFail($id);
-                $nama = $wisata->nama_wisata;
-                
-                // Hapus akun mitra terkait (jika perlu) atau biarkan mitranya kosong. 
-                // Kita asumsikan cascade delete akan menangani jika mitranya ikut dihapus, 
-                // tapi di sini kita hapus pariwisatanya saja atau sekalian mitranya:
-                if ($wisata->mitra) {
-                    $wisata->mitra->delete();
-                } else {
-                    $wisata->delete();
-                }
-            } else {
-                $wisata = \App\Models\PendaftaranPariwisata::findOrFail($id);
-                $nama = $wisata->nama_wisata;
-                $wisata->delete();
-            }
+            $wisata = PendaftaranPariwisata::findOrFail($id);
+            $nama = $wisata->nama_wisata;
+            $wisata->delete();
 
             return response()->json([
                 'success' => true,
@@ -320,29 +295,15 @@ class AdminController extends Controller
 
     private function getMergedWisataForDashboard()
     {
-        $pendaftaranData = PendaftaranPariwisata::disetujui()->get()->map(function($w) {
+        return PendaftaranPariwisata::disetujui()->get()->map(function($w) {
             $w->type = 'public';
             return $w;
         });
-
-        $mitraData = collect();
-        if (class_exists(\App\Models\Pariwisata::class)) {
-            $mitraData = \App\Models\Pariwisata::with('mitra')
-                ->whereHas('mitra', fn($query) => $query->where('is_verified', true))
-                ->get()
-                ->map(function($w) {
-                    $w->type = 'mitra';
-                    $w->nama_pengelola = $w->mitra->nama_penanggung_jawab ?? 'Pengelola';
-                    return $w;
-                });
-        }
-
-        return $pendaftaranData->merge($mitraData)->values();
     }
 
     private function getMergedPariwisataData()
     {
-        $pendaftaranData = PendaftaranPariwisata::disetujui()->get()->map(fn($w) => [
+        return PendaftaranPariwisata::disetujui()->get()->map(fn($w) => [
             'id'         => 'p_' . $w->id,
             'name'       => $w->nama_wisata,
             'kategori'   => $w->kategori,
@@ -355,28 +316,6 @@ class AdminController extends Controller
             'telp'       => $w->no_telp,
             'foto'       => $w->foto_path ? asset('storage/' . $w->foto_path) : null,
         ]);
-
-        $mitraData = collect();
-        if (class_exists(\App\Models\Pariwisata::class)) {
-            $mitraData = \App\Models\Pariwisata::with('mitra')
-                ->whereHas('mitra', fn($query) => $query->where('is_verified', true))
-                ->get()
-                ->map(fn($w) => [
-                    'id'         => 'm_' . $w->id,
-                    'name'       => $w->nama_wisata,
-                    'kategori'   => $w->kategori ?? 'Lainnya',
-                    'deskripsi'  => $w->deskripsi,
-                    'alamat'     => $w->alamat,
-                    'lat'        => (float) $w->latitude,
-                    'lng'        => (float) $w->longitude,
-                    'tiket'      => 0,
-                    'pengelola'  => $w->mitra->nama_penanggung_jawab ?? 'Pengelola',
-                    'telp'       => $w->kontak_wisata ?? $w->mitra->no_telp ?? '',
-                    'foto'       => $w->foto_path ? asset('storage/' . $w->foto_path) : null,
-                ]);
-        }
-
-        return $pendaftaranData->merge($mitraData)->values();
     }
 
     /**

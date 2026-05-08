@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Mitra;
 use App\Models\Faskes;
-use App\Models\Pariwisata;
+use App\Models\PendaftaranPariwisata;
 use App\Models\RiwayatKunjungan;
 use App\Models\LaporanMasalah;
 use Carbon\Carbon;
@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // =======================================================
-        // 1. DATA WISATAWAN (End-User)
+        // 1. DATA WISATAWAN (Tabel: users)
         // =======================================================
         $wisatawan1 = User::create([
             'name'           => 'Fares Qwentel',
@@ -35,65 +35,30 @@ class DatabaseSeeder extends Seeder
             'gol_darah'      => 'O',
         ]);
 
-
-        // =======================================================
-        // 2. DATA MITRA FASKES
-        // =======================================================
-        $mitraFaskes1 = Mitra::create([
-            'nama_penanggung_jawab' => 'dr. Hendra Setiawan',
-            'email'                 => 'rsud@subang.id',
-            'password'              => Hash::make('mitra123'),
-            'no_telp'               => '081122334455',
-            'jenis_mitra'           => 'faskes',
-            'is_verified'           => true, // Sudah di-approve admin
-        ]);
-
-        $mitraFaskes2 = Mitra::create([
-            'nama_penanggung_jawab' => 'Apt. Rina Marlina',
-            'email'                 => 'apotek@subang.id',
-            'password'              => Hash::make('mitra123'),
-            'no_telp'               => '082233445566',
-            'jenis_mitra'           => 'faskes',
-            'is_verified'           => true,
-        ]);
-
-        $mitraFaskesPending = Mitra::create([
-            'nama_penanggung_jawab' => 'Klinik Pratama Baru',
-            'email'                 => 'klinikbaru@subang.id',
-            'password'              => Hash::make('mitra123'),
-            'no_telp'               => '0833',
-            'jenis_mitra'           => 'faskes',
-            'is_verified'           => false, // Belum di-approve
+        $wisatawan3 = User::create([
+            'name'           => 'Siti Aminah',
+            'email'          => 'siti@wisata.id',
+            'password'       => Hash::make('password123'),
+            'gol_darah'      => 'B',
+            'riwayat_alergi' => 'Antibiotik Amoxicillin',
         ]);
 
 
         // =======================================================
-        // 2.5 DATA MITRA PARIWISATA
+        // 2. DATA MITRA (Tabel: mitras)
         // =======================================================
-        $mitraWisata1 = Mitra::create([
-            'nama_penanggung_jawab' => 'Bapak Asep (Sari Ater)',
-            'email'                 => 'sariater@subang.id',
-            'password'              => Hash::make('mitra123'),
-            'no_telp'               => '081199887766',
-            'jenis_mitra'           => 'pariwisata',
-            'is_verified'           => true,
-        ]);
-
-        $mitraWisata2 = Mitra::create([
-            'nama_penanggung_jawab' => 'Ibu Lilis (Tangkuban Perahu)',
-            'email'                 => 'tangkuban@subang.id',
-            'password'              => Hash::make('mitra123'),
-            'no_telp'               => '082299887766',
-            'jenis_mitra'           => 'pariwisata',
-            'is_verified'           => true,
-        ]);
+        // Mitra Faskes
+        $mitraF1 = Mitra::create(['nama_penanggung_jawab' => 'dr. Hendra Setiawan', 'email' => 'rsud@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '081122334455', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
+        $mitraF2 = Mitra::create(['nama_penanggung_jawab' => 'Apt. Rina Marlina', 'email' => 'apotek@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '082233445566', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
+        $mitraF3 = Mitra::create(['nama_penanggung_jawab' => 'drg. Maya Indah', 'email' => 'klinikmaya@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '081299008811', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
+        $mitraF4 = Mitra::create(['nama_penanggung_jawab' => 'Kepala Puskesmas Ciater', 'email' => 'puskesmasciater@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '082211002233', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
 
 
         // =======================================================
-        // 3. FASKES MAP DATA
+        // 3. FASKES DETAILS (Tabel: faskes)
         // =======================================================
         $rsud = Faskes::create([
-            'mitra_id'           => $mitraFaskes1->id,
+            'mitra_id'           => $mitraF1->id,
             'nama_faskes'        => 'RSUD Subang',
             'jenis_faskes'       => 'Rumah Sakit',
             'latitude'           => -6.5710,
@@ -107,8 +72,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $apotek = Faskes::create([
-            'mitra_id'           => $mitraFaskes2->id,
-            'nama_faskes'        => 'Apotek K-24',
+            'mitra_id'           => $mitraF2->id,
+            'nama_faskes'        => 'Apotek K-24 Subang',
             'jenis_faskes'       => 'Apotek',
             'latitude'           => -6.5650,
             'longitude'          => 107.7500,
@@ -116,69 +81,98 @@ class DatabaseSeeder extends Seeder
             'dukungan_bpjs'      => false,
             'alamat'             => 'Jl. Raya Cibogo No.12, Subang',
             'no_telp'            => '(0260) 422111',
-            'layanan_tersedia'   => ['Obat Keras', 'Apotek'],
+            'layanan_tersedia'   => ['Obat Keras', 'Apotek', 'Poli Umum'],
+        ]);
+
+        $klinikGigi = Faskes::create([
+            'mitra_id'           => $mitraF3->id,
+            'nama_faskes'        => 'Klinik Gigi Sehat',
+            'jenis_faskes'       => 'Klinik',
+            'latitude'           => -6.5750,
+            'longitude'          => 107.7650,
+            'status_operasional' => 'open',
+            'dukungan_bpjs'      => true,
+            'alamat'             => 'Jl. Otista No. 45, Subang',
+            'no_telp'            => '081299008811',
+            'layanan_tersedia'   => ['Poli Gigi', 'Apotek'],
+        ]);
+
+        Faskes::create([
+            'mitra_id'           => $mitraF4->id,
+            'nama_faskes'        => 'Puskesmas Ciater',
+            'jenis_faskes'       => 'Puskesmas',
+            'latitude'           => -6.7400,
+            'longitude'          => 107.6600,
+            'status_operasional' => 'open',
+            'dukungan_bpjs'      => true,
+            'alamat'             => 'Jl. Raya Ciater, Subang',
+            'no_telp'            => '(0260) 470001',
+            'layanan_tersedia'   => ['Poli Umum', 'Ambulans', 'Imunisasi'],
         ]);
 
 
         // =======================================================
-        // 3.5 PARIWISATA MAP DATA
+        // 4. PARIWISATA DETAILS (Tabel: pendaftaran_pariwisata)
         // =======================================================
-        Pariwisata::create([
-            'mitra_id'           => $mitraWisata1->id,
-            'nama_wisata'        => 'Sari Ater Hot Spring',
-            'kategori'           => 'Alam',
-            'deskripsi'          => 'Pemandian air panas alami dari kawah Gunung Tangkuban Perahu.',
-            'alamat'             => 'Jl. Raya Ciater, Ciater, Subang',
-            'latitude'           => -6.7360,
-            'longitude'          => 107.6530,
-            'info_keselamatan'   => 'Lantai area kolam sangat licin. Faskes terdekat: Puskesmas Ciater (1km).',
-            'kontak_wisata'      => '081199887766',
+        // Pariwisata di sini murni dari pendaftaran (Tanpa Akun)
+        PendaftaranPariwisata::create([
+            'nama_wisata'    => 'Sari Ater Hot Spring',
+            'kategori'       => 'Alam',
+            'deskripsi'      => 'Pemandian air panas alami dari kawah Gunung Tangkuban Perahu.',
+            'alamat'         => 'Jl. Raya Ciater, Ciater, Subang',
+            'latitude'       => -6.7360,
+            'longitude'      => 107.6530,
+            'nama_pengelola' => 'Bapak Asep',
+            'email_kontak'   => 'asep@sariater.id',
+            'no_telp'        => '081199887766',
+            'status_review'  => 'disetujui',
+            'harga_tiket'    => 35000,
         ]);
 
-        Pariwisata::create([
-            'mitra_id'           => $mitraWisata2->id,
-            'nama_wisata'        => 'Kawah Tangkuban Perahu',
-            'kategori'           => 'Alam',
-            'deskripsi'          => 'Gunung api aktif dengan pemandangan kawah memukau.',
-            'alamat'             => 'Cikahuripan, Lembang, Bandung Barat (Perbatasan Subang)',
-            'latitude'           => -6.7596,
-            'longitude'          => 107.6096,
-            'info_keselamatan'   => 'Asap belerang cukup pekat. Pengunjung asma diharap berhati-hati.',
-            'kontak_wisata'      => '082299887766',
+        PendaftaranPariwisata::create([
+            'nama_wisata'    => 'Kawah Tangkuban Perahu',
+            'kategori'       => 'Alam',
+            'deskripsi'      => 'Gunung api aktif dengan pemandangan kawah memukau.',
+            'alamat'         => 'Cikahuripan, Lembang, Bandung Barat',
+            'latitude'       => -6.7596,
+            'longitude'      => 107.6096,
+            'nama_pengelola' => 'Ibu Lilis',
+            'email_kontak'   => 'lilis@tangkuban.id',
+            'no_telp'        => '082299887766',
+            'status_review'  => 'disetujui',
+            'harga_tiket'    => 20000,
+        ]);
+
+        PendaftaranPariwisata::create([
+            'nama_wisata'    => 'Florawisata DCastello',
+            'kategori'       => 'Buatan',
+            'deskripsi'      => 'Taman bunga dengan kastil megah bergaya Rusia dan Turki.',
+            'alamat'         => 'Jl. Raya Ciater, Subang',
+            'latitude'       => -6.7123,
+            'longitude'      => 107.6712,
+            'nama_pengelola' => 'Pak Dedi',
+            'email_kontak'   => 'dedi@dcastello.id',
+            'no_telp'        => '081377889900',
+            'status_review'  => 'disetujui',
+            'harga_tiket'    => 30000,
         ]);
 
 
         // =======================================================
-        // 4. RIWAYAT KUNJUNGAN (Untuk Dashboard Wisatawan)
+        // 5. RIWAYAT KUNJUNGAN & LAPORAN
         // =======================================================
-        RiwayatKunjungan::create([
-            'user_id'           => $wisatawan1->id,
-            'faskes_id'         => $rsud->id,
-            'tanggal_kunjungan' => Carbon::now()->subDays(5),
-            'label_warna'       => 'green',
-            'catatan_pribadi'   => 'Dokternya teliti dan perawat ramah.',
-        ]);
-
-        RiwayatKunjungan::create([
-            'user_id'           => $wisatawan1->id,
-            'faskes_id'         => $apotek->id,
-            'tanggal_kunjungan' => Carbon::now()->subDays(1),
-            'label_warna'       => 'yellow',
-            'catatan_pribadi'   => 'Antrean agak lama, tapi obat lengkap.',
-        ]);
-
-
-        // =======================================================
-        // 5. LAPORAN MASALAH (Untuk Dashboard Admin)
-        // =======================================================
-        LaporanMasalah::create([
-            'user_id'              => $wisatawan2->id,
-            'faskes_id'            => $rsud->id,
-            'subjek'               => 'Titik lokasi geser',
-            'deskripsi'            => 'Lokasi RSUD di peta agak kurang geser ke selatan dikit dari pintu masuk.',
-            'status'               => 'pending',
-        ]);
+        RiwayatKunjungan::create(['user_id' => $wisatawan1->id, 'faskes_id' => $rsud->id, 'tanggal_kunjungan' => Carbon::now()->subDays(5), 'label_warna' => 'green', 'catatan_pribadi' => 'Cek kesehatan rutin.']);
+        LaporanMasalah::create(['user_id' => $wisatawan2->id, 'faskes_id' => $rsud->id, 'subjek' => 'Lokasi Peta', 'deskripsi' => 'Pintu masuk UGD sedang diperbaiki.', 'status' => 'pending']);
         
-        $this->command->info('Database berhasil di-seed dengan data Faskes, Pariwisata, dan Wisatawan!');
+
+        // =======================================================
+        // 6. ULASAN FASKES
+        // =======================================================
+        \App\Models\UlasanFaskes::create(['user_id' => $wisatawan1->id, 'faskes_id' => $rsud->id, 'rating' => 5, 'komentar' => 'Sangat cepat saat keadaan darurat malam hari.']);
+        \App\Models\UlasanFaskes::create(['user_id' => $wisatawan2->id, 'faskes_id' => $rsud->id, 'rating' => 4, 'komentar' => 'Dokternya ramah, antrean pagi lumayan panjang.']);
+        \App\Models\UlasanFaskes::create(['user_id' => $wisatawan3->id, 'faskes_id' => $apotek->id, 'rating' => 5, 'komentar' => 'Obat lengkap dan harga transparan.']);
+        \App\Models\UlasanFaskes::create(['user_id' => $wisatawan1->id, 'faskes_id' => $klinikGigi->id, 'rating' => 5, 'komentar' => 'Modern dan nyaman. Recomended!']);
+
+        $this->command->info('Database WanderMed berhasil di-seed dengan data lengkap!');
     }
 }
