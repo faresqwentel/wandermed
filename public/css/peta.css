@@ -761,3 +761,59 @@ body.light-mode .gm-item:hover { border-color: rgba(255,122,0,0.3); }
 body.light-mode .gm-item-icon { background: rgba(255,122,0,0.1); color: var(--hnb-orange); }
 body.light-mode .gm-item-name { color: #1a2a44; }
 body.light-mode .gm-item-dist { color: #64748b; }
+
+/* ===================== FORM ULASAN ===================== */
+.review-rating-box {
+    text-align: center;
+    padding: 20px 0;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    margin-bottom: 20px;
+}
+.review-star {
+    font-size: 42px;
+    color: rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.review-star.star-active {
+    color: #ffc107 !important;
+}
+
+.review-textarea {
+    width: 100%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    resize: none;
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.review-textarea:focus {
+    border-color: var(--hnb-orange);
+}
+.review-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Light Mode Overrides for Form Ulasan */
+body.light-mode .review-rating-box {
+    background: #fafafa;
+    border-color: #ddd;
+}
+body.light-mode .review-star {
+    color: #ddd;
+}
+body.light-mode .review-textarea {
+    background: #fff;
+    border-color: #eee;
+    color: #333;
+}
+body.light-mode .review-textarea::placeholder {
+    color: #aaa;
+}
