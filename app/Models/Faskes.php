@@ -74,6 +74,11 @@ class Faskes extends Model
         return $this->hasMany(JadwalDokter::class);
     }
 
+    public function ulasans(): HasMany
+    {
+        return $this->hasMany(UlasanFaskes::class);
+    }
+
     // =========================================================
     // QUERY SCOPES
     // =========================================================

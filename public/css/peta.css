@@ -817,3 +817,58 @@ body.light-mode .review-textarea {
 body.light-mode .review-textarea::placeholder {
     color: #aaa;
 }
+
+/* ===================== DROPDOWN PENCARIAN ===================== */
+.search-dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 8px;
+    background: rgba(13, 27, 46, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1050;
+    padding: 8px 0;
+    pointer-events: auto;
+}
+.search-dropdown-list::-webkit-scrollbar { width: 4px; }
+.search-dropdown-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+.search-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.search-dropdown-item:last-child { border-bottom: none; }
+.search-dropdown-item:hover { background: rgba(255,122,0,0.15); }
+.search-item-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px; flex-shrink: 0;
+}
+.search-item-info { flex: 1; min-width: 0; }
+.search-item-name { color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.search-item-type { color: rgba(255,255,255,0.5); font-size: 11px; }
+
+/* Light Mode Override for Dropdown */
+body.light-mode .search-dropdown-list {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+body.light-mode .search-dropdown-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
+body.light-mode .search-dropdown-item { border-bottom-color: rgba(0,0,0,0.05); }
+body.light-mode .search-dropdown-item:hover { background: rgba(255,122,0,0.08); }
+body.light-mode .search-item-icon { background: rgba(0,0,0,0.05); color: var(--hnb-orange); }
+body.light-mode .search-item-name { color: #1a2a44; }
+body.light-mode .search-item-type { color: #64748b; }

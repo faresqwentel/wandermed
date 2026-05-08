@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function() {
             phone:    f.phone,
             jam:      f.status === 'open' ? 'Sedang Buka' : 'Sedang Tutup',
             notes:    f.notes,
+            ratingAvg: f.rating_avg || 0,
+            ratingCount: f.rating_count || 0,
             facilities: (f.facilities || []).map(label => ({
                 icon:  getFacilityIcon(label),
                 ico:   getFacilityFaIcon(label),
@@ -102,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
               bpjs:true, status:"open", address:"Jl. Brigjen Katamso No.37, Subang",
               phone:"(0260) 411421", jam:"24 Jam (UGD & Layanan Darurat)",
               notes:"Antrean poli umum buka pukul 07.00 WIB. Parkiran tersedia luas.",
+              ratingAvg: 4.8, ratingCount: 125,
               facilities:[
                 {icon:"fac-icon red",ico:"fas fa-ambulance",label:"UGD 24 Jam"},
                 {icon:"fac-icon blue",ico:"fas fa-car",label:"Ambulans"},
@@ -111,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
             { id:2, name:"Klinik Pratama Cibogo", lat:-6.5650, lng:107.7500, type:"Klinik",
               bpjs:true, status:"open", address:"Jl. Raya Cibogo No.12, Subang",
               phone:"(0260) 422111", jam:"Senin – Sabtu, 08.00 – 20.00 WIB", notes:null,
+              ratingAvg: 4.2, ratingCount: 34,
               facilities:[
                 {icon:"fac-icon green",ico:"fas fa-stethoscope",label:"Poli Umum"},
                 {icon:"fac-icon green",ico:"fas fa-pills",label:"Apotek"},
@@ -118,6 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
             { id:3, name:"Apotek Kimia Farma Subang", lat:-6.5730, lng:107.7560, type:"Apotek",
               bpjs:true, status:"open", address:"Jl. Otista No.4, Subang",
               phone:"(0260) 417080", jam:"Setiap Hari, 07.00 – 22.00 WIB", notes:null,
+              ratingAvg: 4.5, ratingCount: 89,
               facilities:[
                 {icon:"fac-icon green",ico:"fas fa-pills",label:"Obat Keras"},
                 {icon:"fac-icon teal",ico:"fas fa-vials",label:"Alat Kesehatan"},
@@ -271,6 +276,16 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('detailJam').textContent     = data.jam;
         document.getElementById('detailPhone').textContent   = data.phone;
 
+        // Rating
+        const ratingContainer = document.getElementById('detailRatingContainer');
+        if (data.ratingCount > 0) {
+            ratingContainer.style.display = 'flex';
+            document.getElementById('detailRatingAvg').textContent = Number(data.ratingAvg).toFixed(1);
+            document.getElementById('detailRatingCount').textContent = `(${data.ratingCount})`;
+        } else {
+            ratingContainer.style.display = 'none';
+        }
+
         // Status visual jam
         const rowJam = document.getElementById('rowJam');
         if (data.status === 'open') {
@@ -307,6 +322,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const btnJadwal = document.getElementById('btnJadwal');
         btnJadwal.style.display = 'block';
         btnJadwal.href = `/faskes/${data.id}/jadwal`;
+        document.getElementById('btnDeteksiFaskes').style.display = 'none';
         document.getElementById('btnCall').href = `tel:${data.phone.replace(/\D/g, '')}`;
 
         // Notes
@@ -514,10 +530,104 @@ document.addEventListener("DOMContentLoaded", function() {
     // Set BPJS chip awalnya inactive
     document.getElementById('bpjsChip').classList.add('inactive');
 
-    // Input pencarian
+    // Input pencarian & Autocomplete Dropdown
     document.getElementById('searchInput').addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
         closeDetail();
         updateMarkers();
+
+        const dropdown = document.getElementById('searchResultsDropdown');
+        dropdown.innerHTML = '';
+        
+        if (query.length < 2) {
+            dropdown.style.display = 'none';
+            return;
+        }
+
+        let results = [];
+        
+        // Cari Faskes
+        faskesData.forEach(f => {
+            if (f.name.toLowerCase().includes(query) || f.address.toLowerCase().includes(query)) {
+                results.push({ ...f, isWisata: false });
+            }
+        });
+
+        // Cari Wisata
+        pariwisataData.forEach(w => {
+            if (w.name.toLowerCase().includes(query) || (w.kategori && w.kategori.toLowerCase().includes(query))) {
+                results.push({ ...w, isWisata: true });
+            }
+        });
+
+        if (results.length === 0) {
+            dropdown.innerHTML = '<div style="padding: 12px 16px; color: rgba(255,255,255,0.6); font-size: 13px; font-family:\'Poppins\', sans-serif;">Pencarian tidak ditemukan.</div>';
+            dropdown.style.display = 'block';
+            return;
+        }
+
+        // Ambil maksimal 8 hasil
+        results.slice(0, 8).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'search-dropdown-item';
+            
+            const iconClass = item.isWisata ? 'fa-mountain' : (item.type === 'Rumah Sakit' ? 'fa-hospital-alt' : (item.type === 'Apotek' ? 'fa-pills' : 'fa-clinic-medical'));
+            const typeLabel = item.isWisata ? `Pariwisata (${item.kategori || 'Alam'})` : item.type;
+
+            div.innerHTML = `
+                <div class="search-item-icon"><i class="fas ${iconClass}"></i></div>
+                <div class="search-item-info">
+                    <div class="search-item-name">${item.name}</div>
+                    <div class="search-item-type">${typeLabel}</div>
+                </div>
+            `;
+            
+            div.addEventListener('click', function() {
+                // Sembunyikan dropdown dan isi input
+                dropdown.style.display = 'none';
+                document.getElementById('searchInput').value = item.name;
+                
+                // Setel filter master sesuai tipe item
+                if (item.isWisata) {
+                    document.getElementById('masterFilter').value = 'Pariwisata';
+                } else {
+                    document.getElementById('masterFilter').value = 'Faskes';
+                }
+                updateMarkers();
+
+                // Terbang ke lokasi
+                map.flyTo([item.lat, item.lng], 16, { duration: 1.5 });
+                
+                // Tampilkan detail (beri sedikit jeda agar animasi zoom terlihat enak)
+                setTimeout(() => {
+                    if (item.isWisata) {
+                        showWisataDetail(item);
+                    } else {
+                        showDetail(item);
+                    }
+                }, 800);
+            });
+
+            dropdown.appendChild(div);
+        });
+
+        dropdown.style.display = 'block';
+    });
+
+    // Hilangkan dropdown saat klik di luar
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-input-group') && !e.target.closest('.search-dropdown-list')) {
+            const dropdown = document.getElementById('searchResultsDropdown');
+            if (dropdown) dropdown.style.display = 'none';
+        }
+    });
+
+    // Tampilkan lagi dropdown jika input difokuskan dan ada isinya
+    document.getElementById('searchInput').addEventListener('focus', function() {
+        if (this.value.trim().length >= 2) {
+            // Trigger input event to re-render dropdown
+            this.dispatchEvent(new Event('input'));
+        }
     });
 
     // =========================================================
@@ -707,6 +817,12 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('detailActions').style.display = 'flex';
         document.getElementById('reviewActions').style.display = 'none';
         document.getElementById('btnJadwal').style.display = 'none';
+        
+        document.getElementById('btnDeteksiFaskes').style.display = 'block';
+        document.getElementById('btnDeteksiFaskes').onclick = function(e) {
+            e.preventDefault();
+            triggerManualGeofence(w.lat, w.lng, w.name);
+        };
 
         document.getElementById('btnDirection').href = `https://www.google.com/maps/dir/?api=1&destination=${w.lat},${w.lng}`;
         document.getElementById('btnDirection').onclick = function(e) {
@@ -716,4 +832,50 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('btnCall').href = `tel:${(w.telp || '').replace(/\D/g, '')}`;
         document.getElementById('faskesDetailPanel').classList.add('active');
     }
+
+    // =========================================================
+    // MANUAL DETEKSI FASKES DARI PARIWISATA
+    // =========================================================
+    window.triggerManualGeofence = function(lat, lng, wisataName) {
+        if (faskesData.length === 0) return;
+
+        document.getElementById('gfWisataName').textContent = wisataName;
+        
+        let faskesWithDist = faskesData.map(f => {
+            return {
+                ...f,
+                dist: getDistanceFromLatLonInKm(lat, lng, f.lat, f.lng)
+            };
+        }).filter(f => f.lat && f.lng);
+        
+        faskesWithDist.sort((a, b) => a.dist - b.dist);
+        let top3 = faskesWithDist.slice(0, 3);
+        
+        let listHtml = '';
+        top3.forEach(f => {
+            let distMeters = Math.round(f.dist * 1000);
+            let distText = distMeters > 1000 ? (f.dist).toFixed(1) + ' km' : distMeters + ' m';
+            let mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lng}`;
+
+            listHtml += `
+                <div class="gm-item">
+                    <div class="gm-item-icon">
+                        <i class="fas ${f.type === 'Rumah Sakit' ? 'fa-hospital-alt' : (f.type === 'Apotek' ? 'fa-pills' : 'fa-clinic-medical')}"></i>
+                    </div>
+                    <div class="gm-item-info">
+                        <div class="gm-item-name">${f.name}</div>
+                        <div class="gm-item-dist"><i class="fas fa-route"></i> ${distText}</div>
+                    </div>
+                    <a href="${mapsLink}" onclick="event.preventDefault(); openSmartNavigation(${f.lat}, ${f.lng});" class="gm-item-btn">Rute</a>
+                </div>
+            `;
+        });
+
+        document.getElementById('gfFaskesList').innerHTML = listHtml;
+        document.getElementById('geofenceModal').classList.add('active');
+        
+        // Pindahkan peta ke lokasi pariwisata agar relevan secara visual
+        map.flyTo([lat, lng], 15, { duration: 1.5 });
+        closeDetail();
+    };
 });

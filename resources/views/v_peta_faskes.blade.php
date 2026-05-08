@@ -21,21 +21,26 @@
         <div class="map-overlay-panel">
 
             {{-- BARIS 1: Search + Lokasi + BPJS --}}
-            <div class="unified-nav-box">
-                <div class="search-input-group">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Cari nama faskes, klinik, apotek...">
+            <div style="position: relative;">
+                <div class="unified-nav-box">
+                    <div class="search-input-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Cari nama faskes, klinik, apotek, atau wisata..." autocomplete="off">
+                    </div>
+                    <div class="v-separator-map"></div>
+                    <button class="btn-my-location" id="btnMyLocation" title="Gunakan lokasi saya">
+                        <i class="fas fa-crosshairs"></i>
+                        <span>Lokasi Saya</span>
+                    </button>
+                    <div class="v-separator-map"></div>
+                    <button class="bpjs-chip" id="bpjsChip">
+                        <i class="fas fa-shield-alt"></i>
+                        BPJS
+                    </button>
                 </div>
-                <div class="v-separator-map"></div>
-                <button class="btn-my-location" id="btnMyLocation" title="Gunakan lokasi saya">
-                    <i class="fas fa-crosshairs"></i>
-                    <span>Lokasi Saya</span>
-                </button>
-                <div class="v-separator-map"></div>
-                <button class="bpjs-chip" id="bpjsChip">
-                    <i class="fas fa-shield-alt"></i>
-                    BPJS
-                </button>
+                
+                {{-- Dropdown Hasil Pencarian --}}
+                <div id="searchResultsDropdown" class="search-dropdown-list" style="display: none;"></div>
             </div>
 
             {{-- BARIS 2: Filter Destinasi + Sub-kategori Faskes --}}
@@ -82,9 +87,15 @@
 
             {{-- Header --}}
             <div class="panel-header">
-                <div>
-                    <div class="panel-faskes-name" id="detailName">Nama Fasilitas</div>
-                    <div class="panel-faskes-type" id="detailType">Tipe Faskes</div>
+                <div style="flex: 1;">
+                    <div class="panel-faskes-name" id="detailName">Nama Faskes</div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                        <div class="panel-faskes-type" id="detailType" style="margin-bottom: 0;">Jenis Faskes</div>
+                        <div id="detailRatingContainer" style="display: none; align-items: center; gap: 4px; font-size: 11.5px; background: rgba(255,193,7,0.1); color: #ffc107; padding: 2px 8px; border-radius: 12px; border: 1px solid rgba(255,193,7,0.3);">
+                            <i class="fas fa-star" style="font-size: 10px;"></i> <span id="detailRatingAvg" style="font-weight: 700;">0.0</span> 
+                            <span id="detailRatingCount" style="color: inherit; opacity: 0.7; font-size: 10.5px;">(0)</span>
+                        </div>
+                    </div>
                 </div>
                 <button class="panel-close-btn" onclick="closeDetail()">
                     <i class="fas fa-times"></i>
@@ -206,6 +217,9 @@
                     <a id="btnJadwal" href="#" class="btn btn-outline-primary py-2" style="border-radius:10px; display:none; border-style: dashed;">
                         <i class="fas fa-user-md mr-1"></i> Lihat Jadwal Praktik
                     </a>
+                    <button id="btnDeteksiFaskes" class="btn btn-danger py-2 mt-1" style="border-radius:10px; display:none; border: none; background: linear-gradient(135deg, #e74a3b, #c0392b); color: #fff; box-shadow: 0 4px 15px rgba(231,74,59,0.3);">
+                        <i class="fas fa-heartbeat mr-1"></i> Deteksi Faskes Terdekat
+                    </button>
                 </div>
 
                 {{-- Aksi Review --}}

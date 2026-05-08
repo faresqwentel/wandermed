@@ -16,8 +16,24 @@
                     </div>
 
                     <div class="glass-premier radius-hnb p-4 p-md-5 mb-4 shadow-sm" data-aos="fade-up" data-aos-delay="100" style="background: white !important;">
-                        <h3 class="font-weight-bold mb-2" style="color: #2b3674;">{{ $faskes->nama_faskes }}</h3>
-                        <p class="text-muted mb-4"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $faskes->alamat }}</p>
+                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-4" style="gap: 15px;">
+                            <div>
+                                <h3 class="font-weight-bold mb-2" style="color: #2b3674;">{{ $faskes->nama_faskes }}</h3>
+                                <p class="text-muted mb-0"><i class="fas fa-map-marker-alt text-danger mr-1"></i> {{ $faskes->alamat }}</p>
+                            </div>
+                            @if($faskes->jadwals->isNotEmpty())
+                                @php
+                                    $lastUpdated = $faskes->jadwals->max('updated_at');
+                                @endphp
+                                @if($lastUpdated)
+                                <div class="d-flex align-items-center">
+                                    <div style="background-color: #f8f9fa; color: #6c757d; font-size: 0.85rem; padding: 8px 14px; border: 1px solid #e9ecef; border-radius: 20px; font-weight: 500; white-space: nowrap;">
+                                        <i class="fas fa-history mr-1" style="color: var(--hnb-orange);"></i> Diperbarui: {{ \Carbon\Carbon::parse($lastUpdated)->locale('id')->diffForHumans() }}
+                                    </div>
+                                </div>
+                                @endif
+                            @endif
+                        </div>
 
                         @if($faskes->jadwals->isEmpty())
                             <div class="alert alert-info d-flex align-items-center" style="border-radius: 12px; padding: 20px;">

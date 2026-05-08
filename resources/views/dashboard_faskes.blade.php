@@ -371,6 +371,16 @@
             <div class="wm-page-title">Manajemen Jadwal Praktik</div>
             <div class="wm-page-subtitle">Atur jadwal dokter yang tersedia di faskes Anda</div>
         </div>
+        @if(isset($jadwals) && $jadwals->isNotEmpty())
+            @php
+                $lastUpdatedJadwal = $jadwals->max('updated_at');
+            @endphp
+            @if($lastUpdatedJadwal)
+            <span style="font-size: 11.5px; color: var(--text-muted); background: rgba(0,0,0,0.03); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                <i class="fas fa-history mr-1" style="color: #f6c23e;"></i> Terakhir diubah: {{ \Carbon\Carbon::parse($lastUpdatedJadwal)->locale('id')->diffForHumans() }}
+            </span>
+            @endif
+        @endif
     </div>
     <div class="row">
         <div class="col-md-4">

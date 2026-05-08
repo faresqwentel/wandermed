@@ -48,6 +48,8 @@ class HomeController extends Controller
     public function petaFaskes() {
         // Ambil faskes terverifikasi
         $faskes = \App\Models\Faskes::with(['mitra', 'jadwals'])
+            ->withAvg('ulasans', 'rating')
+            ->withCount('ulasans')
             ->whereHas('mitra', fn($q) => $q->where('is_verified', true))
             ->get()
             ->map(fn($f) => [
@@ -62,6 +64,8 @@ class HomeController extends Controller
                 'bpjs'     => (bool) $f->dukungan_bpjs,
                 'facilities' => $f->layanan_tersedia ?? [],
                 'notes'    => $f->pengumuman,
+                'rating_avg' => round($f->ulasans_avg_rating ?? 0, 1),
+                'rating_count' => $f->ulasans_count ?? 0,
                 'jadwals'  => $f->jadwals->map(fn($j) => [
                     'dokter'       => $j->nama_dokter,
                     'spesialisasi' => $j->spesialisasi,
