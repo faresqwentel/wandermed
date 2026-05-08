@@ -24,7 +24,55 @@
     <!-- AOS Animate On Scroll -->
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
 
+    <!-- Animate.css (for SweetAlert2 popup transitions) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     @stack('styles')
+
+    <!-- SweetAlert2 Logout Popup Styles -->
+    <style>
+    .wm-swal-popup {
+        border: 1px solid rgba(255,122,0,0.18) !important;
+        border-radius: 18px !important;
+        padding: 28px !important;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04) !important;
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .wm-swal-title {
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.3px !important;
+    }
+    .wm-swal-icon {
+        border-color: rgba(255,122,0,0.3) !important;
+    }
+    .wm-swal-confirm {
+        background: linear-gradient(135deg, #ff7a00, #e65c00) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 10px 22px !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 6px 20px rgba(255,122,0,0.35) !important;
+        transition: opacity 0.2s !important;
+    }
+    .wm-swal-confirm:hover { opacity: 0.88 !important; }
+    .wm-swal-cancel {
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 10px !important;
+        padding: 10px 22px !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        transition: background 0.2s, color 0.2s !important;
+    }
+    .wm-swal-cancel:hover {
+        background: rgba(255,255,255,0.14) !important;
+    }
+    </style>
 
     {{-- Dark Mode Init: Terapkan class SEBELUM render untuk hindari flash --}}
     <script>
@@ -103,14 +151,12 @@
             <!-- Search -->
             <div class="wm-search d-none d-md-block">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Cari sesuatu...">
+                <input type="text" id="wmSearchBox" placeholder="Cari menu..." autocomplete="off">
+                <div id="wmSearchDropdown"></div>
             </div>
 
-            <!-- Notification Bell -->
-            <div class="wm-topbar-icon">
-                <i class="fas fa-bell"></i>
-                <span class="dot"></span>
-            </div>
+            <!-- Notification Bell (per-role) -->
+            @yield('topbar_bell')
 
             <!-- Dark Mode Toggle -->
             <button class="wm-darkmode-btn" id="darkModeToggle" title="Ganti tema gelap/terang" onclick="toggleDarkMode()">

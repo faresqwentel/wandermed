@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -286,6 +287,52 @@ body {
     gap: 8px;
 }
 .w-info-box i { color: var(--red); flex-shrink: 0; margin-top: 2px; }
+
+/* ── SWEETALERT2 LOGOUT POPUP ── */
+.wm-swal-popup {
+    border: 1px solid rgba(255,122,0,0.18) !important;
+    border-radius: 18px !important;
+    padding: 28px !important;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04) !important;
+    font-family: 'Poppins', sans-serif !important;
+}
+.wm-swal-title {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    color: #e8ecf4 !important;
+    letter-spacing: -0.3px !important;
+}
+.wm-swal-icon {
+    border-color: rgba(255,122,0,0.3) !important;
+}
+.wm-swal-confirm {
+    background: linear-gradient(135deg, #ff7a00, #e65c00) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px 22px !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 6px 20px rgba(255,122,0,0.35) !important;
+    transition: opacity 0.2s !important;
+}
+.wm-swal-confirm:hover { opacity: 0.88 !important; }
+.wm-swal-cancel {
+    background: rgba(255,255,255,0.06) !important;
+    color: #94a3b8 !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+    padding: 10px 22px !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    transition: background 0.2s, color 0.2s !important;
+}
+.wm-swal-cancel:hover {
+    background: rgba(255,255,255,0.1) !important;
+    color: #e8ecf4 !important;
+}
 </style>
 </head>
 <body>
@@ -303,7 +350,7 @@ body {
         <button id="themeBtn" class="w-btn w-btn-ghost" onclick="toggleTheme()" title="Ganti Mode">
             <i class="fas fa-sun" id="themeIco"></i>
         </button>
-        <a href="/logout" class="w-btn w-btn-red" onclick="return confirm('Yakin ingin keluar?')">
+        <a href="/logout" class="w-btn w-btn-red" id="logoutBtn">
             <i class="fas fa-sign-out-alt"></i>
             <span>Keluar</span>
         </a>
@@ -497,6 +544,47 @@ function switchTab(name, btn) {
     btn.classList.add('active');
     window.scrollTo({ top: document.querySelector('.w-hero').offsetHeight - 60, behavior: 'smooth' });
 }
+
+// ── LOGOUT CONFIRMATION ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const dest = this.href;
+            Swal.fire({
+                title: 'Keluar dari Akun?',
+                html: `<p style="color:#94a3b8;font-size:14px;margin:0;line-height:1.6;">
+                          Sesi Anda akan diakhiri dan Anda<br>akan diarahkan ke halaman login.
+                       </p>`,
+                icon: 'warning',
+                iconColor: '#ff7a00',
+                background: '#111827',
+                color: '#e8ecf4',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-sign-out-alt" style="margin-right:6px;"></i>Ya, Keluar',
+                cancelButtonText:  '<i class="fas fa-times" style="margin-right:6px;"></i>Batal',
+                reverseButtons: true,
+                focusCancel: true,
+                customClass: {
+                    popup:         'wm-swal-popup',
+                    title:         'wm-swal-title',
+                    confirmButton: 'wm-swal-confirm',
+                    cancelButton:  'wm-swal-cancel',
+                    icon:          'wm-swal-icon',
+                },
+                showClass:  { popup: 'animate__animated animate__fadeInDown animate__faster' },
+                hideClass:  { popup: 'animate__animated animate__fadeOutUp animate__faster' },
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    document.body.style.transition = 'opacity 0.18s ease';
+                    document.body.style.opacity    = '0';
+                    setTimeout(function () { window.location.href = dest; }, 185);
+                }
+            });
+        });
+    }
+});
 </script>
 </body>
 </html>
