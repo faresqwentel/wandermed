@@ -131,7 +131,8 @@ class AuthController extends Controller
         $user = User::where('email', $email)->first();
         if ($user && Hash::check($password, $user->password)) {
             if (!$user->is_active) {
-                return back()->with('error', 'Akun Anda telah DIBLOKIR oleh Admin.');
+                $reason = $user->blocking_reason ?? 'Pelanggaran ketentuan layanan.';
+                return back()->with('error', "Akun Anda telah DIBLOKIR oleh Admin. Alasan: {$reason}");
             }
 
             $this->setSession('wisatawan', $user->id, $user->name, $user->email);
@@ -145,7 +146,8 @@ class AuthController extends Controller
         $mitra = Mitra::where('email', $email)->first();
         if ($mitra && Hash::check($password, $mitra->password)) {
             if (!$mitra->is_active) {
-                return back()->with('error', 'Akun Faskes Anda telah DIBLOKIR oleh Admin.');
+                $reason = $mitra->blocking_reason ?? 'Pelanggaran ketentuan layanan.';
+                return back()->with('error', "Akun Faskes Anda telah DIBLOKIR oleh Admin. Alasan: {$reason}");
             }
             if (!$mitra->is_verified) {
                 return back()->with('error', 'Akun Anda belum diverifikasi oleh admin. Silakan tunggu konfirmasi.');

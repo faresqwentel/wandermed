@@ -20,6 +20,8 @@ class User extends Authenticatable
         'gol_darah',
         'riwayat_alergi',
         'kontak_darurat',
+        'is_active',
+        'blocking_reason',
     ];
 
     /**

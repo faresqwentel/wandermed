@@ -144,15 +144,24 @@ class AdminController extends Controller
     /**
      * Toggle status aktif pengguna (wisatawan).
      */
-    public function toggleUserActive(int $id): JsonResponse
+    public function toggleUserActive(Request $request, int $id): JsonResponse
     {
         $user = User::findOrFail($id);
         $user->is_active = !$user->is_active;
+        
+        if (!$user->is_active) {
+            $user->blocking_reason = $request->input('reason', 'Pelanggaran ketentuan layanan.');
+        } else {
+            $user->blocking_reason = null;
+        }
+        
         $user->save();
 
         return response()->json([
             'success'   => true,
-            'message'   => "Status Wisatawan {$user->name} berhasil diubah.",
+            'message'   => $user->is_active 
+                            ? "Akun {$user->name} berhasil diaktifkan kembali." 
+                            : "Akun {$user->name} telah diblokir dengan alasan: {$user->blocking_reason}",
             'is_active' => $user->is_active
         ]);
     }

@@ -25,6 +25,7 @@ class Mitra extends Model
         'jenis_mitra',
         'is_verified',
         'is_active',
+        'blocking_reason',
         'catatan_admin',
     ];
 

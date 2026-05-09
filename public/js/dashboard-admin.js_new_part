@@ -1,0 +1,97 @@
+    // 9. TOGGLE STATUS USER
+    window.toggleUserStatus = function(btn,id) {
+        var isCurrentlyActive = btn.classList.contains('danger'); // Button 'danger' means they are currently active
+        
+        if (isCurrentlyActive) {
+            // Jika mau blokir, minta alasan
+            Swal.fire({
+                title: 'Blokir Wisatawan?',
+                text: "Silakan pilih atau tuliskan alasan pemblokiran:",
+                icon: 'warning',
+                input: 'select',
+                inputOptions: {
+                    'Ulasan palsu / Manipulasi rating': 'Ulasan palsu / Manipulasi rating',
+                    'Spam atau perilaku mengganggu': 'Spam atau perilaku mengganggu',
+                    'Pelanggaran Ketentuan Layanan': 'Pelanggaran Ketentuan Layanan',
+                    'Aktivitas mencurigakan': 'Aktivitas mencurigakan',
+                    'other': 'Lainnya (Tuliskan sendiri...)'
+                },
+                inputPlaceholder: 'Pilih alasan...',
+                showCancelButton: true,
+                confirmButtonColor: '#e53e3e',
+                confirmButtonText: 'Ya, Blokir Akun',
+                cancelButtonText: 'Batal',
+                inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                        if (value) {
+                            resolve();
+                        } else {
+                            resolve('Anda harus memilih alasan.');
+                        }
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var reason = result.value;
+                    if (reason === 'other') {
+                        // Jika pilih lainnya, tampilkan input text
+                        Swal.fire({
+                            title: 'Alasan Khusus',
+                            input: 'text',
+                            inputLabel: 'Tuliskan alasan pemblokiran:',
+                            showCancelButton: true,
+                            confirmButtonText: 'Blokir Sekarang',
+                            inputValidator: (value) => {
+                                if (!value) return 'Alasan tidak boleh kosong!';
+                            }
+                        }).then((res) => {
+                            if (res.isConfirmed) {
+                                executeToggleStatus(btn, id, res.value);
+                            }
+                        });
+                    } else {
+                        executeToggleStatus(btn, id, reason);
+                    }
+                }
+            });
+        } else {
+            // Jika mau aktifkan kembali, langsung saja
+            executeToggleStatus(btn, id, null);
+        }
+    };
+
+    function executeToggleStatus(btn, id, reason) {
+        var oldHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
+        fetch('/admin/user/'+id+'/toggle-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ reason: reason })
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+            var statusCell = document.getElementById('statusUser-'+id);
+            if(data.is_active) {
+                statusCell.innerHTML = '<span class="wm-badge green">Aktif</span>';
+                btn.className = 'wm-btn danger sm';
+                btn.innerHTML = '<i class="fas fa-ban"></i> Blokir';
+            } else {
+                statusCell.innerHTML = '<span class="wm-badge danger">Diblokir</span>';
+                btn.className = 'wm-btn success sm';
+                btn.innerHTML = '<i class="fas fa-check"></i> Aktifkan';
+            }
+            showToast(data.message || 'Status akun diperbarui!');
+        })
+        .catch(function() {
+            btn.innerHTML = oldHtml;
+            showToast('Gagal mengubah status.', 'danger');
+        })
+        .finally(function() {
+            btn.disabled = false;
+        });
+    }

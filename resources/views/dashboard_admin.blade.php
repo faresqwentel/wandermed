@@ -3,7 +3,16 @@
      Layout: theme/dashboard_layout.blade.php
      ============================================================ --}}
 @extends('theme.dashboard_layout')
-@php use Illuminate\Support\Facades\Storage; @endphp
+@php 
+    use Illuminate\Support\Facades\Storage; 
+    /** @var \Illuminate\Support\Collection|\App\Models\Mitra[] $mitraPending */
+    /** @var \Illuminate\Support\Collection|\App\Models\PendaftaranPariwisata[] $wisataPending */
+    /** @var \Illuminate\Support\Collection|\App\Models\PendaftaranPariwisata[] $wisataApproved */
+    /** @var \Illuminate\Pagination\LengthAwarePaginator|\App\Models\User[] $users */
+    /** @var \Illuminate\Pagination\LengthAwarePaginator|\App\Models\Faskes[] $faskesList */
+    /** @var \Illuminate\Support\Collection|\App\Models\LaporanMasalah[] $laporans */
+    /** @var \Illuminate\Support\Collection|\App\Models\UlasanFaskes[] $allUlasan */
+@endphp
 
 @section('page_title', 'Admin Dashboard')
 @section('badge_role', 'Administrator')
@@ -221,17 +230,17 @@
                         ]);
                         $recents = collect($recentFaskes)->merge(collect($recentWisata))->sortByDesc('tanggal')->take(5);
                     @endphp
-                    @forelse($recents as $r)
+                    @forelse(($recents ?? []) as $r)
                     <tr>
-                        <td class="bold">{{ $r->nama }}</td>
+                        <td class="bold">{{ $r?->nama ?? '-' }}</td>
                         <td>
-                            @if($r->jenis === 'Faskes')
+                            @if(($r?->jenis ?? '') === 'Faskes')
                                 <span class="wm-badge green"><i class="fas fa-clinic-medical"></i> Faskes</span>
                             @else
                                 <span class="wm-badge teal"><i class="fas fa-mountain"></i> Pariwisata</span>
                             @endif
                         </td>
-                        <td style="color: var(--text-muted); font-size: 12px;">{{ $r->tanggal->format('d M Y') }}</td>
+                        <td style="color: var(--text-muted); font-size: 12px;">{{ $r?->tanggal?->format('d M Y') ?? '-' }}</td>
                         <td><span class="wm-badge yellow"><i class="fas fa-clock"></i> Menunggu</span></td>
                     </tr>
                     @empty
@@ -276,46 +285,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($mitraPending as $m)
+                    @foreach(($mitraPending ?? []) as $m)
                     @php
                         $isFaskesIncomplete = false;
-                        if($m->faskes) {
-                            $isFaskesIncomplete = empty($m->faskes->alamat) || $m->faskes->alamat === '-'
-                                || empty($m->faskes->latitude) || empty($m->faskes->longitude)
-                                || ($m->faskes->latitude == -6.5718 && $m->faskes->longitude == 107.7600);
+                        if($m?->faskes) {
+                            $isFaskesIncomplete = empty($m?->faskes?->alamat) || ($m?->faskes?->alamat === '-')
+                                || empty($m?->faskes?->latitude) || empty($m?->faskes?->longitude)
+                                || ($m?->faskes?->latitude == -6.5718 && $m?->faskes?->longitude == 107.7600);
                         }
                     @endphp
-                    <tr id="mitraRow-{{ $m->id }}">
+                    <tr id="mitraRow-{{ $m?->id ?? 0 }}">
                         <td class="bold col-nama">
-                            {{ $m->nama_penanggung_jawab }}
+                            {{ $m?->nama_penanggung_jawab ?? '-' }}
                             @if($isFaskesIncomplete)
                                 <span title="Data lokasi faskes belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
                                     <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
                                 </span>
                             @endif
-                            @if($m->faskes)
+                            @if($m?->faskes)
                             <div style="font-size:11px; color: var(--text-muted); font-weight:400; margin-top:3px;">
-                                <i class="fas fa-hospital-alt mr-1"></i>{{ $m->faskes->nama_faskes }}
+                                <i class="fas fa-hospital-alt mr-1"></i>{{ $m?->faskes?->nama_faskes ?? '-' }}
                                 &nbsp;|&nbsp;
-                                <span style="font-family:monospace;">{{ $m->faskes->latitude }}, {{ $m->faskes->longitude }}</span>
+                                <span style="font-family:monospace;">{{ $m?->faskes?->latitude ?? 0 }}, {{ $m?->faskes?->longitude ?? 0 }}</span>
                             </div>
                             @endif
                         </td>
                         <td><span class="wm-badge green"><i class="fas fa-clinic-medical"></i> Faskes</span></td>
                         <td style="color: var(--text-muted); font-size:12px;">
-                            {{ $m->email }}<br>
-                            <i class="fas fa-phone-alt mr-1"></i>{{ $m->no_telp ?? '-' }}
+                            {{ $m?->email ?? '-' }}<br>
+                            <i class="fas fa-phone-alt mr-1"></i>{{ $m?->no_telp ?? '-' }}
                         </td>
                         <td>
-                            @if($m->catatan_admin && !str_contains($m->catatan_admin ?? '', ' '))
-                                <a href="{{ Storage::url($m->catatan_admin) }}" target="_blank" class="wm-btn info sm">
+                            @if($m?->catatan_admin && !str_contains($m?->catatan_admin ?? '', ' '))
+                                <a href="{{ Storage::url($m?->catatan_admin) }}" target="_blank" class="wm-btn info sm">
                                     <i class="fas fa-file-alt"></i> Lihat
                                 </a>
                             @else
                                 <span style="color: var(--text-muted); font-size:12px;"><i class="fas fa-minus"></i> Tidak ada</span>
                             @endif
                         </td>
-                        <td style="color: var(--text-muted); font-size:12px;">{{ $m->created_at->format('d M Y') }}</td>
+                        <td style="color: var(--text-muted); font-size:12px;">{{ $m?->created_at?->format('d M Y') ?? '-' }}</td>
                         <td style="text-align: center;">
                             <button class="wm-btn info sm" onclick='showDetailFaskes(@json($m))'>
                                 <i class="fas fa-eye"></i> Detail
@@ -324,42 +333,42 @@
                     </tr>
                     @endforeach
 
-                    @foreach($wisataPending as $w)
+                    @foreach(($wisataPending ?? []) as $w)
                     @php
-                        $isWisataIncomplete = empty($w->alamat) || $w->alamat === '-'
-                            || empty($w->latitude) || empty($w->longitude)
-                            || ($w->latitude == -6.5718 && $w->longitude == 107.7600)
-                            || empty($w->deskripsi);
+                        $isWisataIncomplete = empty($w?->alamat) || ($w?->alamat === '-')
+                            || empty($w?->latitude) || empty($w?->longitude)
+                            || ($w?->latitude == -6.5718 && $w?->longitude == 107.7600)
+                            || empty($w?->deskripsi);
                     @endphp
-                    <tr id="wisataRow-{{ $w->id }}">
+                    <tr id="wisataRow-{{ $w?->id ?? 0 }}">
                         <td class="bold col-nama">
-                            {{ $w->nama_pengelola }}
+                            {{ $w?->nama_pengelola ?? '-' }}
                             @if($isWisataIncomplete)
                                 <span title="Data lokasi atau deskripsi belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
                                     <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
                                 </span>
                             @endif
                             <div style="font-size:11px; color: var(--text-muted); font-weight:400; margin-top:3px;">
-                                <i class="fas fa-mountain mr-1"></i>{{ $w->nama_wisata }} ({{ $w->kategori }})
+                                <i class="fas fa-mountain mr-1"></i>{{ $w?->nama_wisata ?? '-' }} ({{ $w?->kategori ?? '-' }})
                                 &nbsp;|&nbsp;
-                                <span style="font-family:monospace;">{{ $w->latitude }}, {{ $w->longitude }}</span>
+                                <span style="font-family:monospace;">{{ $w?->latitude ?? 0 }}, {{ $w?->longitude ?? 0 }}</span>
                             </div>
                         </td>
                         <td><span class="wm-badge teal"><i class="fas fa-mountain"></i> Pariwisata</span></td>
                         <td style="color: var(--text-muted); font-size:12px;">
-                            {{ $w->email_kontak }}<br>
-                            <i class="fas fa-phone-alt mr-1"></i>{{ $w->no_telp ?? '-' }}
+                            {{ $w?->email_kontak ?? '-' }}<br>
+                            <i class="fas fa-phone-alt mr-1"></i>{{ $w?->no_telp ?? '-' }}
                         </td>
                         <td>
-                            @if($w->foto_path)
-                                <a href="{{ Storage::url($w->foto_path) }}" target="_blank" class="wm-btn info sm">
+                            @if($w?->foto_path)
+                                <a href="{{ Storage::url($w?->foto_path) }}" target="_blank" class="wm-btn info sm">
                                     <i class="fas fa-file-alt"></i> Lihat
                                 </a>
                             @else
                                 <span style="color: var(--text-muted); font-size:12px;"><i class="fas fa-minus"></i> Tidak ada</span>
                             @endif
                         </td>
-                        <td style="color: var(--text-muted); font-size:12px;">{{ $w->created_at->format('d M Y') }}</td>
+                        <td style="color: var(--text-muted); font-size:12px;">{{ $w?->created_at?->format('d M Y') ?? '-' }}</td>
                         <td style="text-align: center;">
                             <button class="wm-btn info sm" onclick='showDetailWisata(@json($w))'>
                                 <i class="fas fa-eye"></i> Detail
@@ -405,11 +414,11 @@
                     @forelse($laporans as $lap)
                     <tr>
                         <td class="bold" style="color: var(--orange);">#TKT-{{ str_pad($lap->id, 4, '0', STR_PAD_LEFT) }}</td>
-                        <td>{{ $lap->user->name ?? 'Anonim' }}</td>
+                        <td>{{ $lap?->user?->name ?? 'Anonim' }}</td>
                         <td style="max-width: 280px; color: var(--text-muted); font-size: 12px; font-style: italic;">
-                            "{{ $lap->deskripsi }}"
+                            "{{ $lap?->deskripsi ?? '-' }}"
                         </td>
-                        <td class="bold">{{ $lap->faskes ? $lap->faskes->nama_faskes : 'Tidak spesifik' }}</td>
+                        <td class="bold">{{ $lap?->faskes ? $lap->faskes->nama_faskes : 'Tidak spesifik' }}</td>
                         <td>
                             @if($lap->status == 'pending')
                             <span class="wm-badge yellow"><i class="fas fa-clock"></i> Pending</span>
@@ -477,16 +486,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($faskesList as $faskesItem)
+                    @forelse(($faskesList ?? []) as $faskesItem)
                     @php
-                        $faskesIncomplete = empty($faskesItem->alamat) || $faskesItem->alamat === '-'
-                            || empty($faskesItem->latitude) || empty($faskesItem->longitude)
-                            || ($faskesItem->latitude == -6.5718 && $faskesItem->longitude == 107.7600);
+                        $faskesIncomplete = empty($faskesItem?->alamat) || ($faskesItem?->alamat === '-')
+                            || empty($faskesItem?->latitude) || empty($faskesItem?->longitude)
+                            || ($faskesItem?->latitude == -6.5718 && $faskesItem?->longitude == 107.7600);
                     @endphp
-                    <tr id="faskesTableRow-{{ $faskesItem->id }}">
+                    <tr id="faskesTableRow-{{ $faskesItem?->id ?? 0 }}">
                         <td class="bold col-nama-faskes">
                             <i class="fas fa-hospital-alt" style="color:#ff7a00;margin-right:6px;"></i>
-                            {{ $faskesItem->nama_faskes }}
+                            {{ $faskesItem?->nama_faskes ?? 'N/A' }}
                             @if($faskesIncomplete)
                                 <span title="Data lokasi belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
                                     <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
@@ -495,25 +504,25 @@
                         </td>
                         <td>
                             <span class="wm-badge" style="background:rgba(56,161,105,0.1);color:#38a169;border:1px solid rgba(56,161,105,0.3);font-size:10px;">
-                                {{ $faskesItem->jenis_faskes }}
+                                {{ $faskesItem?->jenis_faskes ?? '-' }}
                             </span>
                         </td>
                         <td style="color:var(--text-muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                            @if(empty($faskesItem->alamat) || $faskesItem->alamat === '-')
+                            @if(empty($faskesItem?->alamat) || $faskesItem?->alamat === '-')
                                 <span style="color:#f6c23e;"><i class="fas fa-exclamation-circle"></i> Belum diisi</span>
                             @else
-                                {{ $faskesItem->alamat }}
+                                {{ $faskesItem?->alamat }}
                             @endif
                         </td>
-                        <td id="statusBadge-{{ $faskesItem->id }}">
-                            @if($faskesItem->status_operasional == 'open')
+                        <td id="statusBadge-{{ $faskesItem?->id ?? 0 }}">
+                            @if(($faskesItem?->status_operasional ?? 'closed') == 'open')
                                 <span class="wm-badge green"><i class="fas fa-circle" style="font-size:8px;"></i> Buka</span>
                             @else
                                 <span class="wm-badge danger"><i class="fas fa-circle" style="font-size:8px;"></i> Tutup</span>
                             @endif
                         </td>
                         <td>
-                            @if($faskesItem->dukungan_bpjs)
+                            @if($faskesItem?->dukungan_bpjs)
                                 <span class="wm-badge info" style="font-size:10px;">✅ BPJS</span>
                             @else
                                 <span class="wm-badge" style="font-size:10px;background:rgba(255,255,255,0.06);color:var(--text-muted);border:1px solid var(--border);">❌ Non-BPJS</span>
@@ -524,7 +533,7 @@
                                 <button class="wm-btn info sm" onclick='openEditFaskes(@json($faskesItem))' title="Edit Detail">
                                     <i class="fas fa-edit"></i> Detail
                                 </button>
-                                <button class="wm-btn danger sm" onclick='deleteFaskes(this, {{ $faskesItem->id ?? 0 }}, @json($faskesItem->nama_faskes ?? ""))' title="Hapus">
+                                <button class="wm-btn danger sm" onclick='deleteFaskes(this, {{ $faskesItem?->id ?? 0 }}, @json($faskesItem?->nama_faskes ?? ""))' title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -572,16 +581,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($wisataApproved ?? [] as $wi)
+                    @forelse(($wisataApproved ?? []) as $wi)
                     @php
-                        $wisataIncomplete = empty($wi->alamat) || $wi->alamat === '-'
-                            || empty($wi->latitude) || empty($wi->longitude)
-                            || ($wi->latitude == -6.5718 && $wi->longitude == 107.7600)
-                            || empty($wi->deskripsi);
+                        $wisataIncomplete = empty($wi?->alamat) || ($wi?->alamat === '-')
+                            || empty($wi?->latitude) || empty($wi?->longitude)
+                            || ($wi?->latitude == -6.5718 && $wi?->longitude == 107.7600)
+                            || empty($wi?->deskripsi);
                     @endphp
-                    <tr id="wisataMasterRow-{{ $wi->id }}">
+                    <tr id="wisataMasterRow-{{ $wi?->id ?? 0 }}">
                         <td class="bold col-nama-wisata">
-                            {{ $wi->nama_wisata }}
+                            {{ $wi?->nama_wisata ?? 'N/A' }}
                             @if($wisataIncomplete)
                                 <span title="Data lokasi atau deskripsi belum lengkap" style="display:inline-flex;align-items:center;gap:4px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:600;margin-left:6px;">
                                     <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i> Data Kurang
@@ -589,18 +598,18 @@
                             @endif
                         </td>
                         <td>
-                            <span class="wm-badge" style="background:rgba(128,90,213,0.1);color:#805ad5;border:1px solid rgba(128,90,213,0.3);">{{ $wi->kategori }}</span>
+                            <span class="wm-badge" style="background:rgba(128,90,213,0.1);color:#805ad5;border:1px solid rgba(128,90,213,0.3);">{{ $wi?->kategori ?? '-' }}</span>
                         </td>
                         <td style="color:var(--text-muted);font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                            {{ $wi->alamat ?? '-' }}
+                            {{ $wi?->alamat ?? '-' }}
                         </td>
-                        <td style="color:var(--text-muted);">{{ $wi->nama_pengelola }}</td>
+                        <td style="color:var(--text-muted);">{{ $wi?->nama_pengelola ?? '-' }}</td>
                         <td style="text-align:center;white-space:nowrap;">
                             <div style="display:inline-flex;align-items:center;gap:6px;">
                                 <button class="wm-btn info sm" onclick='openEditPariwisata(@json($wi))' title="Edit Detail">
                                     <i class="fas fa-edit"></i> Detail
                                 </button>
-                                <button class="wm-btn danger sm" onclick='deletePariwisata(this, {{ $wi->id ?? 0 }}, @json($wi->nama_wisata ?? ""))' title="Hapus">
+                                <button class="wm-btn danger sm" onclick='deletePariwisata(this, {{ $wi?->id ?? 0 }}, @json($wi?->nama_wisata ?? ""))' title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -633,27 +642,27 @@
                     <tr><th>Nama</th><th>Email</th><th>Gol. Darah</th><th>Kelengkapan Data</th><th>Status Akun</th><th class="text-center">Aksi</th></tr>
                 </thead>
                 <tbody>
-                    @foreach($users as $usr)
+                    @foreach(($users ?? []) as $usr)
                     @php
-                        $wisatawanIncomplete = empty($usr->gol_darah)
-                            || empty($usr->kontak_darurat);
+                        $wisatawanIncomplete = empty($usr?->gol_darah)
+                            || empty($usr?->kontak_darurat);
                     @endphp
                     <tr>
-                        <td class="bold">{{ $usr->name }}</td>
-                        <td>{{ $usr->email }}</td>
+                        <td class="bold">{{ $usr?->name ?? 'Anonim' }}</td>
+                        <td>{{ $usr?->email ?? '-' }}</td>
                         <td>
-                            @if(empty($usr->gol_darah))
+                            @if(empty($usr?->gol_darah))
                                 <span style="color:#f6c23e;"><i class="fas fa-exclamation-circle"></i> -</span>
                             @else
-                                {{ $usr->gol_darah }}
+                                {{ $usr?->gol_darah }}
                             @endif
                         </td>
                         <td>
                             @if($wisatawanIncomplete)
                                 <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(246,194,62,0.15);color:#f6c23e;border:1px solid rgba(246,194,62,0.4);border-radius:6px;padding:3px 9px;font-size:10px;font-weight:600;">
                                     <i class="fas fa-exclamation-triangle" style="font-size:9px;"></i>
-                                    @if(empty($usr->gol_darah) && empty($usr->kontak_darurat)) Gol. Darah & Kontak Darurat
-                                    @elseif(empty($usr->gol_darah)) Gol. Darah kosong
+                                    @if(empty($usr?->gol_darah) && empty($usr?->kontak_darurat)) Gol. Darah & Kontak Darurat
+                                    @elseif(empty($usr?->gol_darah)) Gol. Darah kosong
                                     @else Kontak Darurat kosong
                                     @endif
                                 </span>
@@ -661,16 +670,16 @@
                                 <span class="wm-badge green" style="font-size:10px;"><i class="fas fa-check"></i> Lengkap</span>
                             @endif
                         </td>
-                        <td id="statusUser-{{ $usr->id }}">
-                            @if($usr->is_active)
+                        <td id="statusUser-{{ $usr?->id ?? 0 }}">
+                            @if($usr?->is_active)
                                 <span class="wm-badge green">Aktif</span>
                             @else
                                 <span class="wm-badge danger">Diblokir</span>
                             @endif
                         </td>
                         <td style="text-align: center;">
-                            <button class="wm-btn {{ $usr->is_active ? 'danger' : 'success' }} sm" onclick="toggleUserStatus(this, {{ $usr->id }})">
-                                @if($usr->is_active)
+                            <button class="wm-btn {{ ($usr?->is_active ?? false) ? 'danger' : 'success' }} sm" onclick="toggleUserStatus(this, {{ $usr?->id ?? 0 }})">
+                                @if($usr?->is_active)
                                     <i class="fas fa-ban"></i> Blokir
                                 @else
                                     <i class="fas fa-check"></i> Aktifkan
@@ -722,26 +731,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($allUlasan as $ul)
+                    @forelse(($allUlasan ?? []) as $ul)
                     <tr>
                         <td class="bold col-search">
-                            {{ $ul->user->name ?? 'Anonim' }}
-                            <div style="font-size: 10px; font-weight: 400; color: var(--text-muted);">{{ $ul->user->email ?? '-' }}</div>
+                            {{ $ul?->user?->name ?? 'Anonim' }}
+                            <div style="font-size: 10px; font-weight: 400; color: var(--text-muted);">{{ $ul?->user?->email ?? '-' }}</div>
                         </td>
                         <td class="col-search">
-                            <span class="wm-badge info" style="font-size: 11px;"><i class="fas fa-hospital-alt"></i> {{ $ul->faskes->nama_faskes ?? 'Faskes Terhapus' }}</span>
+                            <span class="wm-badge info" style="font-size: 11px;"><i class="fas fa-hospital-alt"></i> {{ $ul?->faskes?->nama_faskes ?? 'Faskes Terhapus' }}</span>
                         </td>
                         <td>
                             @for($i=1; $i<=5; $i++)
-                                <i class="fas fa-star" style="font-size:10px; {{ $i <= $ul->rating ? 'color:#f6c23e;' : 'color:rgba(255,255,255,0.1);' }}"></i>
+                                <i class="fas fa-star" style="font-size:10px; {{ $i <= ($ul?->rating ?? 0) ? 'color:#f6c23e;' : 'color:rgba(255,255,255,0.1);' }}"></i>
                             @endfor
-                            <span style="font-size:11px; margin-left:4px;">{{ $ul->rating }}/5</span>
+                            <span style="font-size:11px; margin-left:4px;">{{ $ul?->rating ?? 0 }}/5</span>
                         </td>
                         <td class="col-search" style="max-width: 300px; font-size: 12px; line-height: 1.4; font-style: italic;">
-                            "{{ $ul->komentar }}"
+                            "{{ $ul?->komentar ?? '-' }}"
                         </td>
                         <td style="font-size: 11px; color: var(--text-muted);">
-                            {{ $ul->created_at->format('d/m/Y H:i') }}
+                            {{ $ul?->created_at?->format('d/m/Y H:i') ?? '-' }}
                         </td>
                     </tr>
                     @empty
