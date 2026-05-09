@@ -35,7 +35,7 @@
 
     <!-- KIRI: PROFILE SIDEBAR -->
     <aside>
-        <div class="w-card" style="margin-bottom: 24px;">
+        <div class="w-card animate__animated animate__fadeInLeft" style="margin-bottom: 24px; animation-delay: 0.1s;">
             <div class="profile-main">
                 <div class="p-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
                 <div class="p-name">{{ $user->name }}</div>
@@ -101,7 +101,7 @@
         </div>
 
         <!-- TABS -->
-        <div class="w-pills">
+        <div class="w-pills animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
             <button class="w-pill active" data-target="tab-riwayat" onclick="switchTab('riwayat')"><i class="fas fa-history"></i> Riwayat Kunjungan</button>
             <button class="w-pill" data-target="tab-profil" onclick="switchTab('profil')"><i class="fas fa-user-cog"></i> Pengaturan Akun</button>
             <button class="w-pill" data-target="tab-medis" onclick="switchTab('medis')"><i class="fas fa-notes-medical"></i> Rekam Medis Pribadi</button>
@@ -109,7 +109,7 @@
 
         <!-- TAB CONTENT: RIWAYAT -->
         <div id="tab-riwayat" class="w-pane active">
-            <div class="w-card">
+            <div class="w-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
                 <div class="w-card-header"><i class="fas fa-history"></i> Riwayat Kunjungan Faskes Anda</div>
                 <div class="w-card-body">
                     @if($riwayats->count() > 0)
@@ -151,7 +151,7 @@
 
         <!-- TAB CONTENT: PROFIL -->
         <div id="tab-profil" class="w-pane">
-            <div class="w-card">
+            <div class="w-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
                 <div class="w-card-header"><i class="fas fa-user-cog"></i> Pengaturan Akun</div>
                 <div class="w-card-body">
                     <form action="{{ route('wisatawan.profil.update') }}" method="POST">
@@ -182,7 +182,7 @@
 
         <!-- TAB CONTENT: MEDIS -->
         <div id="tab-medis" class="w-pane">
-            <div class="w-card" style="border-top: 4px solid var(--red);">
+            <div class="w-card animate__animated animate__fadeInUp" style="border-top: 4px solid var(--red); animation-delay: 0.3s;">
                 <div class="w-card-header" style="color: var(--red);">
                     <i class="fas fa-notes-medical" style="color:var(--red);"></i> Rekam Medis Darurat Pribadi
                 </div>
