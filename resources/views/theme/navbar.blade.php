@@ -18,6 +18,7 @@
                 <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#tentang">Tentang</a></li>
                 <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#panduan">Panduan</a></li>
                 <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#mitra">Mitra</a></li>
+                <li class="nav-item"><a class="nav-link nav-pill-link" href="/faq">FAQ</a></li>
                 <li class="nav-item">
                     <a class="nav-link nav-pill-link" href="https://wa.me/6287775733922" target="_blank">Kontak CS</a>
                 </li>

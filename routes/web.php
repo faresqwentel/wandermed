@@ -27,6 +27,7 @@ use App\Http\Controllers\PariwisataController;
 
 Route::get('/', [HomeController::class, 'wisatawanHome']);
 Route::get('/mitra', fn() => view('v_mitra_home'))->name('mitra.home');
+Route::get('/faq', fn() => view('v_faq'))->name('faq');
 Route::get('/peta-faskes', [HomeController::class, 'petaFaskes'])->name('peta.faskes');
 Route::get('/faskes/{id}/jadwal', [HomeController::class, 'jadwalFaskes'])->name('faskes.jadwal');
 Route::post('/lapor-masalah', [HomeController::class, 'submitLaporan'])->name('lapor.masalah');

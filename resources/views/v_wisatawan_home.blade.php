@@ -85,37 +85,44 @@
         <div class="container px-4 mt-5 mb-5">
 
             <div class="text-center mb-5 pb-4" data-aos="fade-up" data-aos-duration="600">
-                <h2 class="teks-judul font-weight-bold mb-3 text-white">At Your Service</h2>
+                <h2 class="teks-judul font-weight-bold mb-3 text-white">Layanan & Tujuan Kami</h2>
                 <div style="width: 60px; height: 3px; background-color: var(--hnb-orange); margin: 0 auto 20px auto; border-radius: 2px;"></div>
-                <p class="teks-subjudul mx-auto text-white-50">Mengenal lebih dekat visi dan misi kami untuk pariwisata sehat.</p>
+                <p class="teks-subjudul mx-auto text-white-50">Mengenal lebih dekat visi kami dalam mengintegrasikan pariwisata dengan fasilitas kesehatan yang tanggap darurat.</p>
             </div>
 
-            <div class="row text-center">
-                <div class="col-lg-3 col-md-6 mb-5 mb-lg-0 px-3" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
-                    <div class="mb-4"><i class="fas fa-gem fa-4x text-hnb-orange"></i></div>
-                    <h5 class="text-white font-weight-bold mb-3">Tujuan Utama</h5>
-                    <p class="text-white-50 mb-0" style="font-size: 14.5px; line-height: 1.8;">Menjadi jembatan digital yang menghubungkan wisatawan dengan Faskes terdekat.</p>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-5 mb-lg-0 px-3" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-                    <div class="mb-4"><i class="fas fa-laptop-code fa-4x text-hnb-orange"></i></div>
-                    <h5 class="text-white font-weight-bold mb-3">Sistem Terpadu</h5>
-                    <p class="text-white-50 mb-0" style="font-size: 14.5px; line-height: 1.8;">Smart Mapping yang menampilkan rute darurat tercepat secara <i>real-time</i>.</p>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-5 mb-lg-0 px-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-                    <div class="mb-4"><i class="fas fa-globe fa-4x text-hnb-orange"></i></div>
-                    <h5 class="text-white font-weight-bold mb-3">Solusi Instan</h5>
-                    <p class="text-white-50 mb-0" style="font-size: 14.5px; line-height: 1.8;">Temukan UGD 24 Jam atau faskes BPJS dalam hitungan detik tanpa panik.</p>
-                </div>
-
-                <div class="col-lg-3 col-md-6 px-3" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
-                    <div class="mb-4 d-flex justify-content-center">
-                        <img src="{{ asset('img/wdm.png') }}" alt="Logo" class="logo-for-light-bg" style="width: 80px; height: 80px; object-fit: contain;">
-                        <img src="{{ asset('img/wdmlight.png') }}" alt="Logo" class="logo-for-dark-bg" style="width: 80px; height: 80px; object-fit: contain;">
+            <div class="row text-center" style="gap: 20px 0;">
+                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
+                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid var(--hnb-orange);">
+                        <div class="mb-4"><i class="fas fa-gem fa-3x text-hnb-orange"></i></div>
+                        <h5 class="text-white font-weight-bold mb-3">Tujuan Utama</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Menjadi jembatan digital yang andal untuk menghubungkan wisatawan dengan layanan kesehatan terdekat.</p>
                     </div>
-                    <h5 class="text-white font-weight-bold mb-3">Made with Love</h5>
-                    <p class="text-white-50 mb-0" style="font-size: 14.5px; line-height: 1.8;">Mendukung pariwisata berstandar keselamatan tinggi dengan penuh dedikasi.</p>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
+                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid #1cc88a;">
+                        <div class="mb-4"><i class="fas fa-laptop-code fa-3x text-success"></i></div>
+                        <h5 class="text-white font-weight-bold mb-3">Sistem Terpadu</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Smart Mapping kami menampilkan lokasi dan ketersediaan layanan fasilitas kesehatan secara aktual (*real-time*).</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
+                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid #e74a3b;">
+                        <div class="mb-4"><i class="fas fa-ambulance fa-3x text-danger"></i></div>
+                        <h5 class="text-white font-weight-bold mb-3">Solusi Instan</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Temukan lokasi UGD 24 Jam atau faskes pendukung BPJS di sekitar Anda dalam hitungan detik saat darurat.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
+                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid #36b9cc;">
+                        <div class="mb-4 d-flex justify-content-center">
+                            <i class="fas fa-shield-alt fa-3x text-info"></i>
+                        </div>
+                        <h5 class="text-white font-weight-bold mb-3">Standar Aman</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Mendukung terciptanya ekosistem pariwisata yang tidak hanya indah, tapi juga memiliki standar keselamatan medis yang tinggi.</p>
+                    </div>
                 </div>
             </div>
 
@@ -127,40 +134,40 @@
             <div class="text-center mb-5 pb-2" data-aos="fade-up" data-aos-duration="600">
                 <h2 class="teks-judul font-weight-bold mb-3 text-white">Panduan Penggunaan</h2>
                 <div style="width: 60px; height: 3px; background-color: var(--hnb-orange); margin: 0 auto 20px auto; border-radius: 2px;"></div>
-                <p class="teks-subjudul mx-auto text-white-50">3 Langkah mudah berburu faskes dan destinasi dengan WanderMed.</p>
+                <p class="teks-subjudul mx-auto text-white-50">3 Langkah mudah menemukan fasilitas kesehatan dan destinasi yang tepat.</p>
             </div>
-            <div class="row w-100 justify-content-center" style="max-width: 1000px; gap: 20px;">
+            <div class="row w-100 justify-content-center" style="max-width: 1000px; gap: 20px 0;">
 
                 {{-- Card 1 --}}
-                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
+                <div class="col-md-4 mb-4 px-3" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
                     <div class="glass-premier radius-hnb p-4 h-100 text-center shadow-sm" style="border-top: 4px solid var(--hnb-orange);">
-                        <div class="mb-3">
-                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,122,0,0.1); color: var(--hnb-orange); font-size: 1.5rem; font-weight: bold;">1</span>
+                        <div class="mb-4 mt-2">
+                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,122,0,0.15); color: var(--hnb-orange); font-size: 1.5rem; font-weight: 800;">1</span>
                         </div>
-                        <h5 class="text-white font-weight-bold mb-3">Buka Peta Digital</h5>
-                        <p class="text-white-50 mb-0" style="font-size: 0.95rem;">Klik tombol "Cari Faskes" di halaman utama untuk memuat peta pintar responsif di layar perangkat Anda.</p>
+                        <h5 class="text-white font-weight-bold mb-3">Akses Peta Pintar</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Klik tombol <strong>Buka Peta Faskes</strong> untuk langsung memuat sistem pemetaan digital interaktif pada layar perangkat Anda.</p>
                     </div>
                 </div>
 
                 {{-- Card 2 --}}
-                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
+                <div class="col-md-4 mb-4 px-3" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600">
                     <div class="glass-premier radius-hnb p-4 h-100 text-center shadow-sm" style="border-top: 4px solid var(--hnb-orange);">
-                        <div class="mb-3">
-                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,122,0,0.1); color: var(--hnb-orange); font-size: 1.5rem; font-weight: bold;">2</span>
+                        <div class="mb-4 mt-2">
+                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,122,0,0.15); color: var(--hnb-orange); font-size: 1.5rem; font-weight: 800;">2</span>
                         </div>
-                        <h5 class="text-white font-weight-bold mb-3">Atur Filter</h5>
-                        <p class="text-white-50 mb-0" style="font-size: 0.95rem;">Pilih apakah Anda ingin mencari "Semua Destinasi", "Faskes khusus", atau "Pariwisata". Peta akan menyesuaikan diri.</p>
+                        <h5 class="text-white font-weight-bold mb-3">Gunakan Pencarian</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Gunakan fitur *filter* dan kolom pencarian untuk memilah destinasi pariwisata, apotek, klinik, maupun rumah sakit.</p>
                     </div>
                 </div>
 
                 {{-- Card 3 --}}
-                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
+                <div class="col-md-4 mb-4 px-3" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
                     <div class="glass-premier radius-hnb p-4 h-100 text-center shadow-sm" style="border-top: 4px solid var(--hnb-orange);">
-                        <div class="mb-3">
-                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255,122,0,0.1); color: var(--hnb-orange); font-size: 1.5rem; font-weight: bold;">3</span>
+                        <div class="mb-4 mt-2">
+                            <span class="d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,122,0,0.15); color: var(--hnb-orange); font-size: 1.5rem; font-weight: 800;">3</span>
                         </div>
-                        <h5 class="text-white font-weight-bold mb-3">Rute Navigasi</h5>
-                        <p class="text-white-50 mb-0" style="font-size: 0.95rem;">Klik lokasi target di peta dan otomatis dapatkan panduan rute (Google Maps) dan nomor penting yang bisa dihubungi.</p>
+                        <h5 class="text-white font-weight-bold mb-3">Dapatkan Navigasi</h5>
+                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Klik titik lokasi di peta untuk melihat kontak informasi layanan, serta panduan arah rute tercepat ke lokasi darurat.</p>
                     </div>
                 </div>
 
@@ -172,32 +179,45 @@
     <section id="mitra" class="py-5 section-scroll">
         <div class="container px-4 my-5">
             <div class="text-center mb-5" data-aos="fade-up" data-aos-duration="600">
-                <h2 class="teks-judul font-weight-bold mb-3 text-white">Gabung Kemitraan</h2>
+                <h2 class="teks-judul font-weight-bold mb-3 text-white">Peluang Kemitraan</h2>
                 <div style="width: 60px; height: 3px; background-color: var(--hnb-orange); margin: 0 auto 20px auto; border-radius: 2px;"></div>
-                <p class="teks-subjudul mx-auto text-white-50 mb-0">Jadilah bagian dari ekosistem pariwisata sehat.</p>
+                <p class="teks-subjudul mx-auto text-white-50 mb-0">Jadilah bagian dari ekosistem digital untuk pariwisata sehat dan tanggap darurat.</p>
             </div>
-            <div class="mx-auto" style="max-width: 800px;">
-                <div class="glass-premier radius-hnb p-4 p-md-5 mb-4 shadow-sm">
-                    <h5 class="text-white font-weight-bold mb-4 text-center border-bottom pb-3" style="border-color: rgba(255,255,255,0.1) !important;">Keuntungan Menjadi Mitra</h5>
-                    <ul class="text-white-50 pl-4 mb-0" style="font-size: 15px; line-height: 2;">
-                        <li class="mb-3"><strong>Visibilitas Tinggi:</strong> Destinasi atau faskes Anda akan muncul di peta digital WanderMed.</li>
-                        <li class="mb-3"><strong>Manajemen Real-Time:</strong> Kelola operasional dan status layanan melalui dashboard admin khusus.</li>
-                        <li><strong>Dukungan Keselamatan:</strong> Membantu wisatawan dalam situasi darurat medis secara lebih cepat.</li>
-                    </ul>
+            <div class="row align-items-stretch justify-content-center" style="gap: 20px 0; max-width: 1000px; margin: 0 auto;">
+                
+                <div class="col-md-6 mb-4 px-3" data-aos="fade-right" data-aos-duration="600">
+                    <div class="glass-premier radius-hnb p-4 p-md-5 h-100 shadow-sm d-flex flex-column justify-content-center">
+                        <h5 class="text-white font-weight-bold mb-4 border-bottom pb-3" style="border-color: rgba(255,255,255,0.1) !important;">
+                            <i class="fas fa-handshake text-hnb-orange mr-2"></i> Mengapa Bergabung?
+                        </h5>
+                        <ul class="text-white-50 pl-4 mb-0" style="font-size: 14.5px; line-height: 1.9;">
+                            <li class="mb-3"><strong>Visibilitas Tinggi:</strong> Lokasi Faskes atau Pariwisata Anda akan terdaftar eksklusif di peta digital WanderMed.</li>
+                            <li class="mb-3"><strong>Manajemen Cepat:</strong> Perbarui status layanan, fasilitas, dan jadwal praktik secara *real-time* lewat dashboard admin.</li>
+                            <li><strong>Bantuan Darurat:</strong> Membantu wisatawan mendapatkan tindakan medis yang cepat di saat-saat genting.</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="glass-premier radius-hnb p-4 text-center shadow-sm" style="border-color: var(--hnb-orange) !important; background: rgba(255, 122, 0, 0.05) !important;">
-                    <p class="text-white font-weight-bold mb-4" style="font-size: 16px;">Sudah siap bergabung bersama kami?</p>
-                    <div class="d-flex justify-content-center align-items-center flex-wrap" style="gap: 15px;">
-                        <a href="/daftar" class="btn btn-hnb-orange radius-hnb px-5 py-3 font-weight-bold shadow-lg" style="font-size: 15px; min-width: 200px;">Mendaftar Sekarang</a>
-                        @if(session('auth_user'))
-                            <a href="{{ url('/login') }}" class="btn btn-light text-hnb-navy radius-hnb px-5 py-3 font-weight-bold" style="font-size: 15px; min-width: 200px;">
-                                Enter <i class="fas fa-door-open ml-1 text-hnb-orange"></i>
+
+                <div class="col-md-6 mb-4 px-3" data-aos="fade-left" data-aos-duration="600">
+                    <div class="glass-premier radius-hnb p-4 p-md-5 h-100 text-center shadow-sm d-flex flex-column justify-content-center align-items-center" style="border-color: var(--hnb-orange) !important; background: rgba(255, 122, 0, 0.05) !important;">
+                        <i class="fas fa-user-plus fa-3x text-hnb-orange mb-3 opacity-75"></i>
+                        <h4 class="text-white font-weight-bold mb-3">Siap Berkolaborasi?</h4>
+                        <p class="text-white-50 mb-4" style="font-size: 14px;">Tingkatkan mutu keselamatan pelayanan pariwisata bersama kami hari ini juga.</p>
+                        
+                        <div class="w-100" style="display:grid; gap: 12px;">
+                            <a href="/daftar" class="btn btn-hnb-orange radius-hnb px-4 py-3 font-weight-bold shadow-sm w-100">
+                                <i class="fas fa-clipboard-list mr-2"></i> Mulai Pendaftaran
                             </a>
-                        @else
-                            <a href="/login" class="btn btn-light text-hnb-navy radius-hnb px-5 py-3 font-weight-bold" style="font-size: 15px; min-width: 200px;">
-                                Login <i class="fas fa-sign-in-alt ml-1 text-hnb-orange"></i>
-                            </a>
-                        @endif
+                            @if(session('auth_user'))
+                                <a href="{{ url('/login') }}" class="btn btn-light text-hnb-navy radius-hnb px-4 py-3 font-weight-bold w-100">
+                                    <i class="fas fa-sign-in-alt mr-2 text-hnb-orange"></i> Lanjut ke Dashboard
+                                </a>
+                            @else
+                                <a href="/login" class="btn btn-light text-hnb-navy radius-hnb px-4 py-3 font-weight-bold w-100">
+                                    <i class="fas fa-sign-in-alt mr-2 text-hnb-orange"></i> Login Mitra
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
 

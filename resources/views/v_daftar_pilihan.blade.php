@@ -13,12 +13,14 @@
                 <p class="text-white-50 teks-subjudul mx-auto">Pilih peran Anda untuk mendaftar</p>
             </div>
 
-            <div class="search-registration animate-fade-up delay-1">
-                <div class="glass-premier radius-hnb p-2 shadow-sm">
-                    <div class="input-group align-items-center px-3">
-                        <i class="fas fa-search text-white-50"></i>
-                        <input type="text" class="form-control border-0 bg-transparent input-dark text-white py-3 shadow-none" placeholder="Cari peran..." style="font-size: 14px;">
+            <div class="animate-fade-up delay-1 mb-4" style="max-width: 600px; margin: 0 auto;">
+                <div class="glass-premier radius-hnb p-3 shadow-sm d-flex align-items-center" style="background: rgba(255, 122, 0, 0.08) !important; border: 1px solid rgba(255, 122, 0, 0.2) !important;">
+                    <div style="min-width: 45px; text-align: center;">
+                        <i class="fas fa-info-circle fa-2x text-hnb-orange"></i>
                     </div>
+                    <p class="text-white-50 mb-0" style="font-size: 14px; text-align: left; line-height: 1.6;">
+                        Setiap peran memiliki akses ke fitur yang berbeda. <strong class="text-white">Pilih peran</strong> sesuai dengan tujuan pendaftaran Anda untuk pengalaman terbaik.
+                    </p>
                 </div>
             </div>
 
