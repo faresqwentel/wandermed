@@ -21,15 +21,15 @@ class PariwisataController extends Controller
     public function submitPendaftaran(Request $request)
     {
         $request->validate([
-            'nama_wisata'    => 'required|string|max:150',
+            'nama_wisata'    => 'required|string|max:100',
             'kategori'       => 'required|string',
-            'deskripsi'      => 'nullable|string',
-            'alamat'         => 'required|string',
+            'deskripsi'      => 'nullable|string|max:200',
+            'alamat'         => 'required|string|max:200',
             'latitude'       => 'nullable|numeric',
             'longitude'      => 'nullable|numeric',
             'nama_pengelola' => 'required|string|max:100',
             'email_kontak'   => 'required|email|max:100',
-            'no_telp'        => 'required|string|max:20',
+            'no_telp'        => 'required|string|max:15',
             'harga_tiket'    => 'nullable|integer|min:0',
             'foto_path'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [

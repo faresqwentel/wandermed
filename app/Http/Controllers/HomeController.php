@@ -127,7 +127,7 @@ class HomeController extends Controller
         try {
             $request->validate([
                 'subjek' => 'required|string|max:255',
-                'deskripsi' => 'required|string'
+                'deskripsi' => 'required|string|max:200'
             ]);
 
             \App\Models\LaporanMasalah::create([

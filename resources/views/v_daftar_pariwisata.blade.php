@@ -103,7 +103,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-mountain"></i></span>
                                                 </div>
-                                                <input type="text" name="nama_wisata" value="{{ old('nama_wisata') }}" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Contoh: Curug Cijalu" required style="font-size: 1.05rem;">
+                                                <input type="text" name="nama_wisata" value="{{ old('nama_wisata') }}" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Contoh: Curug Cijalu" required maxlength="100" style="font-size: 1.05rem;">
                                             </div>
                                         </div>
                                         <div class="col-md-5 mb-3">
@@ -121,7 +121,7 @@
                                     <div class="form-group mb-0">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Deskripsi & Daya Tarik Utama</label>
                                         <textarea name="deskripsi" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="4"
-                                            placeholder="Ceritakan keunikan destinasi ini, apa yang bisa dinikmati wisatawan...">{{ old('deskripsi') }}</textarea>
+                                            placeholder="Ceritakan keunikan destinasi ini, apa yang bisa dinikmati wisatawan..." maxlength="200">{{ old('deskripsi') }}</textarea>
                                     </div>
                                 </div>
 
@@ -130,7 +130,7 @@
                                     <div class="form-group mb-4">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Alamat Lengkap</label>
                                         <textarea name="alamat" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="2"
-                                            placeholder="Desa Cibadak, Kec. Cisalak, Kab. Subang..." required>{{ old('alamat') }}</textarea>
+                                            placeholder="Desa Cibadak, Kec. Cisalak, Kab. Subang..." required maxlength="200">{{ old('alamat') }}</textarea>
                                     </div>
                                     <div class="d-flex align-items-center mb-2">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75 mb-0 mr-2">Koordinat di Peta <span class="text-white-50">(opsional tapi disarankan)</span></label>
@@ -178,7 +178,7 @@
                                                 </div>
                                                 <input type="tel" name="no_telp" value="{{ old('no_telp') }}"
                                                     class="form-control form-control-dark border-left-0 radius-hnb py-4 px-3 input-dark"
-                                                    placeholder="8123xxx" required>
+                                                    placeholder="8123xxx" required maxlength="15">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
@@ -217,7 +217,7 @@
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Nama Pengelola / Penanggung Jawab</label>
                                         <input type="text" name="nama_pengelola" value="{{ old('nama_pengelola') }}"
                                             class="form-control form-control-dark radius-hnb py-4 px-3 input-dark"
-                                            placeholder="Contoh: Bapak Dede Suherman" required>
+                                            placeholder="Contoh: Bapak Dede Suherman" required maxlength="100">
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">
@@ -225,7 +225,7 @@
                                         </label>
                                         <input type="email" name="email_kontak" value="{{ old('email_kontak') }}"
                                             class="form-control form-control-dark radius-hnb py-4 px-3 input-dark"
-                                            placeholder="pengelola@destinasi.com" required>
+                                            placeholder="pengelola@destinasi.com" required maxlength="100">
                                         <small class="text-white-50 ml-1">
                                             <i class="fas fa-info-circle mr-1"></i>
                                             Admin akan mengirim keputusan verifikasi ke email ini

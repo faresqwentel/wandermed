@@ -159,7 +159,7 @@
                         <div class="w-form-grid">
                             <div>
                                 <label class="w-label">Nama Lengkap</label>
-                                <input type="text" name="name" class="w-input" value="{{ old('name', $user->name) }}" required>
+                                <input type="text" name="name" class="w-input" value="{{ old('name', $user->name) }}" required maxlength="100">
                             </div>
                             <div>
                                 <label class="w-label">Email Utama (Read Only)</label>
@@ -168,7 +168,7 @@
                         </div>
                         <div class="w-form-group">
                             <label class="w-label">Password Baru <span style="text-transform:none; font-weight:400;">(Opsional, kosongkan jika tidak ingin diubah)</span></label>
-                            <input type="password" name="password" class="w-input" placeholder="Masukkan minimal 8 karakter rahasia">
+                            <input type="password" name="password" class="w-input" placeholder="Masukkan minimal 8 karakter rahasia" maxlength="50">
                         </div>
                         <div style="text-align: right; margin-top: 24px;">
                             <button type="submit" class="w-btn w-btn-orange" style="padding: 12px 32px;">
@@ -210,12 +210,12 @@
                             </div>
                             <div>
                                 <label class="w-label">Kontak Darurat (Keluarga/Teman)</label>
-                                <input type="text" name="kontak_darurat" class="w-input" value="{{ old('kontak_darurat', $user->kontak_darurat) }}" placeholder="Contoh: 08123456789 (Istri)">
+                                <input type="text" name="kontak_darurat" class="w-input" value="{{ old('kontak_darurat', $user->kontak_darurat) }}" placeholder="Contoh: 08123456789 (Istri)" maxlength="15">
                             </div>
                         </div>
                         <div class="w-form-group">
                             <label class="w-label">Riwayat Alergi & Penyakit Bawaan</label>
-                            <textarea name="riwayat_alergi" class="w-textarea" placeholder="Sebutkan jika Anda memiliki alergi obat (contoh: Penisilin), makanan, atau penyakit bawaan (contoh: Asma, Hipertensi)...">{{ old('riwayat_alergi', $user->riwayat_alergi) }}</textarea>
+                            <textarea name="riwayat_alergi" class="w-textarea" placeholder="Sebutkan jika Anda memiliki alergi obat (contoh: Penisilin), makanan, atau penyakit bawaan (contoh: Asma, Hipertensi)..." maxlength="200">{{ old('riwayat_alergi', $user->riwayat_alergi) }}</textarea>
                         </div>
                         
                         <div style="text-align: right; margin-top: 24px;">

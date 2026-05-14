@@ -25,22 +25,22 @@ class MitraRegistrationRequest extends FormRequest
             'nama_penanggung_jawab' => 'required|string|max:100',
             'email'                 => 'required|email|unique:mitras,email',
             'password'              => 'required|min:8|confirmed',
-            'no_telp'               => 'required|string|max:20',
+            'no_telp'               => 'required|string|max:15',
             'jenis_mitra'           => 'required|in:faskes,pariwisata',
             
             // Faskes attributes
-            'nama_faskes'           => 'nullable|string|max:150',
+            'nama_faskes'           => 'nullable|string|max:100',
             'jenis_faskes'          => 'nullable|string',
             'layanan_ugd'           => 'nullable|string',
             'dukungan_bpjs'         => 'nullable',
             
             // Pariwisata attributes
-            'nama_pariwisata'       => 'nullable|string|max:150',
+            'nama_pariwisata'       => 'nullable|string|max:100',
             'jenis_wisata'          => 'nullable|string',
-            'deskripsi'             => 'nullable|string',
+            'deskripsi'             => 'nullable|string|max:200',
             
             // Shared attributes
-            'alamat'                => 'required|string',
+            'alamat'                => 'required|string|max:200',
             'latitude'              => 'required|numeric',
             'longitude'             => 'required|numeric',
             'dokumen_izin'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',

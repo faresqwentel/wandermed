@@ -93,7 +93,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-hospital-alt"></i></span>
                                                 </div>
-                                                <input type="text" name="nama_faskes" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Contoh: RSUD Subang" required style="font-size: 1.05rem;">
+                                                <input type="text" name="nama_faskes" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Contoh: RSUD Subang" required maxlength="100" style="font-size: 1.05rem;">
                                             </div>
                                         </div>
                                         <div class="col-md-5 mb-3">
@@ -109,7 +109,7 @@
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Informasi Layanan Utama</label>
-                                        <textarea name="pengumuman" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="3" placeholder="Contoh: Melayani poli gigi, bedah ringan, dll..." required></textarea>
+                                        <textarea name="pengumuman" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="3" placeholder="Contoh: Melayani poli gigi, bedah ringan, dll..." required maxlength="200"></textarea>
                                     </div>
                                 </div>
 
@@ -117,7 +117,7 @@
                                 <div id="step2" class="step-content d-none">
                                     <div class="form-group mb-4">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Alamat Lengkap</label>
-                                        <textarea name="alamat" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="2" placeholder="Jl. Raya Kesehatan No. 99..." required></textarea>
+                                        <textarea name="alamat" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="2" placeholder="Jl. Raya Kesehatan No. 99..." required maxlength="200"></textarea>
                                     </div>
                                     <div class="d-flex align-items-center mb-2">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75 mb-0 mr-2">Koordinat Lokasi di Peta</label>
@@ -158,7 +158,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text bg-transparent border-right-0 text-white font-weight-bold" style="border-color: rgba(255,255,255,0.1) !important;">+62</span>
                                             </div>
-                                            <input type="tel" name="no_telp" class="form-control form-control-dark border-left-0 radius-hnb py-4 px-3 input-dark" placeholder="8123xxx" required>
+                                            <input type="tel" name="no_telp" class="form-control form-control-dark border-left-0 radius-hnb py-4 px-3 input-dark" placeholder="8123xxx" required maxlength="15">
                                         </div>
                                     </div>
                                     <div class="row mb-4">
@@ -189,7 +189,7 @@
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Nama Penanggung Jawab / Pimpinan</label>
-                                        <input type="text" name="nama_penanggung_jawab" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Contoh: dr. Andi Susanto" required>
+                                        <input type="text" name="nama_penanggung_jawab" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Contoh: dr. Andi Susanto" required maxlength="100">
                                     </div>
                                 </div>
 
@@ -201,19 +201,19 @@
                                     </div>
                                     <div class="form-group mb-4">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Email Akun Login</label>
-                                        <input type="email" name="email" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="klinik@email.com" required>
+                                        <input type="email" name="email" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="klinik@email.com" required maxlength="100">
                                     </div>
                                     <div class="form-group mb-3">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Sandi Akses</label>
                                         <div class="pass-group-wizard">
-                                            <input type="password" name="password" id="inputPass" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Minimal 8 karakter..." required>
+                                            <input type="password" name="password" id="inputPass" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Minimal 8 karakter..." required maxlength="50">
                                             <i class="fas fa-eye btn-toggle-pass" id="btnTogglePass"></i>
                                         </div>
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Konfirmasi Sandi</label>
                                         <div class="pass-group-wizard">
-                                            <input type="password" name="password_confirmation" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Ketik ulang sandi..." required>
+                                            <input type="password" name="password_confirmation" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Ketik ulang sandi..." required maxlength="50">
                                         </div>
                                     </div>
                                 </div>

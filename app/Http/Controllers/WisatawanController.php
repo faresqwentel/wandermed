@@ -100,8 +100,8 @@ class WisatawanController extends Controller
         $request->validate([
             'name'           => 'required|string|max:100',
             'gol_darah'      => 'nullable|in:A,B,AB,O',
-            'kontak_darurat' => 'nullable|string|max:20',
-            'riwayat_alergi' => 'nullable|string|max:500',
+            'kontak_darurat' => 'nullable|string|max:15',
+            'riwayat_alergi' => 'nullable|string|max:200',
         ]);
 
         $user = User::find(session('auth_user.id'));

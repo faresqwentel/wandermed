@@ -312,7 +312,7 @@
             </div>
             <div class="chat-search">
                 <i class="fas fa-search"></i>
-                <input type="text" id="chatContactSearch" placeholder="Cari faskes..." oninput="filterContacts(this.value)">
+                <input type="text" id="chatContactSearch" placeholder="Cari faskes..." oninput="filterContacts(this.value)" maxlength="100">
             </div>
         </div>
         <div class="chat-contacts" id="chatContactsList">
@@ -357,7 +357,7 @@
                     <textarea class="chat-input-box" id="chatInputAdmin" rows="1"
                         placeholder="Ketik pesan untuk mitra faskes ini..."
                         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();adminSendMessage();}"
-                        oninput="autoResize(this)"></textarea>
+                        oninput="autoResize(this)" maxlength="500"></textarea>
                 </div>
                 <button class="chat-send-btn" id="chatSendBtnAdmin" onclick="adminSendMessage()" title="Kirim Pesan">
                     <i class="fas fa-paper-plane"></i>

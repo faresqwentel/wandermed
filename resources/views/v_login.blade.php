@@ -44,7 +44,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-envelope"></i></span>
                                         </div>
-                                        <input type="email" name="email" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4 @error('email') is-invalid @enderror" placeholder="Masukkan email aktif Anda..." value="{{ old('email') }}" required autocomplete="email" style="font-size: 1.05rem;">
+                                        <input type="email" name="email" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4 @error('email') is-invalid @enderror" placeholder="Masukkan email aktif Anda..." value="{{ old('email') }}" required autocomplete="email" maxlength="100" style="font-size: 1.05rem;">
                                     </div>
                                     @error('email')
                                         <small class="text-danger ml-1 mt-1 d-block">{{ $message }}</small>
@@ -57,7 +57,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-lock"></i></span>
                                         </div>
-                                        <input type="password" name="password" id="inputPassword" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Ketik kata sandi Anda..." required autocomplete="current-password" style="font-size: 1.05rem;">
+                                        <input type="password" name="password" id="inputPassword" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Ketik kata sandi Anda..." required autocomplete="current-password" maxlength="50" style="font-size: 1.05rem;">
                                         <div class="input-group-append">
                                             <button type="button" id="btnToggle" class="btn border-0 text-white-50 shadow-none px-3" style="background: transparent;">
                                                 <i class="fas fa-eye" id="ikonMata"></i>

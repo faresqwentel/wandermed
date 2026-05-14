@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-group mb-3">
                         <label class="text-hnb-navy font-weight-bold small">Deskripsi Masalah</label>
-                        <textarea name="deskripsi" class="form-control radius-hnb shadow-sm border-0" rows="4" placeholder="Ceritakan detail masalah..." required></textarea>
+                        <textarea name="deskripsi" class="form-control radius-hnb shadow-sm border-0" rows="4" placeholder="Ceritakan detail masalah..." required maxlength="200"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-0 bg-light pb-4">

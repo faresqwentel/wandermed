@@ -176,6 +176,7 @@ class AdminController extends Controller
         $request->validate([
             'latitude'  => 'required|numeric',
             'longitude' => 'required|numeric',
+            'pengumuman' => 'nullable|string|max:200',
         ]);
 
         $updateData = [
@@ -260,6 +261,8 @@ class AdminController extends Controller
         $request->validate([
             'latitude'  => 'required|numeric',
             'longitude' => 'required|numeric',
+            'alamat'    => 'nullable|string|max:200',
+            'deskripsi' => 'nullable|string|max:200',
         ]);
 
         $wisata = PendaftaranPariwisata::findOrFail($id);

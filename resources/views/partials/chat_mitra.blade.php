@@ -298,7 +298,7 @@
             <textarea class="mc-input-box" id="mcInputBox" rows="1"
                 placeholder="Ketik pesan untuk Admin WanderMed..."
                 onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();mitraSendMessage();}"
-                oninput="autoResizeMc(this)"></textarea>
+                oninput="autoResizeMc(this)" maxlength="500"></textarea>
         </div>
         <button class="mc-send-btn" id="mcSendBtn" onclick="mitraSendMessage()" title="Kirim Pesan">
             <i class="fas fa-paper-plane"></i>

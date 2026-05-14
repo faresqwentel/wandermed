@@ -202,7 +202,7 @@
                         {{-- Input Teks --}}
                         <div class="panel-section-title">Ceritakan Pengalaman Anda</div>
                         <textarea id="reviewKomentar" class="review-textarea" rows="5" 
-                            placeholder="Ketik ulasan Anda di sini..."></textarea>
+                            placeholder="Ketik ulasan Anda di sini..." maxlength="255"></textarea>
                     </div>
                 </div>
 

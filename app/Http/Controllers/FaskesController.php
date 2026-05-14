@@ -112,10 +112,10 @@ class FaskesController extends Controller
     public function updateProfil(Request $request)
     {
         $request->validate([
-            'nama_faskes'  => 'required|string|max:150',
+            'nama_faskes'  => 'required|string|max:100',
             'jenis_faskes' => 'required|in:Rumah Sakit,Klinik,Apotek,Puskesmas,Lainnya',
-            'alamat'       => 'required|string',
-            'no_telp'      => 'nullable|string|max:20',
+            'alamat'       => 'required|string|max:200',
+            'no_telp'      => 'nullable|string|max:15',
             'latitude'     => 'nullable|numeric|between:-90,90',
             'longitude'    => 'nullable|numeric|between:-180,180',
             'dukungan_bpjs'=> 'nullable|boolean',
@@ -161,7 +161,7 @@ class FaskesController extends Controller
 
         $request->validate([
             'rating'   => 'required|integer|min:1|max:5',
-            'komentar' => 'required|string|max:1000',
+            'komentar' => 'required|string|max:255',
         ]);
 
         \App\Models\UlasanFaskes::create([
@@ -186,8 +186,8 @@ class FaskesController extends Controller
     public function storeJadwal(Request $request)
     {
         $request->validate([
-            'nama_dokter' => 'required|string',
-            'spesialisasi' => 'required|string',
+            'nama_dokter' => 'required|string|max:100',
+            'spesialisasi' => 'required|string|max:100',
             'hari' => 'required|string',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required',

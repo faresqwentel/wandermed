@@ -311,7 +311,7 @@
             <!-- Pengumuman -->
             <div class="wm-form-group" style="margin-top: 24px;">
                 <label class="wm-label">Pengumuman Sementara untuk Wisatawan di Peta</label>
-                <textarea class="wm-textarea" id="inputPengumuman" rows="4" placeholder="Contoh: Stok oksigen terbatas hari ini, harap hubungi kami terlebih dahulu...">{{ $faskes ? $faskes->pengumuman : '' }}</textarea>
+                <textarea class="wm-textarea" id="inputPengumuman" rows="4" placeholder="Contoh: Stok oksigen terbatas hari ini, harap hubungi kami terlebih dahulu..." maxlength="200">{{ $faskes ? $faskes->pengumuman : '' }}</textarea>
             </div>
             <button class="wm-btn orange" style="width:100%;" onclick="savePengumuman()">
                 <i class="fas fa-broadcast-tower"></i> Simpan & Siaran ke Peta
@@ -396,11 +396,11 @@
                         @csrf
                         <div class="wm-form-group mb-2">
                             <label class="wm-label">Nama Dokter</label>
-                            <input type="text" name="nama_dokter" class="wm-input" required>
+                            <input type="text" name="nama_dokter" class="wm-input" required maxlength="100">
                         </div>
                         <div class="wm-form-group mb-2">
                             <label class="wm-label">Spesialisasi</label>
-                            <input type="text" name="spesialisasi" class="wm-input" placeholder="Misal: Poli Umum, Dokter Gigi" required>
+                            <input type="text" name="spesialisasi" class="wm-input" placeholder="Misal: Poli Umum, Dokter Gigi" required maxlength="100">
                         </div>
                         <div class="wm-form-group mb-2">
                             <label class="wm-label">Hari Praktik</label>
@@ -555,7 +555,7 @@
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px;">
                     <div class="wm-form-group" style="grid-column: 1/-1;">
                         <label class="wm-label">Nama Faskes <span style="color:#e74a3b">*</span></label>
-                        <input type="text" name="nama_faskes" class="wm-input" value="{{ $faskes->nama_faskes ?? '' }}" placeholder="Contoh: RSUD Subang" required>
+                        <input type="text" name="nama_faskes" class="wm-input" value="{{ $faskes->nama_faskes ?? '' }}" placeholder="Contoh: RSUD Subang" required maxlength="100">
                     </div>
                     <div class="wm-form-group">
                         <label class="wm-label">Kategori / Jenis <span style="color:#e74a3b">*</span></label>
@@ -567,11 +567,11 @@
                     </div>
                     <div class="wm-form-group">
                         <label class="wm-label">Nomor Telepon</label>
-                        <input type="tel" name="no_telp" class="wm-input" value="{{ $faskes->no_telp ?? '' }}" placeholder="0260-xxxxxx">
+                        <input type="tel" name="no_telp" class="wm-input" value="{{ $faskes->no_telp ?? '' }}" placeholder="0260-xxxxxx" maxlength="15">
                     </div>
                     <div class="wm-form-group" style="grid-column: 1/-1;">
                         <label class="wm-label">Alamat Lengkap <span style="color:#e74a3b">*</span></label>
-                        <textarea name="alamat" class="wm-textarea" rows="2" required>{{ $faskes->alamat ?? '' }}</textarea>
+                        <textarea name="alamat" class="wm-textarea" rows="2" required maxlength="200">{{ $faskes->alamat ?? '' }}</textarea>
                     </div>
                 </div>
                 <div style="margin-top: 18px;">

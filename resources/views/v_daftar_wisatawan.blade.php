@@ -34,7 +34,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-user"></i></span>
                                             </div>
-                                            <input type="text" name="name" value="{{ old('name') }}" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Masukkan nama sesuai KTP..." required style="font-size: 1.05rem;">
+                                            <input type="text" name="name" value="{{ old('name') }}" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="Masukkan nama sesuai KTP..." required maxlength="100" style="font-size: 1.05rem;">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -44,7 +44,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text border-0 bg-transparent text-white-50 px-3"><i class="fas fa-phone-alt"></i></span>
                                                 </div>
-                                                <input type="tel" name="kontak_darurat" value="{{ old('kontak_darurat') }}" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="0812xxx" required style="font-size: 1.05rem;">
+                                                <input type="tel" name="kontak_darurat" value="{{ old('kontak_darurat') }}" class="form-control border-0 bg-transparent text-white shadow-none px-2 py-4" placeholder="0812xxx" required maxlength="15" style="font-size: 1.05rem;">
                                             </div>
                                         </div>
                                     </div>
@@ -65,27 +65,27 @@
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Alergi atau Riwayat Penyakit</label>
-                                        <textarea name="riwayat_alergi" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="3" placeholder="Contoh: Alergi kacang, riwayat asma, dsb...">{{ old('riwayat_alergi') }}</textarea>
+                                        <textarea name="riwayat_alergi" class="form-control form-control-dark radius-hnb p-3 input-dark" rows="3" placeholder="Contoh: Alergi kacang, riwayat asma, dsb..." maxlength="200">{{ old('riwayat_alergi') }}</textarea>
                                     </div>
                                 </div>
 
                                 <div id="step3" class="step-content d-none">
                                     <div class="form-group mb-4">
                                         <label class="text-white font-weight-bold small ml-1 opacity-75">Email Aktif</label>
-                                        <input type="email" name="email" value="{{ old('email') }}" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="nama@email.com" required>
+                                        <input type="email" name="email" value="{{ old('email') }}" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="nama@email.com" required maxlength="100">
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <label class="text-white font-weight-bold small ml-1 opacity-75">Buat Kata Sandi</label>
                                             <div class="pass-group-wizard">
-                                                <input type="password" name="password" id="inputPass" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Minimal 8 karakter..." required>
+                                                <input type="password" name="password" id="inputPass" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Minimal 8 karakter..." required maxlength="50">
                                                 <i class="fas fa-eye btn-toggle-pass" id="btnTogglePass"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <label class="text-white font-weight-bold small ml-1 opacity-75">Konfirmasi Sandi</label>
                                             <div class="pass-group-wizard">
-                                                <input type="password" name="password_confirmation" id="inputPassConfirm" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Ulangi sandi..." required>
+                                                <input type="password" name="password_confirmation" id="inputPassConfirm" class="form-control form-control-dark radius-hnb py-4 px-3 input-dark" placeholder="Ulangi sandi..." required maxlength="50">
                                             </div>
                                         </div>
                                     </div>

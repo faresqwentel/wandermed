@@ -958,7 +958,7 @@
                             <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
                                 <i class="fas fa-stethoscope" style="color:#805ad5;"></i> Layanan / Fasilitas Utama
                             </label>
-                            <textarea id="editFaskesPengumuman" class="wm-input" rows="3" style="font-size:12px;padding:8px 10px;resize:vertical;"></textarea>
+                            <textarea id="editFaskesPengumuman" class="wm-input" rows="3" style="font-size:12px;padding:8px 10px;resize:vertical;" maxlength="200"></textarea>
                         </div>
                     </div>
 
@@ -1014,7 +1014,7 @@
                             <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
                                 <i class="fas fa-map-marker-alt"></i> Alamat Lengkap
                             </label>
-                            <textarea id="editWisataAlamat" class="wm-input" rows="2" style="font-size:12px;padding:8px 10px;resize:vertical;"></textarea>
+                            <textarea id="editWisataAlamat" class="wm-input" rows="2" style="font-size:12px;padding:8px 10px;resize:vertical;" maxlength="200"></textarea>
                         </div>
                         <div style="margin-bottom:16px;">
                             <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
@@ -1039,7 +1039,7 @@
                             <label style="font-size:11px;font-weight:600;color:#a3aed1;text-transform:uppercase;display:block;margin-bottom:6px;">
                                 <i class="fas fa-align-left" style="color:#3182ce;"></i> Deskripsi & Daya Tarik
                             </label>
-                            <textarea id="editWisataDeskripsi" rows="4" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;resize:vertical;"></textarea>
+                            <textarea id="editWisataDeskripsi" rows="4" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;resize:vertical;" maxlength="200"></textarea>
                         </div>
                     </div>
                 </div>
