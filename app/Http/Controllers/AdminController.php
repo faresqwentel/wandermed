@@ -295,7 +295,7 @@ class AdminController extends Controller
                 'success' => true,
                 'message' => "Data Pariwisata \"{$nama}\" berhasil dihapus."
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error("Destroy Pariwisata failed: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Gagal menghapus data pariwisata.'], 500);
         }
