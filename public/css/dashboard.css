@@ -386,7 +386,7 @@ html.dark .wm-topbar-user:hover { background: rgba(255,255,255,0.09); }
 }
 .wm-search input::placeholder { color: var(--text-muted); }
 .wm-search input:focus { border-color: rgba(255, 122, 0, 0.5); background: rgba(255, 122, 0, 0.05); }
-.wm-search i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+.wm-search > i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
 
 /* Topbar Icons */
 .wm-topbar-icon {
@@ -990,57 +990,124 @@ html.dark [style*="background:#fffff0"] {
 #wmSearchDropdown {
     display: none;
     position: absolute;
-    top: calc(100% + 8px);
-    left: 0; right: 0;
-    background: var(--navy-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.13);
-    z-index: 9999;
+    top: calc(100% + 12px);
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08), 0 5px 15px rgba(0,0,0,0.03);
+    z-index: 100;
     overflow: hidden;
-    max-height: 300px;
+    max-height: 350px;
     overflow-y: auto;
-    animation: wmFadeIn 0.18s ease;
+    animation: dropdownPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+@keyframes dropdownPop {
+    from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .wm-search-result {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 11px 16px;
-    font-size: 13px;
-    color: var(--text-secondary);
+    gap: 14px;
+    padding: 12px 18px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
     cursor: pointer;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s, color 0.15s;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
 }
+
 .wm-search-result:last-child { border-bottom: none; }
+
+.wm-search-result::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--orange);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+    border-radius: 0 4px 4px 0;
+}
+
 .wm-search-result:hover {
-    background: var(--orange-glow);
+    background: rgba(255, 122, 0, 0.05);
+    padding-left: 24px;
     color: var(--orange);
 }
+
+.wm-search-result:hover::before {
+    transform: scaleY(1);
+}
+
 .wm-search-result i {
-    width: 18px;
-    text-align: center;
-    font-size: 13px;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.04);
+    border-radius: 8px;
+    font-size: 12px;
     flex-shrink: 0;
-    color: var(--text-muted);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
 }
-.wm-search-result:hover i { color: var(--orange); }
+
+.wm-search-result:hover i {
+    background: var(--orange);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(255, 122, 0, 0.3);
+}
+
 .wm-search-empty {
-    padding: 20px 16px;
+    padding: 30px 20px;
     text-align: center;
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 13.5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
-.wm-search-empty i { display: block; font-size: 24px; margin-bottom: 8px; opacity: 0.35; }
+
+.wm-search-empty i {
+    font-size: 32px;
+    opacity: 0.2;
+}
 
 /* Dark mode */
 html.dark #wmSearchDropdown {
-    background: var(--navy-card);
-    border-color: var(--border);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+    background: rgba(17, 24, 39, 0.96);
+    border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
 }
-html.dark .wm-search-result { border-bottom-color: var(--border); }
+
+html.dark .wm-search-result {
+    border-bottom-color: rgba(255,255,255,0.03);
+    color: var(--text-secondary);
+}
+
+html.dark .wm-search-result i {
+    background: rgba(255,255,255,0.05);
+}
+
+html.dark .wm-search-result:hover {
+    background: rgba(255, 122, 0, 0.1);
+    color: #fff;
+}
+
+html.dark .wm-search-result:hover i {
+    background: var(--orange);
+}
 
 /* ==============================
  * 21. NOTIFICATION BELL PANEL

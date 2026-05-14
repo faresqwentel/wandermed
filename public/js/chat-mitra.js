@@ -158,16 +158,55 @@
             .catch(() => {});
     }
 
+    // ── Bersihkan Chat (Mitra) ────────────────────────────────
+    window.mitraClearChat = function () {
+        Swal.fire({
+            title: 'Hapus Semua Chat?',
+            text: "Tindakan ini akan menghapus seluruh riwayat obrolan Anda dengan Admin secara permanen.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74a3b',
+            cancelButtonColor: '#858796',
+            confirmButtonText: 'Ya, Hapus Semua',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('/mitra/chat/clear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF()
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const body = document.getElementById('mcBody');
+                        const empty = document.getElementById('mcEmpty');
+                        
+                        if (body) body.innerHTML = '';
+                        if (empty) empty.style.display = 'flex';
+                        lastMessageId = 0;
+                        
+                        if (window.showToast) {
+                            window.showToast('Obrolan berhasil dibersihkan', 'success');
+                        }
+                    }
+                })
+                .catch(() => {});
+            }
+        });
+    };
+
     // ── Helpers ───────────────────────────────────────────────
     function buildMcBubble(msg) {
         const isAdmin = msg.sender_role === 'admin';
         const dir     = isAdmin ? 'from-admin' : 'from-mitra';
 
-        const avatarHtml = isAdmin
-            ? `<div class="mc-sender-avatar">A</div>` : '';
+        const avatarHtml = '';
 
         const labelHtml = isAdmin
-            ? `<div class="mc-sender-label"><i class="fas fa-shield-alt" style="font-size:9px;margin-right:3px;"></i>Admin WanderMed</div>` : '';
+            ? `<div class="mc-sender-label">Admin WanderMed</div>` : '';
 
         return `
         <div class="mc-bubble-wrap ${dir}" data-id="${msg.id}">

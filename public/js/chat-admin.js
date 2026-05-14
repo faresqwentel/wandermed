@@ -8,11 +8,12 @@
     'use strict';
 
     // ── State ──────────────────────────────────────────────────
-    let currentMitraId   = null;
-    let currentMitraName = '';
-    let lastMessageId    = 0;
-    let pollTimer        = null;
-    let allContacts      = [];
+    let currentMitraId      = null;
+    let currentMitraName    = '';
+    let currentMitraInitial = '';
+    let lastMessageId       = 0;
+    let pollTimer           = null;
+    let allContacts         = [];
 
     const CSRF = () => document.querySelector('meta[name="csrf-token"]')?.content
                     || document.querySelector('meta[name="csrf-token-chat"]')?.content
@@ -84,9 +85,10 @@
         if (currentMitraId === mitraId) return;
 
         // Reset state
-        currentMitraId   = mitraId;
-        currentMitraName = nama;
-        lastMessageId    = 0;
+        currentMitraId      = mitraId;
+        currentMitraName    = nama;
+        currentMitraInitial = initial;
+        lastMessageId       = 0;
 
         // Update active state kontak
         document.querySelectorAll('#chatContactsList .contact-item').forEach(el => {
@@ -236,18 +238,61 @@
         .finally(() => { btn.disabled = false; input.focus(); });
     };
 
+    // ── Bersihkan Chat (Admin) ────────────────────────────────
+    window.adminClearChat = function () {
+        if (!currentMitraId) return;
+
+        Swal.fire({
+            title: 'Hapus Semua Chat?',
+            text: "Tindakan ini akan menghapus seluruh riwayat obrolan dengan faskes ini, dan tidak dapat dikembalikan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74a3b',
+            cancelButtonColor: '#858796',
+            confirmButtonText: 'Ya, Hapus Semua',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/admin/chat/clear/${currentMitraId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': CSRF()
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const body = document.getElementById('chatBody');
+                        body.innerHTML = `<div class="chat-empty">
+                            <i class="fas fa-comment-medical"></i>
+                            <p>Riwayat obrolan telah dibersihkan.</p>
+                        </div>`;
+                        lastMessageId = 0;
+                        loadContacts();
+                        
+                        // Menampilkan notifikasi sukses kecil
+                        if (window.showToast) {
+                            window.showToast('Obrolan berhasil dibersihkan', 'success');
+                        }
+                    }
+                })
+                .catch(() => {});
+            }
+        });
+    };
+
     // ── Helpers ───────────────────────────────────────────────
     function buildBubble(msg) {
         const isAdmin  = msg.sender_role === 'admin';
         const dir      = isAdmin ? 'from-admin' : 'from-mitra';
 
-        // Avatar kecil hanya untuk pesan dari Mitra (kiri)
-        const avatarHtml = !isAdmin
-            ? `<div class="bubble-sender-avatar">F</div>` : '';
+        // Avatar kecil dihapus sesuai permintaan
+        const avatarHtml = '';
 
-        // Label pengirim untuk pesan Mitra
+        // Label pengirim untuk pesan Mitra tanpa ikon
         const labelHtml = !isAdmin
-            ? `<div class="bubble-sender-label"><i class="fas fa-hospital" style="font-size:9px;margin-right:3px;"></i>Mitra Faskes</div>` : '';
+            ? `<div class="bubble-sender-label">Mitra Faskes</div>` : '';
 
         return `
         <div class="bubble-wrap ${dir}" data-id="${msg.id}">

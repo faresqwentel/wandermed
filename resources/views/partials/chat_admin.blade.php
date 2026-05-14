@@ -337,12 +337,17 @@
 
         {{-- Area percakapan --}}
         <div id="chatConversation" style="display:none; flex-direction:column; flex:1; overflow:hidden; height:100%;">
-            <div class="chat-topbar">
-                <div class="chat-topbar-avatar" id="chatTopAvatar">F</div>
-                <div>
-                    <div class="chat-topbar-name" id="chatTopName">Nama Faskes</div>
-                    <div class="chat-topbar-sub">Online</div>
+            <div class="chat-topbar" style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
+                <div style="display: flex; align-items: center; gap: 13px;">
+                    <div class="chat-topbar-avatar" id="chatTopAvatar">F</div>
+                    <div>
+                        <div class="chat-topbar-name" id="chatTopName">Nama Faskes</div>
+                        <div class="chat-topbar-sub">Online</div>
+                    </div>
                 </div>
+                <button class="btn btn-sm btn-outline-danger" onclick="adminClearChat()" title="Hapus Semua Obrolan" style="border-radius: 6px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-trash-alt"></i> Bersihkan
+                </button>
             </div>
 
             <div class="chat-body" id="chatBody">

@@ -272,13 +272,20 @@
 <div class="mc-shell">
 
     {{-- ── Topbar ── --}}
-    <div class="mc-topbar">
-        <div class="mc-topbar-avatar">A</div>
-        <div style="flex:1;">
-            <div class="mc-topbar-name">Admin WanderMed</div>
-            <div class="mc-topbar-sub">Siap membalas pesan Anda</div>
+    <div class="mc-topbar" style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
+        <div style="display: flex; align-items: center; gap: 13px; flex:1;">
+            <div class="mc-topbar-avatar">A</div>
+            <div>
+                <div class="mc-topbar-name">Admin WanderMed</div>
+                <div class="mc-topbar-sub">Siap membalas pesan Anda</div>
+            </div>
         </div>
-        <div class="mc-unread-badge" id="mcUnreadBadge">0 pesan baru</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="mc-unread-badge" id="mcUnreadBadge">0 pesan baru</div>
+            <button class="btn btn-sm btn-outline-danger" onclick="mitraClearChat()" title="Hapus Semua Obrolan" style="border-radius: 6px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                <i class="fas fa-trash-alt"></i> Bersihkan
+            </button>
+        </div>
     </div>
 
     {{-- ── Messages ── --}}

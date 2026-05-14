@@ -130,6 +130,15 @@ class ChatController extends Controller
         return response()->json(['messages' => $newMessages]);
     }
 
+    /**
+     * API: Hapus semua pesan dengan mitra tertentu (Admin side).
+     */
+    public function adminClear(int $mitraId): JsonResponse
+    {
+        Message::where('mitra_id', $mitraId)->delete();
+        return response()->json(['success' => true]);
+    }
+
     // =========================================================
     // MITRA FASKES: Ruang chat langsung dengan Admin
     // =========================================================
@@ -212,6 +221,16 @@ class ChatController extends Controller
             ->count();
 
         return response()->json(['unread' => $count]);
+    }
+
+    /**
+     * API: Hapus semua pesan di room chat (Mitra side).
+     */
+    public function mitraClear(): JsonResponse
+    {
+        $mitraId = session('auth_user.id');
+        Message::where('mitra_id', $mitraId)->delete();
+        return response()->json(['success' => true]);
     }
 
     // =========================================================

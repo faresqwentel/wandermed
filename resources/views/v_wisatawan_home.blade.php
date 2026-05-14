@@ -90,38 +90,61 @@
                 <p class="teks-subjudul mx-auto text-white-50">Mengenal lebih dekat visi kami dalam mengintegrasikan pariwisata dengan fasilitas kesehatan yang tanggap darurat.</p>
             </div>
 
-            <div class="row text-center" style="gap: 20px 0;">
-                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="0" data-aos-duration="600">
-                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid var(--hnb-orange);">
-                        <div class="mb-4"><i class="fas fa-gem fa-3x text-hnb-orange"></i></div>
-                        <h5 class="text-white font-weight-bold mb-3">Tujuan Utama</h5>
-                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Menjadi jembatan digital yang andal untuk menghubungkan wisatawan dengan layanan kesehatan terdekat.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
-                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid #1cc88a;">
-                        <div class="mb-4"><i class="fas fa-laptop-code fa-3x text-success"></i></div>
-                        <h5 class="text-white font-weight-bold mb-3">Sistem Terpadu</h5>
-                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Smart Mapping kami menampilkan lokasi dan ketersediaan layanan fasilitas kesehatan secara aktual (*real-time*).</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
-                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid #e74a3b;">
-                        <div class="mb-4"><i class="fas fa-ambulance fa-3x text-danger"></i></div>
-                        <h5 class="text-white font-weight-bold mb-3">Solusi Instan</h5>
-                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Temukan lokasi UGD 24 Jam atau faskes pendukung BPJS di sekitar Anda dalam hitungan detik saat darurat.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4 px-3" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
-                    <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column align-items-center" style="border-top: 3px solid #36b9cc;">
-                        <div class="mb-4 d-flex justify-content-center">
-                            <i class="fas fa-shield-alt fa-3x text-info"></i>
+            <style>
+                .hnb-bento-card { transition: all 0.3s ease; }
+                .hnb-bento-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important; }
+            </style>
+            <div class="row g-4 justify-content-center">
+                <!-- Card 1: Utama (Besar) -->
+                <div class="col-lg-5 mb-4 px-3" data-aos="fade-right" data-aos-delay="0" data-aos-duration="600">
+                    <div class="glass-premier radius-hnb p-5 h-100 shadow-sm position-relative overflow-hidden hnb-bento-card" style="border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid var(--hnb-orange); background: linear-gradient(145deg, rgba(255,122,0,0.08) 0%, transparent 100%);">
+                        <div class="position-absolute" style="top: -20px; right: -20px; font-size: 160px; opacity: 0.04; color: white;">
+                            <i class="fas fa-heartbeat"></i>
                         </div>
-                        <h5 class="text-white font-weight-bold mb-3">Standar Aman</h5>
-                        <p class="text-white-50 mb-0" style="font-size: 14px; line-height: 1.6;">Mendukung terciptanya ekosistem pariwisata yang tidak hanya indah, tapi juga memiliki standar keselamatan medis yang tinggi.</p>
+                        <div class="mb-4 d-inline-flex align-items-center justify-content-center" style="width: 56px; height: 56px; border-radius: 14px; background: rgba(255,122,0,0.15); border: 1px solid rgba(255,122,0,0.2);">
+                            <i class="fas fa-bullseye fa-lg text-hnb-orange"></i>
+                        </div>
+                        <h3 class="text-white font-weight-bold mb-3" style="font-size: 1.7rem;">Tujuan Utama</h3>
+                        <p class="text-white-50 mb-0" style="font-size: 1.05rem; line-height: 1.8;">
+                            Menjadi jembatan digital yang andal untuk menghubungkan wisatawan dengan layanan kesehatan terdekat di momen genting, memberikan rasa aman selama berwisata di Subang.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2: 3 Cards Kecil di kanan -->
+                <div class="col-lg-7">
+                    <div class="row h-100 align-content-stretch">
+                        <div class="col-sm-6 mb-4 px-3" data-aos="fade-down" data-aos-delay="100" data-aos-duration="600">
+                            <div class="glass-premier radius-hnb p-4 h-100 shadow-sm hnb-bento-card" style="border: 1px solid rgba(28,200,138,0.15);">
+                                <div class="mb-3 d-inline-flex align-items-center justify-content-center" style="width: 48px; height: 48px; border-radius: 12px; background: rgba(28,200,138,0.1);">
+                                    <i class="fas fa-satellite-dish text-success" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <h5 class="text-white font-weight-bold mb-2">Sistem Terpadu</h5>
+                                <p class="text-white-50 mb-0" style="font-size: 0.9rem; line-height: 1.6;">Smart Mapping menampilkan lokasi dan ketersediaan layanan faskes secara <strong class="text-white-50">real-time</strong>.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 mb-4 px-3" data-aos="fade-down" data-aos-delay="200" data-aos-duration="600">
+                            <div class="glass-premier radius-hnb p-4 h-100 shadow-sm hnb-bento-card" style="border: 1px solid rgba(231,74,59,0.15);">
+                                <div class="mb-3 d-inline-flex align-items-center justify-content-center" style="width: 48px; height: 48px; border-radius: 12px; background: rgba(231,74,59,0.1);">
+                                    <i class="fas fa-first-aid text-danger" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <h5 class="text-white font-weight-bold mb-2">Solusi Instan</h5>
+                                <p class="text-white-50 mb-0" style="font-size: 0.9rem; line-height: 1.6;">Temukan <strong>UGD 24 Jam</strong> atau faskes BPJS terdekat dalam hitungan detik saat darurat.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-4 px-3" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
+                            <div class="glass-premier radius-hnb p-4 h-100 shadow-sm d-flex flex-column flex-sm-row align-items-start align-items-sm-center hnb-bento-card" style="border: 1px solid rgba(54,185,204,0.15); gap: 20px;">
+                                <div class="d-inline-flex align-items-center justify-content-center" style="width: 56px; height: 56px; border-radius: 14px; background: rgba(54,185,204,0.1); border: 1px solid rgba(54,185,204,0.2); flex-shrink: 0;">
+                                    <i class="fas fa-shield-alt fa-lg text-info"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-white font-weight-bold mb-2">Standar Keamanan Tinggi</h5>
+                                    <p class="text-white-50 mb-0" style="font-size: 0.95rem; line-height: 1.6;">Mendukung terciptanya ekosistem pariwisata yang tidak hanya indah, tapi juga terjamin keselamatan medisnya untuk semua wisatawan.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -225,23 +248,34 @@
         </div>
     </section>
 
-    <section class="py-5">
+    <section class="py-5 mb-4">
         <div class="container px-4">
-            <div class="row">
-                <div class="col-12 px-3">
-                    <div class="glass-premier radius-hnb p-4 p-md-5 text-center shadow-sm border-0"
-                         style="background: rgba(255, 122, 0, 0.03) !important; border: 1px dashed rgba(255, 122, 0, 0.2) !important;">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 px-3" data-aos="zoom-in" data-aos-duration="800">
+                    <div class="glass-premier position-relative radius-hnb p-5 overflow-hidden shadow-lg border-0 text-center"
+                         style="background: linear-gradient(135deg, rgba(20, 25, 40, 0.8) 0%, rgba(10, 14, 25, 0.9) 100%); border-top: 1px solid rgba(255,255,255,0.08) !important;">
+                        
+                        <!-- Decorative Elements -->
+                        <div class="position-absolute" style="top: -60px; left: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,122,0,0.12) 0%, transparent 70%); border-radius: 50%;"></div>
+                        <div class="position-absolute" style="bottom: -80px; right: -50px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(78,115,223,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
 
-                        <h5 class="text-hnb-orange font-weight-bold mb-3">Special Thanks</h5>
-                        <p class="text-white-50 mx-auto mb-4" style="max-width: 700px; line-height: 1.8;">
-                            Terima kasih telah mempercayakan perjalanan Anda kepada <strong>WanderMed</strong>. Proyek ini adalah dedikasi kami untuk menciptakan ekosistem pariwisata Indonesia yang lebih aman, sehat, dan terintegrasi bagi setiap petualang.
-                        </p>
+                        <div class="position-relative" style="z-index: 2;">
+                            <div class="mb-4">
+                                <i class="fas fa-quote-left text-hnb-orange opacity-50 fa-2x"></i>
+                            </div>
+                            
+                            <h4 class="text-white font-weight-bold mb-4" style="letter-spacing: 1px;">Sebuah Dedikasi</h4>
+                            
+                            <p class="text-white-50 mx-auto mb-5" style="max-width: 750px; font-size: 1.15rem; line-height: 1.8; font-style: italic;">
+                                "Terima kasih telah mempercayakan perjalanan Anda kepada <strong>WanderMed</strong>. Kami membangun platform ini dengan visi sederhana: merangkai ekosistem pariwisata yang lebih peduli, responsif, dan terintegrasi demi keamanan setiap langkah Anda."
+                            </p>
 
-                        <div class="d-flex align-items-center justify-content-center flex-wrap" style="gap: 20px;">
-                            <div class="d-flex align-items-center">
-                                <img src="{{ asset('img/wdm.png') }}" class="logo-for-light-bg mr-2" style="width: 30px; height: 30px; object-fit: contain;">
-                                <img src="{{ asset('img/wdmlight.png') }}" class="logo-for-dark-bg mr-2" style="width: 30px; height: 30px; object-fit: contain;">
-                                <span class="text-white small font-weight-bold opacity-75">Developed by Hear & Build Studio</span>
+                            <div class="d-flex align-items-center justify-content-center flex-wrap" style="gap: 15px;">
+                                <div class="d-flex align-items-center px-4 py-2 hover-translate" style="background: rgba(255,255,255,0.03); border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s;">
+                                    <img src="{{ asset('img/wdm.png') }}" class="logo-for-light-bg mr-3" style="width: 24px; height: 24px; object-fit: contain;">
+                                    <img src="{{ asset('img/wdmlight.png') }}" class="logo-for-dark-bg mr-3" style="width: 24px; height: 24px; object-fit: contain;">
+                                    <span class="text-white font-weight-bold" style="font-size: 0.9rem; letter-spacing: 0.5px;">HEAR & BUILD STUDIO</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -250,9 +284,7 @@
         </div>
     </section>
 
-    <section class="bg-hnb-navy pt-5 pb-4 mt-5">
-        @include('theme.footer')
-    </section>
+    @include('theme.footer')
 
 @endsection
 

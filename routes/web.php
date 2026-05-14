@@ -156,6 +156,7 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
     Route::get('/admin/chat/messages/{mitraId}',    [ChatController::class, 'adminMessages'])->name('admin.chat.messages');
     Route::post('/admin/chat/send',                 [ChatController::class, 'adminSend'])->name('admin.chat.send');
     Route::get('/admin/chat/poll/{mitraId}',        [ChatController::class, 'adminPoll'])->name('admin.chat.poll');
+    Route::post('/admin/chat/clear/{mitraId}',      [ChatController::class, 'adminClear'])->name('admin.chat.clear');
 });
 
 // --- Chat: Mitra Faskes side ---
@@ -164,6 +165,7 @@ Route::middleware(['auth.session', 'role:mitra_faskes,mitra_pariwisata'])->group
     Route::post('/mitra/chat/send',     [ChatController::class, 'mitraSend'])->name('mitra.chat.send');
     Route::get('/mitra/chat/poll',      [ChatController::class, 'mitraPoll'])->name('mitra.chat.poll');
     Route::get('/mitra/chat/unread',    [ChatController::class, 'mitraUnreadCount'])->name('mitra.chat.unread');
+    Route::post('/mitra/chat/clear',    [ChatController::class, 'mitraClear'])->name('mitra.chat.clear');
 });
 
 // Rute lama untuk backward compatibility (redirect ke rute baru)
