@@ -36,6 +36,11 @@
     <a href="#" class="wm-nav-link" id="navKoordinat">
         <i class="fas fa-map-pin"></i> Update Koordinat
     </a>
+    <div class="wm-nav-label">Komunikasi</div>
+    <a href="#" class="wm-nav-link" id="navChat" style="position:relative;">
+        <i class="fas fa-comments"></i> Chat Admin
+        <span id="chatNavBadge" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#ff7a00;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;align-items:center;justify-content:center;">0</span>
+    </a>
     <div class="wm-nav-label">Navigasi</div>
     <a href="/peta-faskes" class="wm-nav-link">
         <i class="fas fa-map-marked-alt"></i> Lihat di Peta
@@ -651,11 +656,15 @@
     </div>
 </div>
 
+{{-- ===== SECTION CHAT ADMIN ===== --}}
+@include('partials.chat_mitra')
+
 @endsection
 
 </div>{{-- /faskesApp --}}
 
 @push('scripts')
 <script src="{{ asset('js/dashboard-faskes.js') }}"></script>
+<script src="{{ asset('js/chat-mitra.js') }}"></script>
 @endpush
 

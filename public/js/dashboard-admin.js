@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         'navDashboard':'sectionDashboard','navValidasi':'sectionValidasi',
         'navLaporan':'sectionLaporan','navDataWisatawan':'sectionWisatawan',
         'navDataFaskes':'sectionFaskes','navDataPariwisata':'sectionPariwisata',
-        'navAllUlasan':'sectionAllUlasan',
+        'navAllUlasan':'sectionAllUlasan','navChat':'sectionChat',
     };
     document.querySelectorAll('.wm-nav-link').forEach(function(link) {
         link.addEventListener('click', function(e) {
@@ -190,24 +190,79 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // 5. EDIT FASKES MODAL
+    // Daftar fasilitas yang sama dengan dashboard faskes
+    var FASKES_FASILITAS = [
+        { name: 'UGD 24 Jam',     icon: 'fa-ambulance',         color: '#e74a3b' },
+        { name: 'Ambulans',        icon: 'fa-car',               color: '#4e73df' },
+        { name: 'Rawat Inap',      icon: 'fa-bed',               color: '#36b9cc' },
+        { name: 'Apotek',          icon: 'fa-pills',             color: '#1cc88a' },
+        { name: 'Laboratorium',    icon: 'fa-flask',             color: '#f6c23e' },
+        { name: 'Dok. Spesialis',  icon: 'fa-user-md',           color: '#ff7a00' },
+        { name: 'Poli Anak',       icon: 'fa-baby',              color: '#e74a3b' },
+        { name: 'Poli Gigi',       icon: 'fa-tooth',             color: '#4e73df' },
+        { name: 'Poli Umum',       icon: 'fa-stethoscope',       color: '#1cc88a' },
+        { name: 'Imunisasi',       icon: 'fa-syringe',           color: '#36b9cc' },
+        { name: 'Fisioterapi',     icon: 'fa-hand-holding-heart',color: '#e74a3b' },
+        { name: 'Radiologi',       icon: 'fa-x-ray',             color: '#6f42c1' },
+    ];
+
     window.openEditFaskes = function(data) {
-        document.getElementById('editFaskesId').value=data.id;
-        document.getElementById('editFaskesNamaLabel').textContent=data.nama_faskes+' ('+data.jenis_faskes+')';
-        document.getElementById('editFaskesLat').value=data.latitude||'';
-        document.getElementById('editFaskesLng').value=data.longitude||'';
-        document.getElementById('editFaskesBPJS').value=(data.dukungan_bpjs)?'1':'0';
-        document.getElementById('editFaskesPengumuman').value=data.pengumuman||'';
-        document.getElementById('editFaskesPesanAdmin').value=data.pesan_admin||'';
+        document.getElementById('editFaskesId').value = data.id;
+        document.getElementById('editFaskesNamaLabel').textContent = data.nama_faskes + ' (' + data.jenis_faskes + ')';
+        document.getElementById('editFaskesLat').value = data.latitude || '';
+        document.getElementById('editFaskesLng').value = data.longitude || '';
+        document.getElementById('editFaskesBPJS').value = data.dukungan_bpjs ? '1' : '0';
+        document.getElementById('editFaskesPengumuman').value = data.pengumuman || '';
+
+        // Render checkbox grid fasilitas
+        var currentFasilitas = data.layanan_tersedia || [];
+        if (typeof currentFasilitas === 'string') {
+            try { currentFasilitas = JSON.parse(currentFasilitas); } catch(e) { currentFasilitas = []; }
+        }
+        var grid = document.getElementById('editFasilitasGrid');
+        grid.innerHTML = FASKES_FASILITAS.map(function(f) {
+            var checked = currentFasilitas.indexOf(f.name) !== -1;
+            return '<label style="display:flex;align-items:center;gap:6px;padding:7px 8px;border-radius:8px;border:1px solid var(--border);background:var(--navy);cursor:pointer;font-size:11.5px;font-weight:500;transition:background 0.15s;">' +
+                '<input type="checkbox" name="edit_fasilitas" value="' + f.name + '"' + (checked ? ' checked' : '') + ' style="accent-color:' + f.color + ';width:14px;height:14px;flex-shrink:0;">' +
+                '<i class="fas ' + f.icon + '" style="color:' + f.color + ';font-size:12px;"></i>' +
+                f.name +
+                '</label>';
+        }).join('');
+
         $('#modalEditFaskes').modal('show');
     };
+
     window.saveFaskesData = function() {
-        var btn=document.getElementById('btnSaveFaskesEdit'),id=document.getElementById('editFaskesId').value;
-        if(!id)return;
-        btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Menyimpan...';btn.disabled=true;
-        fetch('/admin/faskes/'+id+'/update-lokasi',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},body:JSON.stringify({latitude:document.getElementById('editFaskesLat').value,longitude:document.getElementById('editFaskesLng').value,dukungan_bpjs:document.getElementById('editFaskesBPJS').value,pengumuman:document.getElementById('editFaskesPengumuman').value,pesan_admin:document.getElementById('editFaskesPesanAdmin').value})})
-        .then(function(r){return r.json();}).then(function(data){$('#modalEditFaskes').modal('hide');showToast(data.message||'Data faskes berhasil diperbarui!');setTimeout(function(){location.reload();},1500);})
-        .catch(function(){showToast('Gagal menyimpan. Cek koneksi.','danger');})
-        .finally(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Simpan Perubahan';});
+        var btn = document.getElementById('btnSaveFaskesEdit');
+        var id  = document.getElementById('editFaskesId').value;
+        if (!id) return;
+
+        // Kumpulkan fasilitas yang dicentang
+        var checked = Array.from(document.querySelectorAll('#editFasilitasGrid input[name="edit_fasilitas"]:checked'))
+                           .map(function(cb) { return cb.value; });
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+        btn.disabled  = true;
+
+        fetch('/admin/faskes/' + id + '/update-lokasi', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({
+                latitude:          document.getElementById('editFaskesLat').value,
+                longitude:         document.getElementById('editFaskesLng').value,
+                dukungan_bpjs:     document.getElementById('editFaskesBPJS').value,
+                pengumuman:        document.getElementById('editFaskesPengumuman').value,
+                layanan_tersedia:  checked,
+            })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            $('#modalEditFaskes').modal('hide');
+            showToast(data.message || 'Data faskes berhasil diperbarui!');
+            setTimeout(function() { location.reload(); }, 1500);
+        })
+        .catch(function() { showToast('Gagal menyimpan. Cek koneksi.', 'danger'); })
+        .finally(function() { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Perubahan'; });
     };
     window.deleteFaskes = function(btn,id,nama) {
         Swal.fire({

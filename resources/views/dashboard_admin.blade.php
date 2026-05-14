@@ -53,6 +53,12 @@
         <i class="fas fa-star"></i> Ulasan Faskes
     </a>
 
+    <div class="wm-nav-label">Komunikasi</div>
+    <a href="#" class="wm-nav-link" id="navChat" style="position:relative;">
+        <i class="fas fa-comments"></i> Chat Faskes
+        <span id="adminChatBadge" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#ff7a00;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;">0</span>
+    </a>
+
     <div class="wm-nav-label">Sistem</div>
     <a href="/peta-faskes" class="wm-nav-link">
         <i class="fas fa-map-marked-alt"></i> Lihat Peta Publik
@@ -456,7 +462,7 @@
     <div class="wm-page-header">
         <div>
             <div class="wm-page-title">Fasilitas Kesehatan</div>
-            <div class="wm-page-subtitle">Kelola seluruh mitra faskes — klik Detail untuk edit lokasi, BPJS, dan pesan admin</div>
+            <div class="wm-page-subtitle">Kelola seluruh mitra faskes — klik Detail untuk edit lokasi, BPJS, dan fasilitas yang tampil di peta</div>
         </div>
     </div>
     <div class="wm-card">
@@ -956,16 +962,16 @@
                         </div>
                     </div>
 
-                    {{-- Kolom Kanan: Pesan Admin --}}
+                    {{-- Kolom Kanan: Fasilitas Tersedia di Peta --}}
                     <div class="col-md-6">
-                        <div style="background:#fffbeb;border:1px solid #f6e05e;border-radius:10px;padding:14px;margin-bottom:16px;height:100%;">
-                            <label style="font-size:11px;font-weight:700;color:#d69e2e;text-transform:uppercase;display:block;margin-bottom:8px;">
-                                <i class="fas fa-comment-dots"></i> Pesan untuk Mitra Faskes
+                        <div style="background:rgba(28,200,138,0.05);border:1px solid rgba(28,200,138,0.2);border-radius:10px;padding:14px;">
+                            <label style="font-size:11px;font-weight:700;color:#1cc88a;text-transform:uppercase;display:block;margin-bottom:10px;">
+                                <i class="fas fa-map-marked-alt"></i> Fasilitas Tampil di Peta
                             </label>
-                            <textarea id="editFaskesPesanAdmin" rows="5"
-                                style="width:100%;border:1px solid #f6e05e;border-radius:8px;padding:10px;font-size:12px;background:#fffff0;resize:vertical;"
-                                placeholder="Ketik catatan/instruksi yang akan tampil di dashboard faskes ini..."></textarea>
-                            <div style="font-size:10px;color:#d69e2e;margin-top:4px;"><i class="fas fa-info-circle"></i> Hanya terbaca oleh admin dan mitra tersebut.</div>
+                            <div id="editFasilitasGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:7px;"></div>
+                            <div style="font-size:10px;color:var(--text-muted);margin-top:8px;">
+                                <i class="fas fa-info-circle"></i> Fasilitas yang dicentang akan langsung tampil di popup peta wisatawan.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1051,8 +1057,12 @@
     </div>
 </div>
 
+{{-- ==================== SECTION: CHAT FASKES ==================== --}}
+@include('partials.chat_admin')
+
 @endsection
 
 @push('scripts')
 <script src="{{ asset('js/dashboard-admin.js') }}"></script>
+<script src="{{ asset('js/chat-admin.js') }}"></script>
 @endpush

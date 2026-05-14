@@ -114,7 +114,7 @@ html, body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--navy);
     color: var(--text-primary);
-    overflow-x: hidden;
+    overflow: hidden; /* Kunci scroll hanya di .wm-content, bukan seluruh halaman */
 }
 
 a { text-decoration: none; color: inherit; }
@@ -150,8 +150,10 @@ button { cursor: pointer; }
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 24px 20px;
+    height: var(--topbar-h);   /* sejajar dengan topbar */
+    padding: 0 20px;
     border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
 }
 .wm-brand-icon {
     width: 42px;
@@ -238,10 +240,9 @@ button { cursor: pointer; }
     border-radius: 20px;
 }
 
-/* Sidebar Footer */
+/* Sidebar Footer – disembunyikan, info user sudah di topbar */
 .wm-sidebar-footer {
-    border-top: 1px solid var(--border);
-    padding: 16px;
+    display: none;
 }
 .wm-user-mini {
     display: flex;
@@ -284,6 +285,63 @@ button { cursor: pointer; }
 .wm-logout-btn:hover { background: rgba(231, 74, 59, 0.2); color: #e74a3b; border-color: rgba(231, 74, 59, 0.3); }
 
 /* ==============================
+ * TOPBAR USER PILL
+ * ============================== */
+.wm-topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 6px 6px 14px;   /* teks kiri, avatar kanan */
+    border-radius: 40px;
+    border: 1px solid var(--border);
+    background: #f4f7fe;
+    transition: var(--transition);
+    flex-shrink: 0;
+    cursor: default;
+}
+.wm-topbar-user:hover { background: #edf0f8; }
+
+.wm-topbar-user-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), #e06900);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+}
+.wm-topbar-user-name {
+    font-size: 13px; font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    max-width: 160px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wm-topbar-user-role {
+    font-size: 10px; color: var(--text-muted);
+    font-weight: 500; letter-spacing: 0.2px;
+}
+
+.wm-topbar-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+    flex-shrink: 0;
+    margin: 0 2px;
+}
+
+/* Dark mode user pill */
+html.dark .wm-topbar-user {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border);
+}
+html.dark .wm-topbar-user:hover { background: rgba(255,255,255,0.09); }
+
+/* Transisi topbar user */
+.wm-topbar-user, .wm-topbar-divider {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ==============================
  * 4. MAIN AREA
  * ============================== */
 .wm-main {
@@ -302,17 +360,17 @@ button { cursor: pointer; }
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    padding: 0 28px;
-    gap: 16px;
+    padding: 0 20px;
+    gap: 12px;
     flex-shrink: 0;
 }
-.wm-topbar-title { font-size: 17px; font-weight: 700; flex: 1; }
+.wm-topbar-title { font-size: 15px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wm-topbar-title span { color: var(--orange); }
 
 /* Search Bar */
 .wm-search {
     position: relative;
-    flex: 0 0 280px;
+    flex: 0 0 220px;
 }
 .wm-search input {
     width: 100%;
@@ -1147,4 +1205,43 @@ html.dark .wm-notif-item:hover { background: rgba(255,122,0,0.06); }
 html.dark .wm-notif-item.unread { background: rgba(255,122,0,0.06); }
 html.dark .wm-notif-footer { border-top-color: var(--border); }
 html.dark .wm-notif-badge { border-color: var(--navy-light); }
+
+
+/* ==============================
+ * 22. CHAT ROOM – Smooth Transitions
+ * ============================== */
+
+/* Pastikan semua elemen chat ikut transisi tema */
+.chat-shell, .mc-shell,
+.chat-sidebar, .chat-main,
+.chat-topbar, .mc-topbar,
+.chat-body, .mc-body,
+.chat-input-area, .mc-input-area,
+.chat-input-box, .mc-input-box,
+.bubble, .mc-bubble,
+.contact-item, .chat-date-sep span, .mc-date-sep span {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+}
+
+/* Light mode toggle row – override untuk wm-toggle-row */
+.wm-toggle-row {
+    background: rgba(0,0,0,0.03);
+    border-color: var(--border);
+}
+
+/* Scrollbar chat dalam light mode lebih subtle */
+html:not(.dark) .chat-body::-webkit-scrollbar-thumb,
+html:not(.dark) .mc-body::-webkit-scrollbar-thumb,
+html:not(.dark) .chat-contacts::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+}
+
+/* Highlight active contact di light mode */
+html:not(.dark) .contact-item.active {
+    background: rgba(255,122,0,0.08);
+    border-left-color: var(--orange);
+}
+html:not(.dark) .contact-item:hover {
+    background: rgba(255,122,0,0.05);
+}
 

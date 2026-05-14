@@ -22,6 +22,7 @@
         'navUlasan'       : 'sectionUlasan',
         'navProfilFaskes' : 'sectionProfil',
         'navKoordinat'    : 'sectionKoordinat',
+        'navChat'         : 'sectionChat',
     };
 
     function switchSection(navId, sectionId) {

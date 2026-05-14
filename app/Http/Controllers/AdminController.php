@@ -179,9 +179,8 @@ class AdminController extends Controller
         ]);
 
         $updateData = [
-            'latitude'    => $request->latitude,
-            'longitude'   => $request->longitude,
-            'pesan_admin' => $request->pesan_admin ?? $faskes->pesan_admin,
+            'latitude'  => $request->latitude,
+            'longitude' => $request->longitude,
         ];
 
         if ($request->has('dukungan_bpjs')) {
@@ -189,6 +188,11 @@ class AdminController extends Controller
         }
         if ($request->has('pengumuman')) {
             $updateData['pengumuman'] = $request->pengumuman;
+        }
+        // Update layanan tersedia (fasilitas di peta)
+        if ($request->has('layanan_tersedia')) {
+            $layanan = $request->layanan_tersedia;
+            $updateData['layanan_tersedia'] = is_array($layanan) ? $layanan : json_decode($layanan, true) ?? [];
         }
 
         $faskes->update($updateData);

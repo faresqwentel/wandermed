@@ -7,6 +7,7 @@ use App\Http\Controllers\WisatawanController;
 use App\Http\Controllers\FaskesController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PariwisataController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -149,6 +150,20 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
     // Export Faskes
     Route::get('/admin/faskes/export', [AdminController::class, 'exportFaskesCsv'])
          ->name('admin.faskes.export');
+
+    // ── CHAT: Admin side ───────────────────────────────────────
+    Route::get('/admin/chat/contacts',              [ChatController::class, 'adminContacts'])->name('admin.chat.contacts');
+    Route::get('/admin/chat/messages/{mitraId}',    [ChatController::class, 'adminMessages'])->name('admin.chat.messages');
+    Route::post('/admin/chat/send',                 [ChatController::class, 'adminSend'])->name('admin.chat.send');
+    Route::get('/admin/chat/poll/{mitraId}',        [ChatController::class, 'adminPoll'])->name('admin.chat.poll');
+});
+
+// --- Chat: Mitra Faskes side ---
+Route::middleware(['auth.session', 'role:mitra_faskes,mitra_pariwisata'])->group(function () {
+    Route::get('/mitra/chat/messages',  [ChatController::class, 'mitraMessages'])->name('mitra.chat.messages');
+    Route::post('/mitra/chat/send',     [ChatController::class, 'mitraSend'])->name('mitra.chat.send');
+    Route::get('/mitra/chat/poll',      [ChatController::class, 'mitraPoll'])->name('mitra.chat.poll');
+    Route::get('/mitra/chat/unread',    [ChatController::class, 'mitraUnreadCount'])->name('mitra.chat.unread');
 });
 
 // Rute lama untuk backward compatibility (redirect ke rute baru)

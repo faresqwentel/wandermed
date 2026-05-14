@@ -114,22 +114,6 @@
         <nav class="wm-nav">
             @yield('sidebar_nav')
         </nav>
-
-        <!-- User Footer -->
-        <div class="wm-sidebar-footer">
-            <div class="wm-user-mini">
-                <div class="wm-avatar">
-                    @yield('user_initial', 'A')
-                </div>
-                <div>
-                    <div class="wm-user-name">@yield('user_name', 'Pengguna')</div>
-                    <div class="wm-user-role">@yield('user_role', 'WanderMed')</div>
-                </div>
-                <a href="/logout" class="wm-logout-btn" title="Keluar dari Sistem">
-                    <i class="fas fa-sign-out-alt"></i>
-                </a>
-            </div>
-        </div>
     </aside>
     {{-- ======================== END SIDEBAR ======================== --}}
 
@@ -168,6 +152,18 @@
                 <i class="fas fa-map-marked-alt"></i>
                 <span class="d-none d-md-inline">Peta</span>
             </a>
+
+            <!-- Divider -->
+            <div class="wm-topbar-divider d-none d-md-block"></div>
+
+            <!-- User Info Pill (kanan topbar) -->
+            <div class="wm-topbar-user">
+                <div class="wm-topbar-user-info d-none d-md-block">
+                    <div class="wm-topbar-user-name">@yield('user_name', 'Pengguna')</div>
+                    <div class="wm-topbar-user-role">@yield('user_role', 'WanderMed')</div>
+                </div>
+                <div class="wm-topbar-user-avatar">@yield('user_initial', 'A')</div>
+            </div>
         </header>
         {{-- ======================== END TOPBAR ======================== --}}
 
