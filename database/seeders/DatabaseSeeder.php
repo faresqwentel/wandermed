@@ -21,24 +21,27 @@ class DatabaseSeeder extends Seeder
         // =======================================================
         $wisatawan1 = User::create([
             'name'           => 'Fares Qwentel',
-            'email'          => 'fares@wisata.id',
+            'email'          => 'fares@gmail.com',
             'password'       => Hash::make('password123'),
+            'recovery_pin'   => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
             'gol_darah'      => 'A',
             'riwayat_alergi' => 'Alergi dingin ekstreme',
             'kontak_darurat' => '081234567890',
         ]);
 
         $wisatawan2 = User::create([
-            'name'           => 'Budi Subang',
-            'email'          => 'budi@wisata.id',
+            'name'           => 'Aditya Saputra',
+            'email'          => 'adityazsaputra11@gmail.com',
             'password'       => Hash::make('password123'),
+            'recovery_pin'   => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
             'gol_darah'      => 'O',
         ]);
 
         $wisatawan3 = User::create([
             'name'           => 'Siti Aminah',
-            'email'          => 'siti@wisata.id',
+            'email'          => 'siti@gmail.com',
             'password'       => Hash::make('password123'),
+            'recovery_pin'   => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
             'gol_darah'      => 'B',
             'riwayat_alergi' => 'Antibiotik Amoxicillin',
         ]);
@@ -48,10 +51,10 @@ class DatabaseSeeder extends Seeder
         // 2. DATA MITRA (Tabel: mitras)
         // =======================================================
         // Mitra Faskes
-        $mitraF1 = Mitra::create(['nama_penanggung_jawab' => 'dr. Hendra Setiawan', 'email' => 'rsud@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '081122334455', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
-        $mitraF2 = Mitra::create(['nama_penanggung_jawab' => 'Apt. Rina Marlina', 'email' => 'apotek@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '082233445566', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
-        $mitraF3 = Mitra::create(['nama_penanggung_jawab' => 'drg. Maya Indah', 'email' => 'klinikmaya@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '081299008811', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
-        $mitraF4 = Mitra::create(['nama_penanggung_jawab' => 'Kepala Puskesmas Ciater', 'email' => 'puskesmasciater@subang.id', 'password' => Hash::make('mitra123'), 'no_telp' => '082211002233', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
+        $mitraF1 = Mitra::create(['nama_penanggung_jawab' => 'dr. Hendra Setiawan', 'email' => 'rsudsubang@gmail.com', 'password' => Hash::make('mitra123'), 'recovery_pin' => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT), 'no_telp' => '081122334455', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
+        $mitraF2 = Mitra::create(['nama_penanggung_jawab' => 'Brilyan Faresya', 'email' => 'brilyannfaresya02@gmail.com', 'password' => Hash::make('mitra123'), 'recovery_pin' => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT), 'no_telp' => '082233445566', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
+        $mitraF3 = Mitra::create(['nama_penanggung_jawab' => 'drg. Maya Indah', 'email' => 'klinikmaya@gmail.com', 'password' => Hash::make('mitra123'), 'recovery_pin' => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT), 'no_telp' => '081299008811', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
+        $mitraF4 = Mitra::create(['nama_penanggung_jawab' => 'Kepala Puskesmas Ciater', 'email' => 'puskesmasciater@gmail.com', 'password' => Hash::make('mitra123'), 'recovery_pin' => str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT), 'no_telp' => '082211002233', 'jenis_mitra' => 'faskes', 'is_verified' => true]);
 
 
         // =======================================================
@@ -123,7 +126,7 @@ class DatabaseSeeder extends Seeder
             'latitude'       => -6.7360,
             'longitude'      => 107.6530,
             'nama_pengelola' => 'Bapak Asep',
-            'email_kontak'   => 'asep@sariater.id',
+            'email_kontak'   => 'asepsariater@gmail.com',
             'no_telp'        => '081199887766',
             'status_review'  => 'disetujui',
             'harga_tiket'    => 35000,
@@ -137,7 +140,7 @@ class DatabaseSeeder extends Seeder
             'latitude'       => -6.7596,
             'longitude'      => 107.6096,
             'nama_pengelola' => 'Ibu Lilis',
-            'email_kontak'   => 'lilis@tangkuban.id',
+            'email_kontak'   => 'lilistangkuban@gmail.com',
             'no_telp'        => '082299887766',
             'status_review'  => 'disetujui',
             'harga_tiket'    => 20000,
@@ -151,7 +154,7 @@ class DatabaseSeeder extends Seeder
             'latitude'       => -6.7123,
             'longitude'      => 107.6712,
             'nama_pengelola' => 'Pak Dedi',
-            'email_kontak'   => 'dedi@dcastello.id',
+            'email_kontak'   => 'dedidcastello@gmail.com',
             'no_telp'        => '081377889900',
             'status_review'  => 'disetujui',
             'harga_tiket'    => 30000,

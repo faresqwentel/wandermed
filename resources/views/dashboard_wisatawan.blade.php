@@ -57,6 +57,41 @@
                     <i class="fas fa-edit"></i> Edit Data Medis
                 </button>
             </div>
+
+            <div class="medis-summary" style="margin-top: 16px;">
+                <div class="w-label" style="margin-bottom:12px; padding-left:4px; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fas fa-key" style="color:var(--orange);"></i> PIN Pemulihan</span>
+                    <label class="switch" style="position:relative; display:inline-block; width:34px; height:20px; margin-bottom:0;">
+                        <input type="checkbox" id="togglePinWisatawan" onchange="togglePinVisibility()">
+                        <span class="slider round" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#4b5563; transition:.4s; border-radius:34px;"></span>
+                        <style>
+                            .switch input {opacity:0; width:0; height:0;}
+                            .slider:before {position:absolute; content:""; height:14px; width:14px; left:3px; bottom:3px; background-color:white; transition:.4s; border-radius:50%;}
+                            input:checked + .slider {background-color:#ff7a00;}
+                            input:checked + .slider:before {transform:translateX(14px);}
+                        </style>
+                    </label>
+                </div>
+                <div class="med-row" style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; justify-content: center; letter-spacing: 6px; font-size: 20px; font-weight: bold; font-family: monospace;">
+                    <span id="pinValueWisatawan" style="filter: blur(6px); transition: filter 0.3s; user-select: none;">{{ $user->recovery_pin ?? '000000' }}</span>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px; line-height: 1.4;">
+                    Gunakan 6-Digit PIN ini jika Anda lupa password akses Anda.
+                </div>
+                <script>
+                    function togglePinVisibility() {
+                        const pinEl = document.getElementById('pinValueWisatawan');
+                        const toggle = document.getElementById('togglePinWisatawan');
+                        if (toggle.checked) {
+                            pinEl.style.filter = 'blur(0)';
+                            pinEl.style.userSelect = 'auto';
+                        } else {
+                            pinEl.style.filter = 'blur(6px)';
+                            pinEl.style.userSelect = 'none';
+                        }
+                    }
+                </script>
+            </div>
         </div>
     </aside>
 
@@ -166,13 +201,35 @@
                                 <input type="email" class="w-input" value="{{ $user->email }}" disabled>
                             </div>
                         </div>
-                        <div class="w-form-group">
-                            <label class="w-label">Password Baru <span style="text-transform:none; font-weight:400;">(Opsional, kosongkan jika tidak ingin diubah)</span></label>
-                            <input type="password" name="password" class="w-input" placeholder="Masukkan minimal 8 karakter rahasia" maxlength="50">
-                        </div>
                         <div style="text-align: right; margin-top: 24px;">
                             <button type="submit" class="w-btn w-btn-orange" style="padding: 12px 32px;">
                                 <i class="fas fa-save"></i> Simpan Perubahan Akun
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr style="border-color: var(--border); margin: 32px 0;">
+
+                    <h5 style="color: var(--text); margin-bottom: 20px; font-size: 16px; font-weight: 600;"><i class="fas fa-lock" style="color:var(--orange);"></i> Ganti Password</h5>
+                    <form action="{{ route('password.update') }}" method="POST">
+                        @csrf
+                        <div class="w-form-grid">
+                            <div style="grid-column: 1 / -1;">
+                                <label class="w-label">Password Saat Ini</label>
+                                <input type="password" name="current_password" class="w-input" placeholder="Ketik password lama Anda..." required>
+                            </div>
+                            <div>
+                                <label class="w-label">Password Baru</label>
+                                <input type="password" name="new_password" class="w-input" placeholder="Minimal 8 karakter" required minlength="8">
+                            </div>
+                            <div>
+                                <label class="w-label">Konfirmasi Password Baru</label>
+                                <input type="password" name="new_password_confirmation" class="w-input" placeholder="Ulangi password baru" required minlength="8">
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top: 24px;">
+                            <button type="submit" class="w-btn w-btn-orange" style="padding: 12px 32px;">
+                                <i class="fas fa-key"></i> Perbarui Password
                             </button>
                         </div>
                     </form>

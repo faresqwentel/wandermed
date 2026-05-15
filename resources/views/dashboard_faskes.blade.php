@@ -45,6 +45,15 @@
     <a href="/peta-faskes" class="wm-nav-link">
         <i class="fas fa-map-marked-alt"></i> Lihat di Peta
     </a>
+
+    <div class="wm-nav-label" style="margin-top:20px;">Keamanan</div>
+    <div style="padding: 12px 20px; display:flex; flex-direction: column; background: rgba(0,0,0,0.1); border-left: 3px solid #ff7a00; margin-bottom: 8px;">
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;"><i class="fas fa-key" style="color:#ff7a00;"></i> PIN Pemulihan Akses</div>
+        <div title="Arahkan kursor untuk melihat PIN" style="font-family: monospace; font-size: 18px; font-weight: bold; letter-spacing: 6px; color: var(--text-primary); filter: blur(6px); transition: filter 0.3s; user-select: none; cursor: crosshair;" onmouseover="this.style.filter='blur(0)'; this.style.userSelect='auto';" onmouseout="this.style.filter='blur(6px)'; this.style.userSelect='none';">
+            {{ $mitra->recovery_pin ?? '000000' }}
+        </div>
+    </div>
+
     <a href="/logout" class="wm-nav-link">
         <i class="fas fa-sign-out-alt"></i> Keluar
     </a>
@@ -593,6 +602,36 @@
                 <div style="margin-top: 20px;">
                     <button type="submit" class="wm-btn orange" style="width:100%;">
                         <i class="fas fa-save"></i> Simpan Perubahan Profil
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="wm-card mt-4">
+        <div class="wm-card-header">
+            <div class="wm-card-title"><i class="fas fa-lock" style="color:var(--orange);"></i> Ganti Password Akses</div>
+        </div>
+        <div class="wm-card-body">
+            <form action="{{ route('password.update') }}" method="POST">
+                @csrf
+                <div style="display:grid; grid-template-columns: 1fr; gap: 18px;">
+                    <div class="wm-form-group">
+                        <label class="wm-label">Password Saat Ini <span style="color:#e74a3b">*</span></label>
+                        <input type="password" name="current_password" class="wm-input" placeholder="Masukkan password saat ini..." required>
+                    </div>
+                    <div class="wm-form-group">
+                        <label class="wm-label">Password Baru <span style="color:#e74a3b">*</span></label>
+                        <input type="password" name="new_password" class="wm-input" placeholder="Minimal 8 karakter rahasia..." required minlength="8">
+                    </div>
+                    <div class="wm-form-group">
+                        <label class="wm-label">Konfirmasi Password Baru <span style="color:#e74a3b">*</span></label>
+                        <input type="password" name="new_password_confirmation" class="wm-input" placeholder="Ketik ulang password baru..." required minlength="8">
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="wm-btn orange" style="width:100%;">
+                        <i class="fas fa-key"></i> Perbarui Password
                     </button>
                 </div>
             </form>

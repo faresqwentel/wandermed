@@ -22,7 +22,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'    => 'required|email',
+            'email'    => ['required', 'email', 'ends_with:@gmail.com'],
             'password' => 'required|min:6',
         ];
     }
@@ -32,6 +32,7 @@ class LoginRequest extends FormRequest
         return [
             'email.required'    => 'Email wajib diisi.',
             'email.email'       => 'Format email tidak valid.',
+            'email.ends_with'   => 'Hanya email @gmail.com yang diperbolehkan.',
             'password.required' => 'Password wajib diisi.',
             'password.min'      => 'Password minimal 6 karakter.',
         ];

@@ -915,7 +915,7 @@
 </div>
 
 {{-- ==================== MODAL: EDIT DATA FASKES ==================== --}}
-<div class="modal fade" id="modalEditFaskes" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalEditFaskes" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content" style="background:#ffffff;border:none;border-radius:16px;box-shadow:0 25px 60px rgba(43,54,116,0.2);overflow:hidden;">
             {{-- Header --}}
@@ -977,8 +977,14 @@
                 </div>
             </div>
             {{-- Footer --}}
-            <div style="background:#f8f9fa;border-top:1px solid #e2e8f0;padding:16px 24px;display:flex;justify-content:flex-end;gap:10px;">
+            <div style="background:#f8f9fa;border-top:1px solid #e2e8f0;padding:16px 24px;display:flex;align-items:center;gap:10px;">
                 <input type="hidden" id="editFaskesId">
+                <input type="hidden" id="editFaskesMitraId">
+                
+                <button type="button" class="wm-btn danger sm" id="btnAdminResetPassword" onclick="adminResetPasswordFaskes()" style="margin-right:auto;">
+                    <i class="fas fa-key"></i> Reset Password Faskes
+                </button>
+                
                 <button type="button" data-dismiss="modal" style="background:#fff;color:#707eae;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;">Batal</button>
                 <button type="button" id="btnSaveFaskesEdit" onclick="saveFaskesData()" style="background:#ff7a00;color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;">
                     <i class="fas fa-save"></i> Simpan Perubahan

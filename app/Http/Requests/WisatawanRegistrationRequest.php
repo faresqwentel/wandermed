@@ -23,11 +23,18 @@ class WisatawanRegistrationRequest extends FormRequest
     {
         return [
             'name'             => 'required|string|max:100',
-            'email'            => 'required|email|unique:users,email',
+            'email'            => ['required', 'email', 'unique:users,email', 'ends_with:@gmail.com'],
             'password'         => 'required|min:8|confirmed',
             'gol_darah'        => 'nullable|in:A,B,AB,O',
             'kontak_darurat'   => 'nullable|string|max:15',
             'riwayat_alergi'   => 'nullable|string|max:200',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.ends_with' => 'Hanya email @gmail.com yang diperbolehkan untuk mendaftar.',
         ];
     }
 }

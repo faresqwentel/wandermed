@@ -23,7 +23,7 @@ class MitraRegistrationRequest extends FormRequest
     {
         return [
             'nama_penanggung_jawab' => 'required|string|max:100',
-            'email'                 => 'required|email|unique:mitras,email',
+            'email'                 => ['required', 'email', 'unique:mitras,email', 'ends_with:@gmail.com'],
             'password'              => 'required|min:8|confirmed',
             'no_telp'               => 'required|string|max:15',
             'jenis_mitra'           => 'required|in:faskes,pariwisata',
@@ -44,6 +44,13 @@ class MitraRegistrationRequest extends FormRequest
             'latitude'              => 'required|numeric',
             'longitude'             => 'required|numeric',
             'dokumen_izin'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.ends_with' => 'Hanya email @gmail.com yang diperbolehkan untuk mendaftar.',
         ];
     }
 }

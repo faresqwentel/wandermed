@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Mitra;
 use App\Models\Faskes;
 use App\Models\LaporanMasalah;
@@ -225,6 +226,34 @@ class AdminController extends Controller
             'is_open'            => ($newStatus === 'open'),
             'message'            => "Status {$faskes->nama_faskes} diubah ke: " . (($newStatus === 'open') ? 'Buka' : 'Tutup')
         ]);
+    }
+
+    /**
+     * Reset password akun faskes oleh admin.
+     */
+    public function resetPasswordFaskes(Request $request, int $mitra_id): JsonResponse
+    {
+        $request->validate([
+            'new_password' => 'required|min:8',
+        ]);
+
+        try {
+            $mitra = Mitra::findOrFail($mitra_id);
+            $mitra->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password Faskes berhasil direset.'
+            ]);
+        } catch (Exception $e) {
+            Log::error("Reset password faskes failed: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem.'
+            ], 500);
+        }
     }
 
     /**

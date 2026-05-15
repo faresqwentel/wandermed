@@ -208,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.openEditFaskes = function(data) {
         document.getElementById('editFaskesId').value = data.id;
+        document.getElementById('editFaskesMitraId').value = data.mitra_id;
         document.getElementById('editFaskesNamaLabel').textContent = data.nama_faskes + ' (' + data.jenis_faskes + ')';
         document.getElementById('editFaskesLat').value = data.latitude || '';
         document.getElementById('editFaskesLng').value = data.longitude || '';
@@ -280,6 +281,59 @@ document.addEventListener('DOMContentLoaded', function () {
                 fetch('/admin/faskes/'+id,{method:'DELETE',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content}})
                 .then(function(r){return r.json();}).then(function(data){var row=document.getElementById('faskesTableRow-'+id);if(row){row.style.transition='all .4s';row.style.opacity='0';setTimeout(function(){row.remove();},400);}showToast(data.message||'Faskes berhasil dihapus!');})
                 .catch(function(){btn.disabled=false;btn.innerHTML='<i class="fas fa-trash"></i>';showToast('Gagal menghapus.','danger');});
+            }
+        });
+    };
+
+    window.adminResetPasswordFaskes = function() {
+        var mitraId = document.getElementById('editFaskesMitraId').value;
+        if(!mitraId) return;
+
+        Swal.fire({
+            title: 'Reset Password Faskes',
+            html: '<input type="password" id="adminNewPass" class="swal2-input" placeholder="Password Baru">' +
+                  '<input type="password" id="adminNewPassConf" class="swal2-input" placeholder="Konfirmasi Password Baru">',
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonColor: '#e53e3e',
+            confirmButtonText: 'Reset Password',
+            cancelButtonText: 'Batal',
+            preConfirm: () => {
+                const p1 = document.getElementById('adminNewPass').value;
+                const p2 = document.getElementById('adminNewPassConf').value;
+                if (!p1 || !p2) { Swal.showValidationMessage('Password tidak boleh kosong'); return false; }
+                if (p1 !== p2) { Swal.showValidationMessage('Konfirmasi password tidak cocok'); return false; }
+                if (p1.length < 8) { Swal.showValidationMessage('Password minimal 8 karakter'); return false; }
+                return p1;
+            }
+        }).then((result) => {
+            if(result.isConfirmed) {
+                var btn = document.getElementById('btnAdminResetPassword');
+                var originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resetting...';
+                btn.disabled = true;
+
+                fetch('/admin/faskes/' + mitraId + '/reset-password', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+                    },
+                    body: JSON.stringify({ new_password: result.value })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if(data.success) {
+                        Swal.fire('Berhasil!', 'Password akun Faskes berhasil direset.', 'success');
+                    } else {
+                        Swal.fire('Gagal', data.message || 'Terjadi kesalahan', 'error');
+                    }
+                })
+                .catch(() => Swal.fire('Error', 'Gagal menghubungi server.', 'error'))
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                });
             }
         });
     };

@@ -53,6 +53,9 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'processLogin'])->name('login.post');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Lupa Password (PIN)
+Route::post('/reset-password-pin', [AuthController::class, 'resetPasswordViaPin'])->name('password.pin.reset');
+
 // Registrasi Wisatawan
 Route::post('/daftar/wisatawan', [AuthController::class, 'registerWisatawan'])->name('register.wisatawan');
 // Registrasi Faskes (butuh akun Mitra)
@@ -64,6 +67,11 @@ Route::post('/daftar/pariwisata', [PariwisataController::class, 'submitPendaftar
 // =========================================================
 // RUTE DASHBOARD — Dilindungi Middleware
 // =========================================================
+
+// --- Rute Umum Authenticated ---
+Route::middleware(['auth.session'])->group(function () {
+    Route::post('/password/update', [AuthController::class, 'updatePassword'])->name('password.update');
+});
 
 // --- Dashboard Wisatawan ---
 Route::middleware(['auth.session', 'role:wisatawan'])->group(function () {
@@ -144,6 +152,10 @@ Route::middleware(['auth.session', 'role:admin'])->group(function () {
     // Toggle status operasional faskes
     Route::post('/admin/faskes/{id}/toggle-status', [AdminController::class, 'toggleStatusFaskes'])
          ->name('admin.faskes.toggle-status');
+         
+    // Reset Password Faskes
+    Route::post('/admin/faskes/{id}/reset-password', [AdminController::class, 'resetPasswordFaskes'])
+         ->name('admin.faskes.reset-password');
     // Hapus data faskes (admin)
     Route::delete('/admin/faskes/{id}', [AdminController::class, 'destroyFaskes'])
          ->name('admin.faskes.destroy');
