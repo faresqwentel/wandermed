@@ -1,0 +1,218 @@
+/* =========================================================
+ * FILE: public/css/footer.css
+ * WanderMed – Footer Styling + Mobile Responsive
+ * ========================================================= */
+
+/* Dark Mode Footer Variables (default) */
+:root {
+    --footer-bg: #111827;
+    --footer-text-main: #ffffff;
+    --footer-text-muted: rgba(255, 255, 255, 0.5);
+    --footer-border: rgba(255, 255, 255, 0.08);
+    --footer-icon-bg: rgba(255, 255, 255, 0.05);
+    --footer-icon-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Light Mode Footer Variables */
+html.light-mode {
+    --footer-bg: #f8f9fc;
+    --footer-text-main: #2e384d;
+    --footer-text-muted: #6e7687;
+    --footer-border: rgba(0, 0, 0, 0.08);
+    --footer-icon-bg: rgba(0, 0, 0, 0.04);
+    --footer-icon-border: rgba(0, 0, 0, 0.08);
+}
+
+/* Base Text */
+.footer-text-main { color: var(--footer-text-main); transition: color 0.3s ease; }
+.footer-text-muted { color: var(--footer-text-muted); transition: color 0.3s ease; }
+.footer-border-top { border-top: 1px solid var(--footer-border); transition: border-color 0.3s ease; }
+
+/* Footer Wrapper */
+.footer-premier {
+    background: var(--footer-bg);
+    border-top: 3px solid var(--hnb-orange);
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+
+/* Logo Text */
+.footer-logo-text {
+    display: inline-block;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+.footer-logo-text:hover {
+    transform: translateY(-3px) scale(1.02);
+    text-shadow: 0 8px 20px rgba(255, 122, 0, 0.3);
+}
+
+/* Glow (dark mode only) */
+:root:not(.light-mode) .footer-premier::before {
+    content: '';
+    position: absolute;
+    top: -150px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,122,0,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Links */
+.footer-links li { margin-bottom: 12px; }
+.footer-links a {
+    color: var(--footer-text-muted);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+}
+.footer-links a:hover {
+    color: var(--hnb-orange);
+    transform: translateX(5px);
+}
+
+/* Social Icons */
+.social-links { display: flex; gap: 12px; }
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
+    background: var(--footer-icon-bg);
+    border: 1px solid var(--footer-icon-border);
+    border-radius: 12px;
+    color: var(--footer-text-main);
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.social-icon:hover {
+    background: var(--hnb-orange);
+    border-color: var(--hnb-orange);
+    color: #fff;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(255, 122, 0, 0.3);
+}
+
+/* Heartbeat */
+@keyframes heartBeat {
+    0%  { transform: scale(1); }
+    15% { transform: scale(1.3); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.3); }
+    60% { transform: scale(1); }
+}
+.heart-beat { animation: heartBeat 2s infinite; }
+
+/* =========================================================
+ * RESPONSIVE – MOBILE FOOTER
+ * ========================================================= */
+
+@media (max-width: 768px) {
+    /* Kurangi padding vertikal */
+    .footer-premier {
+        padding-top: 40px !important;
+        margin-top: 32px !important;
+    }
+
+    .footer-premier .row.mb-5 {
+        margin-bottom: 24px !important;
+    }
+
+    /* Setiap kolom footer full-width dan stack rapi */
+    .footer-premier .col-lg-5,
+    .footer-premier .col-lg-2,
+    .footer-premier .col-lg-3,
+    .footer-premier .col-md-6 {
+        text-align: center !important;
+        margin-bottom: 28px !important;
+        padding: 0 20px !important;
+    }
+
+    /* Logo teks footer lebih kecil */
+    .footer-premier .footer-text-main[style*="2.2rem"] {
+        font-size: 1.7rem !important;
+    }
+
+    /* Deskripsi footer lebih pendek */
+    .footer-premier p.footer-text-muted {
+        font-size: 0.88rem !important;
+        padding: 0 8px;
+        line-height: 1.7;
+    }
+
+    /* Social icons rata tengah */
+    .social-links {
+        justify-content: center !important;
+    }
+
+    /* Links rata tengah */
+    .footer-links a {
+        justify-content: center !important;
+    }
+    .footer-links a:hover {
+        transform: none !important; /* tidak geser di mobile */
+    }
+
+    /* Judul kolom footer */
+    .footer-premier h5 {
+        font-size: 0.95rem !important;
+        margin-bottom: 16px !important;
+    }
+
+    /* Kontak: icon + teks rata tengah */
+    .footer-premier .footer-contact li {
+        justify-content: center !important;
+        text-align: left !important;
+        max-width: 260px;
+        margin: 0 auto 12px !important;
+    }
+
+    /* Bottom bar */
+    .footer-bottom .row {
+        flex-direction: column !important;
+        gap: 8px;
+    }
+
+    .footer-bottom .col-lg-4,
+    .footer-bottom .col-lg-8 {
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    .footer-bottom {
+        padding: 16px 0 !important;
+    }
+
+    .footer-bottom p,
+    .footer-bottom span,
+    .footer-bottom strong {
+        font-size: 0.82rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-premier {
+        padding-top: 28px !important;
+    }
+
+    /* Sembunyikan kolom Layanan di mobile kecil (hemat ruang) */
+    .footer-premier .col-lg-2:nth-child(3) {
+        display: none !important;
+    }
+
+    .footer-bottom .d-inline-flex {
+        flex-direction: column !important;
+        gap: 4px !important;
+    }
+
+    /* Sembunyikan separator "|" */
+    .footer-bottom .d-none.d-sm-inline {
+        display: none !important;
+    }
+}

@@ -1,5 +1,4 @@
 
-
 <nav class="navbar navbar-expand-lg navbar-desktop-premier fixed-top w-100" id="mainNavbar">
     <div class="container px-4">
 
@@ -8,21 +7,58 @@
             <span>WanderMed</span>
         </a>
 
-        <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <i class="fas fa-bars text-white-50"></i>
+        <button class="navbar-toggler border-0" type="button" id="navbarTogglerBtn"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars" id="navbarTogglerIcon"></i>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+
+            {{-- ── Label section (mobile only) ── --}}
+            <div class="nm-section-label">Navigasi</div>
+
             <ul class="navbar-nav mr-auto align-items-center">
-                <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#page-top">Beranda</a></li>
-                <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#tentang">Tentang</a></li>
-                <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#panduan">Panduan</a></li>
-                <li class="nav-item"><a class="nav-link nav-pill-link scroll-link" href="/#mitra">Mitra</a></li>
-                <li class="nav-item"><a class="nav-link nav-pill-link" href="/faq">FAQ</a></li>
                 <li class="nav-item">
-                    <a class="nav-link nav-pill-link" href="https://wa.me/6287775733922" target="_blank">Kontak CS</a>
+                    <a class="nav-link nav-pill-link scroll-link" href="/#page-top">
+                        <span class="nm-icon"><i class="fas fa-home"></i></span>
+                        Beranda
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-pill-link scroll-link" href="/#tentang">
+                        <span class="nm-icon"><i class="fas fa-info-circle"></i></span>
+                        Tentang
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-pill-link scroll-link" href="/#panduan">
+                        <span class="nm-icon"><i class="fas fa-book-open"></i></span>
+                        Panduan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-pill-link scroll-link" href="/#mitra">
+                        <span class="nm-icon"><i class="fas fa-handshake"></i></span>
+                        Mitra
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-pill-link" href="/faq">
+                        <span class="nm-icon"><i class="fas fa-question-circle"></i></span>
+                        FAQ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-pill-link" href="https://wa.me/6287775733922" target="_blank">
+                        <span class="nm-icon"><i class="fab fa-whatsapp"></i></span>
+                        Kontak CS
+                    </a>
                 </li>
             </ul>
+
+            {{-- ── Label section aksi (mobile only) ── --}}
+            <div class="nm-section-label nm-section-label-action">Akun</div>
 
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item">
@@ -52,6 +88,28 @@
         </div>
     </div>
 </nav>
+
+
+<script>
+// Ganti ikon hamburger saat collapse dibuka/tutup
+(function() {
+    var toggler = document.getElementById('navbarTogglerBtn');
+    var icon    = document.getElementById('navbarTogglerIcon');
+    var navEl   = document.getElementById('navbarNav');
+    if (!toggler || !navEl) return;
+
+    toggler.addEventListener('click', function() {
+        // Cek state SESUDAH Bootstrap toggle (pakai setTimeout kecil)
+        setTimeout(function() {
+            if (icon) {
+                icon.className = navEl.classList.contains('show')
+                    ? 'fas fa-times'
+                    : 'fas fa-bars';
+            }
+        }, 10);
+    });
+})();
+</script>
 
 <div class="modal fade" id="tutorialModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 400px;">

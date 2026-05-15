@@ -276,11 +276,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 ${f.label}
             </div>`).join('');
 
-        // Jadwal & Kontak
+        // Jadwal & Kontak — Tampilkan untuk faskes, sembunyikan deteksi wisata
         const btnJadwal = document.getElementById('btnJadwal');
+        const btnDeteksi = document.getElementById('btnDeteksiFaskes');
         btnJadwal.style.display = 'block';
         btnJadwal.href = `/faskes/${data.id}/jadwal`;
-        document.getElementById('btnDeteksiFaskes').style.display = 'none';
+        btnDeteksi.style.display = 'none';  // Bukan wisata, tombol ini harus tersembunyi
+        btnDeteksi.onclick = null;
         document.getElementById('btnCall').href = `tel:${data.phone.replace(/\D/g, '')}`;
 
         // Notes
@@ -805,14 +807,19 @@ document.addEventListener("DOMContentLoaded", function() {
             notes.style.display = 'none';
         }
 
+        // Reset state panel ke mode detail
         document.getElementById('detailContentBlock').style.display = 'block';
         document.getElementById('reviewContentBlock').style.display = 'none';
         document.getElementById('detailActions').style.display = 'flex';
         document.getElementById('reviewActions').style.display = 'none';
-        document.getElementById('btnJadwal').style.display = 'none';
-        
-        document.getElementById('btnDeteksiFaskes').style.display = 'block';
-        document.getElementById('btnDeteksiFaskes').onclick = function(e) {
+
+        // Tombol aksi: Sembunyikan jadwal, tampilkan deteksi faskes terdekat
+        const btnJadwalW = document.getElementById('btnJadwal');
+        const btnDeteksiW = document.getElementById('btnDeteksiFaskes');
+        btnJadwalW.style.display = 'none';   // Bukan faskes, jadwal tidak relevan
+        btnJadwalW.href = '#';
+        btnDeteksiW.style.display = 'block';
+        btnDeteksiW.onclick = function(e) {
             e.preventDefault();
             triggerManualGeofence(w.lat, w.lng, w.name);
         };

@@ -1,0 +1,754 @@
+/* ==========================================================================
+ * FILE: public/css/mobile-responsive.css
+ * WanderMed – Mobile & Tablet Responsive Overrides
+ * Berlaku untuk semua halaman yang diakses oleh Wisatawan (User Biasa)
+ * Breakpoints: 768px (tablet), 576px (mobile besar), 400px (mobile kecil)
+ * ========================================================================== */
+
+/* =========================================================================
+ * 1. GLOBAL – VIEWPORT & TOUCH FRIENDLINESS
+ * ========================================================================= */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Pastikan tidak ada horizontal scroll */
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* =========================================================================
+ * 2. NAVBAR (Semua halaman wisatawan)
+ * ========================================================================= */
+
+/* Elemen khusus mobile (ikon + section labels) — sembunyikan di desktop */
+.nm-icon, .nm-section-label { display: none; }
+
+@media (max-width: 991px) {
+
+    /* ── Navbar wrapper ── */
+    .navbar-desktop-premier {
+        padding: 8px 0 !important;
+    }
+
+    .navbar-desktop-premier .container {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    /* ── Brand ── */
+    .navbar-brand {
+        font-size: 19px !important;
+        letter-spacing: 0 !important;
+    }
+    .navbar-brand i { font-size: 21px !important; }
+
+    /* ── Tombol Hamburger ── */
+    .navbar-toggler {
+        width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        border: 1.5px solid rgba(255, 122, 0, 0.5) !important;
+        border-radius: 9px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(255, 122, 0, 0.08) !important;
+        flex-shrink: 0 !important;
+    }
+    .navbar-toggler:focus {
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    .navbar-toggler .fas {
+        font-size: 16px !important;
+        color: #ff7a00 !important;
+    }
+
+    /* ── Dropdown menu ── */
+    .navbar-collapse {
+        position: static !important;
+        top: auto !important; right: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        background: #0d1b3e !important;
+        border-top: 2px solid #ff7a00 !important;
+        border-bottom: none !important;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45) !important;
+        padding: 8px 12px 16px !important;
+        z-index: auto !important;
+        transition: none !important;
+        pointer-events: auto !important;
+    }
+
+    /* ── Animasi slide-down + fade saat menu terbuka ── */
+    @keyframes navDropDown {
+        from {
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .navbar-collapse.show {
+        animation: navDropDown 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+    }
+
+    /* ── Section labels ── */
+    .nm-section-label {
+        display: block;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: rgba(255, 122, 0, 0.55);
+        padding: 10px 4px 4px;
+    }
+    .nm-section-label-action {
+        margin-top: 4px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Nav lists ── */
+    .navbar-collapse .navbar-nav {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 2px !important;
+        padding: 0 !important;
+    }
+    .navbar-collapse .navbar-nav.mr-auto { margin-right: 0 !important; }
+    .navbar-collapse .navbar-nav.ml-auto {
+        margin-left: 0 !important;
+        padding-top: 0 !important;
+        border-top: none !important;
+    }
+    .navbar-collapse .nav-item { width: 100% !important; }
+
+    /* ── Nav link dengan ikon ── */
+    .navbar-collapse .nav-pill-link {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: rgba(255, 255, 255, 0.82) !important;
+        border-radius: 10px !important;
+        text-decoration: none !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        transition: background 0.15s, color 0.15s, transform 0.12s !important;
+    }
+    .navbar-collapse .nav-pill-link:hover,
+    .navbar-collapse .nav-pill-link.active {
+        background: rgba(255, 122, 0, 0.12) !important;
+        color: #ffaa55 !important;
+        transform: translateX(3px) !important;
+    }
+    .navbar-collapse .nav-pill-link:hover .nm-icon,
+    .navbar-collapse .nav-pill-link.active .nm-icon {
+        background: rgba(255, 122, 0, 0.25) !important;
+        color: #ff7a00 !important;
+    }
+
+    /* ── Ikon per nav item ── */
+    .nm-icon {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.07);
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 13px;
+        flex-shrink: 0;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    /* ── Action Box (Login & Lapor) ── */
+    .nav-action-box {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        gap: 6px !important;
+    }
+    .nav-action-box .btn {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        padding: 11px 14px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+    }
+    .nav-action-box .btn:first-child {
+        background: rgba(255, 122, 0, 0.16) !important;
+        border-color: rgba(255, 122, 0, 0.4) !important;
+        color: #ff9a3c !important;
+    }
+    .nav-action-box .btn.text-danger {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border-color: rgba(239, 68, 68, 0.35) !important;
+        color: #fca5a5 !important;
+    }
+
+    .v-separator { display: none !important; }
+    /* Tombol tema di mobile tersembunyi (ada di navbar bar) */
+    .navbar-collapse .nav-item.ml-3 { display: none !important; }
+    .nav-drawer-backdrop { display: none !important; }
+}
+
+/* ── LIGHT MODE: Navbar Mobile ── */
+@media (max-width: 991px) {
+    body.light-mode .navbar-collapse {
+        background: #f8faff !important;
+        border-top: 2px solid #ff7a00 !important;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1) !important;
+    }
+    body.light-mode .nm-section-label { color: rgba(229, 92, 0, 0.65); }
+    body.light-mode .nm-section-label-action { border-top-color: rgba(0, 0, 0, 0.07); }
+    body.light-mode .navbar-collapse .nav-pill-link { color: #334155 !important; }
+    body.light-mode .navbar-collapse .nav-pill-link:hover,
+    body.light-mode .navbar-collapse .nav-pill-link.active {
+        background: rgba(255, 122, 0, 0.09) !important;
+        color: #e65c00 !important;
+    }
+    body.light-mode .nm-icon {
+        background: rgba(0, 0, 0, 0.05);
+        color: #64748b;
+    }
+    body.light-mode .navbar-collapse .nav-pill-link:hover .nm-icon,
+    body.light-mode .navbar-collapse .nav-pill-link.active .nm-icon {
+        background: rgba(229, 92, 0, 0.14) !important;
+        color: #e65c00 !important;
+    }
+    body.light-mode .nav-action-box .btn {
+        border-color: rgba(0, 0, 0, 0.1) !important;
+        background: rgba(0, 0, 0, 0.04) !important;
+        color: #475569 !important;
+    }
+    body.light-mode .nav-action-box .btn:first-child {
+        background: rgba(255, 122, 0, 0.1) !important;
+        border-color: rgba(255, 122, 0, 0.4) !important;
+        color: #e65c00 !important;
+    }
+    body.light-mode .nav-action-box .btn.text-danger {
+        background: rgba(239, 68, 68, 0.07) !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+        color: #dc2626 !important;
+    }
+    body.light-mode .navbar-toggler {
+        border-color: rgba(255, 122, 0, 0.55) !important;
+        background: rgba(255, 122, 0, 0.06) !important;
+    }
+}
+
+/* =========================================================================
+ * 3. HERO SECTION (Beranda / Home)
+ * ========================================================================= */
+@media (max-width: 768px) {
+    .hero-slanted {
+        padding-top: 80px !important;
+        padding-bottom: 80px !important;
+        clip-path: polygon(0 0, 100% 0, 100% 94%, 0 100%);
+        min-height: auto !important;
+    }
+
+    /* Content box hero lebih compact di mobile */
+    .hero-content-box {
+        padding: 24px 20px !important;
+        border-radius: 16px !important;
+    }
+
+    /* Logo box hero lebih kecil */
+    .hero-logo-box {
+        width: 180px !important;
+        height: 180px !important;
+    }
+
+    /* Tombol CTA hero jadi full width */
+    .hero-content-box .btn-hnb-orange {
+        width: 100% !important;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* Badge Live Map dipindah agar tidak menutupi konten */
+    .hero-map-badge {
+        top: 70px !important;
+        right: 12px !important;
+        font-size: 10px !important;
+        padding: 4px 10px !important;
+    }
+
+    /* Judul hero lebih kecil */
+    .hero-content-box h1,
+    .hero-content-box .display-4 {
+        font-size: 1.8rem !important;
+    }
+
+    /* Scroll indicator tersembunyi di mobile (tidak relevan) */
+    .scroll-indicator {
+        display: none !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-content-box {
+        padding: 20px 16px !important;
+        margin: 0 !important;
+    }
+
+    .hero-content-box h1,
+    .hero-content-box .display-4 {
+        font-size: 1.5rem !important;
+        letter-spacing: -0.5px;
+    }
+
+    .hero-logo-box {
+        width: 140px !important;
+        height: 140px !important;
+        border-width: 3px !important;
+    }
+}
+
+/* =========================================================================
+ * 4. SECTION – TENTANG, PANDUAN, MITRA (Beranda)
+ * ========================================================================= */
+@media (max-width: 768px) {
+    section.section-scroll {
+        padding: 60px 0 !important;
+    }
+
+    .teks-judul {
+        font-size: 1.5rem !important;
+    }
+
+    /* Cards glass full width di mobile */
+    .glass-premier {
+        margin-bottom: 16px !important;
+    }
+
+    /* Ubah grid kolom menjadi single di mobile */
+    .row.g-4 > .col-md-4,
+    .row.g-4 > .col-md-6 {
+        padding: 0 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    section.section-scroll {
+        padding: 40px 0 !important;
+    }
+
+    .teks-judul {
+        font-size: 1.3rem !important;
+    }
+}
+
+/* =========================================================================
+ * 5. HALAMAN LOGIN
+ * ========================================================================= */
+@media (max-width: 768px) {
+    .page-login {
+        padding: 40px 0 !important;
+        min-height: auto !important;
+    }
+
+    /* Card login full width */
+    .page-login .col-md-5,
+    .page-login .col-lg-4 {
+        padding: 0 16px !important;
+    }
+
+    .login-box-premium {
+        padding: 24px 20px !important;
+        border-radius: 20px !important;
+    }
+
+    /* Judul login lebih compact */
+    .page-login h3 {
+        font-size: 1.3rem !important;
+    }
+
+    /* Tombol login full width */
+    .page-login .btn-hnb-orange {
+        width: 100% !important;
+        padding: 14px !important;
+        font-size: 15px !important;
+    }
+
+    /* Input login lebih tinggi agar mudah diklik di mobile */
+    .input-group-custom {
+        padding: 12px 0 !important;
+    }
+
+    .form-control-transparent {
+        font-size: 16px !important; /* Mencegah auto-zoom di iOS */
+    }
+}
+
+@media (max-width: 576px) {
+    .page-login {
+        padding: 20px 0 !important;
+    }
+
+    .login-box-premium {
+        padding: 20px 16px !important;
+        border-radius: 16px !important;
+    }
+
+    .page-login h3 {
+        font-size: 1.2rem !important;
+    }
+}
+
+/* =========================================================================
+ * 6. HALAMAN PENDAFTARAN (Wizard Wisatawan & Faskes)
+ * ========================================================================= */
+@media (max-width: 768px) {
+    .page-registration {
+        padding-top: 20px !important;
+        padding-bottom: 40px !important;
+    }
+
+    /* Kartu opsi pendaftaran jadi full width */
+    .card-opsi-landscape {
+        max-width: 100% !important;
+        margin-bottom: 16px !important;
+    }
+
+    /* Progress bar wizard lebih compact */
+    .step-indicators {
+        gap: 4px !important;
+    }
+
+    /* Tombol wizard full width */
+    .step-actions .btn {
+        width: 100% !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Upload box lebih kecil */
+    .upload-box-premium {
+        padding: 20px 16px !important;
+    }
+}
+
+/* =========================================================================
+ * 7. DASHBOARD WISATAWAN
+ * =========================================================================
+ * Responsive dashboard dihandle langsung di dashboard-wisatawan.css
+ * (mobile-first design dengan breakpoints 992px, 640px, 400px)
+ * Tidak ada override di sini agar tidak terjadi konflik CSS specificity.
+ * ========================================================================= */
+
+
+
+/* =========================================================================
+ * 8. PETA FASKES
+ * ========================================================================= */
+@media (max-width: 768px) {
+    /* Panel overlay search lebih kecil */
+    .map-overlay-panel {
+        width: 94% !important;
+        top: 12px !important;
+        gap: 8px !important;
+    }
+
+    .map-search-card {
+        padding: 10px 12px 8px !important;
+        border-radius: 14px !important;
+    }
+
+    /* Input search lebih besar untuk mobile */
+    .search-input-group input {
+        font-size: 16px !important; /* Mencegah auto-zoom di iOS */
+    }
+
+    /* Tombol lokasi saya sembunyikan teks, hanya icon */
+    .btn-my-location span {
+        display: none !important;
+    }
+
+    /* Filter chips scrollable */
+    .filter-chips-row {
+        gap: 4px !important;
+    }
+
+    .filter-chip {
+        padding: 4px 10px !important;
+        font-size: 11px !important;
+    }
+
+    /* Badge hasil pencarian tersembunyi di mobile */
+    .result-count-badge {
+        display: none !important;
+    }
+
+    /* Bottom sheet detail panel: fleksibel, full width di mobile */
+    .faskes-detail-panel {
+        max-width: 100% !important;
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translateY(105%) !important;
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 80vh !important;
+    }
+    .faskes-detail-panel.active {
+        transform: translateY(0) !important;
+    }
+
+    /* Fasilitas grid jadi 1 kolom di mobile */
+    .facilities-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 6px !important;
+    }
+
+    .facility-item {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+    }
+
+    /* Tombol aksi panel lebih besar (touch-friendly) */
+    .btn-action-primary {
+        padding: 14px !important;
+        font-size: 14px !important;
+    }
+
+    /* Panel header compact */
+    .panel-faskes-name {
+        font-size: 16px !important;
+    }
+
+    /* Zoom control peta lebih besar */
+    .leaflet-control-zoom a {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 20px !important;
+        line-height: 38px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .map-overlay-panel {
+        width: 96% !important;
+        top: 8px !important;
+    }
+
+    .faskes-detail-panel {
+        max-height: 85vh !important;
+    }
+
+    .facilities-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* BPJS chip tersembunyi di layar sangat kecil */
+    .bpjs-chip {
+        padding: 5px 8px !important;
+        font-size: 11px !important;
+    }
+}
+
+/* =========================================================================
+ * 9. FAQ & HALAMAN KONTEN STATIS
+ * ========================================================================= */
+@media (max-width: 768px) {
+    /* Accordion FAQ */
+    .accordion-button {
+        font-size: 14px !important;
+        padding: 16px !important;
+    }
+
+    .accordion-body {
+        font-size: 13px !important;
+        padding: 12px 16px !important;
+    }
+
+    /* Section header FAQ */
+    .faq-section .teks-judul {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* =========================================================================
+ * 10. GEOFENCE MODAL (Peta)
+ * ========================================================================= */
+@media (max-width: 576px) {
+    .geofence-modal {
+        width: 95% !important;
+        padding: 20px 16px !important;
+        border-radius: 16px !important;
+    }
+
+    .gm-title {
+        font-size: 1.1rem !important;
+    }
+
+    .gm-subtitle {
+        font-size: 0.85rem !important;
+    }
+
+    .gm-icon {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 20px !important;
+    }
+}
+
+/* =========================================================================
+ * 11. SWEETALERT – POPUP LUPA PASSWORD & RESET (Mobile Friendly)
+ * ========================================================================= */
+@media (max-width: 576px) {
+    /* SweetAlert popup lebih kecil dan pas di mobile */
+    .swal2-popup {
+        width: 92% !important;
+        max-width: 360px !important;
+        padding: 24px 16px !important;
+        border-radius: 20px !important;
+    }
+
+    .swal2-title {
+        font-size: 1.1rem !important;
+    }
+
+    .swal2-html-container {
+        font-size: 14px !important;
+    }
+
+    /* Input SweetAlert lebih besar dan mudah diklik */
+    .swal2-input {
+        font-size: 16px !important; /* Mencegah auto-zoom iOS */
+        padding: 12px 14px !important;
+        height: 48px !important;
+        border-radius: 12px !important;
+    }
+
+    /* Tombol konfirmasi / batal SweetAlert */
+    .swal2-confirm,
+    .swal2-cancel {
+        padding: 12px 24px !important;
+        font-size: 14px !important;
+        border-radius: 12px !important;
+        min-width: 100px !important;
+    }
+
+    /* Actions bar SweetAlert */
+    .swal2-actions {
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+}
+
+/* =========================================================================
+ * 12. FOOTER (Semua halaman wisatawan)
+ * ========================================================================= */
+@media (max-width: 768px) {
+    footer .row {
+        text-align: center !important;
+    }
+
+    footer .col-md-4,
+    footer .col-md-3 {
+        margin-bottom: 24px !important;
+    }
+
+    footer .d-flex.gap-3 {
+        justify-content: center !important;
+    }
+}
+
+/* =========================================================================
+ * 13. UTILITY – TOUCH TARGETS (Semua tombol & link mudah diklik)
+ * ========================================================================= */
+@media (max-width: 768px) {
+    /* Semua tombol minimal 44px tinggi (standar iOS HIG)
+     * PENTING: JANGAN tambahkan display:inline-flex di sini karena
+     * akan meng-override display:none dari JavaScript/inline style!
+     * Gunakan min-height saja. */
+    .btn:not([style*="display:none"]):not([style*="display: none"]),
+    .w-btn,
+    .btn-hnb-orange {
+        min-height: 44px !important;
+    }
+
+    /* filter-chip & bpjs-chip boleh display karena selalu visible */
+    .filter-chip,
+    .bpjs-chip {
+        min-height: 36px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    /* Link navbar minimal 44px */
+    .nav-pill-link {
+        padding: 12px 15px !important;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* Tombol kecil (sm) */
+    .btn-sm,
+    .w-btn.sm {
+        min-height: 36px !important;
+    }
+}
+
+/* =========================================================================
+ * 14. MAP PAGE – Navbar overlap fix untuk mobile
+ * ========================================================================= */
+@media (max-width: 768px) {
+    .map-page-wrapper {
+        top: 60px !important;
+        height: calc(100vh - 60px) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .map-page-wrapper {
+        top: 60px !important;
+        height: calc(100vh - 60px) !important;
+    }
+}
+
+/* =========================================================================
+ * 15. HIDE ON MOBILE UTILITY
+ * ========================================================================= */
+@media (max-width: 576px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .hide-tablet {
+        display: none !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .show-mobile-only {
+        display: none !important;
+    }
+}

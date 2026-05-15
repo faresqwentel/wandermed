@@ -17,6 +17,7 @@
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style-wisatawan.css') }}" rel="stylesheet">
     <link href="{{ asset('css/wisatawan-layout.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/mobile-responsive.css') }}" rel="stylesheet">
 
     <!-- AOS Animate On Scroll -->
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">

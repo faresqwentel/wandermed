@@ -7,145 +7,230 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link href="{{ asset('css/dashboard-wisatawan.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/dashboard-wisatawan.css') }}" rel="stylesheet">
+    {{-- Inline script tema: set SEBELUM render agar tidak flash --}}
+    <script>
+        (function() {
+            var t = localStorage.getItem('wanderMedTheme') || 'dark';
+            if (t === 'dark') document.write('<style>body{background:#0f172a;color:#f1f5f9}</style>');
+        })();
+    </script>
 </head>
-<body class="dark"> <!-- Default Dark, script akan override jika light -->
+<body id="appBody">
+<script>
+    // Set class tema sebelum konten dirender
+    (function() {
+        var t = localStorage.getItem('wanderMedTheme') || 'dark';
+        document.getElementById('appBody').className = t === 'dark' ? 'dark' : '';
+    })();
+</script>
 
+{{-- ═══════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════ --}}
 <nav class="w-nav">
-    <a href="/" class="w-nav-brand">
-        <i class="fas fa-heartbeat"></i> WanderMed
-    </a>
-    <div class="w-nav-actions">
-        <a href="/peta-faskes" class="w-btn w-btn-ghost">
-            <i class="fas fa-map-marked-alt"></i> <span class="hide-mobile">Peta</span>
+    <div class="w-nav-left">
+        <a href="/" class="w-nav-brand">
+            <i class="fas fa-heartbeat"></i>
+            WanderMed
         </a>
-        <button id="themeBtn" class="w-btn w-btn-ghost" onclick="toggleTheme()" title="Ganti Mode">
-            <i class="fas fa-sun" id="themeIco"></i>
+    </div>
+    <div class="w-nav-actions">
+        <a href="/peta-faskes" class="w-btn w-btn-ghost" title="Peta Faskes">
+            <i class="fas fa-map-marked-alt"></i>
+            <span class="d-none-xs">Peta</span>
+        </a>
+        <button class="w-btn w-btn-ghost" onclick="toggleTheme()" title="Ganti Tema" id="themeBtn">
+            <i class="fas fa-moon" id="themeIco"></i>
         </button>
-        <a href="/logout" class="w-btn w-btn-red" id="logoutBtn">
-            <i class="fas fa-sign-out-alt"></i> <span class="hide-mobile">Keluar</span>
+        <a href="/logout" class="w-btn w-btn-red" id="logoutBtn" title="Keluar">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="d-none-xs">Keluar</span>
         </a>
     </div>
 </nav>
-<style> @media (max-width: 480px) { .hide-mobile { display: none; } } </style>
 
-<div class="w-container">
+{{-- ═══════════════════════════════════════════
+     PROFILE STRIP (mobile only — menggantikan sidebar)
+═══════════════════════════════════════════ --}}
+<div class="profile-strip">
+    <div class="ps-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+    <div class="ps-info">
+        <div class="ps-name">{{ $user->name }}</div>
+        <div class="ps-email">{{ $user->email }}</div>
+        <div class="ps-badge"><i class="fas fa-check-circle"></i> Wisatawan Aktif</div>
+    </div>
+    <div class="ps-quick-links">
+        <a href="/peta-faskes" class="ps-link" title="Peta Faskes">
+            <i class="fas fa-map-marked-alt"></i>
+        </a>
+        <button class="ps-link" onclick="switchTab('medis'); scrollToMain();" title="Rekam Medis">
+            <i class="fas fa-notes-medical"></i>
+        </button>
+    </div>
+</div>
 
-    <!-- KIRI: PROFILE SIDEBAR -->
-    <aside>
-        <div class="w-card animate__animated animate__fadeInLeft" style="margin-bottom: 24px; animation-delay: 0.1s;">
-            <div class="profile-main">
-                <div class="p-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
-                <div class="p-name">{{ $user->name }}</div>
-                <div class="p-email">{{ $user->email }}</div>
-                <div class="p-badge"><i class="fas fa-check-circle"></i> Wisatawan Aktif</div>
-                <div class="p-join"><i class="fas fa-calendar-alt"></i> Bergabung {{ $user->created_at->format('M Y') }}</div>
+{{-- ═══════════════════════════════════════════
+     LAYOUT UTAMA: Sidebar + Main
+═══════════════════════════════════════════ --}}
+<div class="w-layout">
+
+    {{-- ── SIDEBAR KIRI (Desktop) ── --}}
+    <aside class="w-sidebar" id="wSidebar">
+
+        {{-- Profil --}}
+        <div class="profile-main">
+            <div class="p-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+            <div class="p-name">{{ $user->name }}</div>
+            <div class="p-email">{{ $user->email }}</div>
+            <div class="p-badge"><i class="fas fa-check-circle"></i> Wisatawan Aktif</div>
+            <div class="p-join"><i class="fas fa-calendar-alt"></i> Bergabung {{ $user->created_at->format('M Y') }}</div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        {{-- Navigasi Tab --}}
+        <nav class="sidebar-nav">
+            <button class="sidebar-nav-item active" id="sn-riwayat" onclick="switchTab('riwayat')">
+                <i class="fas fa-history"></i> Riwayat Kunjungan
+            </button>
+            <button class="sidebar-nav-item" id="sn-profil" onclick="switchTab('profil')">
+                <i class="fas fa-user-cog"></i> Pengaturan Akun
+            </button>
+            <button class="sidebar-nav-item" id="sn-medis" onclick="switchTab('medis')">
+                <i class="fas fa-notes-medical"></i> Rekam Medis
+            </button>
+        </nav>
+
+        <div class="sidebar-divider"></div>
+
+        {{-- Info Medis Darurat --}}
+        <div class="medis-summary">
+            <div class="medis-summary-title">Info Medis Darurat</div>
+            <div class="med-row">
+                <div class="med-lbl"><i class="fas fa-tint" style="color:var(--red)"></i> Gol. Darah</div>
+                <div class="med-val red">{{ $user->gol_darah ?: '—' }}</div>
             </div>
-            <div class="medis-summary">
-                <div class="w-label" style="margin-bottom:12px; padding-left:4px;">Info Medis Darurat</div>
-                <div class="med-row">
-                    <div class="med-lbl"><i class="fas fa-tint" style="color:var(--red);"></i> Gol. Darah</div>
-                    <div class="med-val red">{{ $user->gol_darah ?: 'Belum diisi' }}</div>
+            <div class="med-row">
+                <div class="med-lbl"><i class="fas fa-phone-alt" style="color:var(--orange)"></i> Kontak Darurat</div>
+                <div class="med-val" style="font-size:11px; text-align:right; max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                    {{ $user->kontak_darurat ?: '—' }}
                 </div>
-                <div class="med-row">
-                    <div class="med-lbl"><i class="fas fa-phone-alt" style="color:var(--orange);"></i> Kontak Darurat</div>
-                    <div class="med-val">{{ $user->kontak_darurat ?: 'Belum diisi' }}</div>
-                </div>
-                <button class="w-btn w-btn-ghost" style="width: 100%; justify-content: center; margin-top: 8px;" onclick="switchTab('medis')">
-                    <i class="fas fa-edit"></i> Edit Data Medis
-                </button>
-            </div>
-
-            <div class="medis-summary" style="margin-top: 16px;">
-                <div class="w-label" style="margin-bottom:12px; padding-left:4px; display:flex; justify-content:space-between; align-items:center;">
-                    <span><i class="fas fa-key" style="color:var(--orange);"></i> PIN Pemulihan</span>
-                    <label class="switch" style="position:relative; display:inline-block; width:34px; height:20px; margin-bottom:0;">
-                        <input type="checkbox" id="togglePinWisatawan" onchange="togglePinVisibility()">
-                        <span class="slider round" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#4b5563; transition:.4s; border-radius:34px;"></span>
-                        <style>
-                            .switch input {opacity:0; width:0; height:0;}
-                            .slider:before {position:absolute; content:""; height:14px; width:14px; left:3px; bottom:3px; background-color:white; transition:.4s; border-radius:50%;}
-                            input:checked + .slider {background-color:#ff7a00;}
-                            input:checked + .slider:before {transform:translateX(14px);}
-                        </style>
-                    </label>
-                </div>
-                <div class="med-row" style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; justify-content: center; letter-spacing: 6px; font-size: 20px; font-weight: bold; font-family: monospace;">
-                    <span id="pinValueWisatawan" style="filter: blur(6px); transition: filter 0.3s; user-select: none;">{{ $user->recovery_pin ?? '000000' }}</span>
-                </div>
-                <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px; line-height: 1.4;">
-                    Gunakan 6-Digit PIN ini jika Anda lupa password akses Anda.
-                </div>
-                <script>
-                    function togglePinVisibility() {
-                        const pinEl = document.getElementById('pinValueWisatawan');
-                        const toggle = document.getElementById('togglePinWisatawan');
-                        if (toggle.checked) {
-                            pinEl.style.filter = 'blur(0)';
-                            pinEl.style.userSelect = 'auto';
-                        } else {
-                            pinEl.style.filter = 'blur(6px)';
-                            pinEl.style.userSelect = 'none';
-                        }
-                    }
-                </script>
             </div>
         </div>
+
+        <div class="sidebar-divider"></div>
+
+        {{-- PIN Pemulihan --}}
+        <div class="medis-summary">
+            <div class="pin-toggle-row">
+                <span><i class="fas fa-key"></i> PIN Pemulihan</span>
+                <label class="switch">
+                    <input type="checkbox" id="togglePinWisatawan" onchange="togglePinVisibility()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="pin-display">
+                <span id="pinValueWisatawan" style="filter:blur(5px); transition:filter 0.3s; user-select:none;">
+                    {{ $user->recovery_pin ?? '000000' }}
+                </span>
+            </div>
+            <div class="pin-hint">Gunakan 6-digit PIN ini jika lupa password akun Anda.</div>
+        </div>
+
     </aside>
 
-    <!-- KANAN: MAIN CONTENT -->
-    <main>
+    {{-- ── KONTEN UTAMA ── --}}
+    <main class="w-main" id="wMain">
+
         @if(session('success'))
-        <div class="alert-success animate__animated animate__fadeInDown"><i class="fas fa-check-circle" style="font-size:18px;"></i> {{ session('success') }}</div>
+        <div class="alert-success">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
         @endif
 
-        <div class="welcome-banner animate__animated animate__fadeIn">
+        {{-- Welcome Banner --}}
+        <div class="welcome-banner">
             <div class="wb-title">Halo, {{ explode(' ', trim($user->name))[0] }}! 👋</div>
-            <div class="wb-desc">Selamat datang di portal wisatawan WanderMed. Kelola riwayat kesehatan dan temukan fasilitas medis terbaik selama perjalanan Anda di Subang.</div>
-        </div>
-
-        <div class="stats-wrapper animate__animated animate__fadeInUp">
-            <div class="stats-header">
-                <i class="fas fa-chart-pie"></i> Ringkasan Aktivitas Anda
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="sc-icon blue"><i class="fas fa-hospital-user"></i></div>
-                    <div>
-                        <div class="sc-val">{{ $totalKunjungan }}</div>
-                        <div class="sc-lbl">Total Kunjungan</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="sc-icon orange"><i class="fas fa-calendar-check"></i></div>
-                    <div>
-                        <div class="sc-val">{{ $kunjunganBulan }}</div>
-                        <div class="sc-lbl">Kunjungan Bulan Ini</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="sc-icon green"><i class="fas fa-star"></i></div>
-                    <div>
-                        <div class="sc-val">{{ $rekomendasiCount }}</div>
-                        <div class="sc-lbl">Direkomendasikan</div>
-                    </div>
-                </div>
+            <div class="wb-desc">Selamat datang di portal wisatawan WanderMed. Kelola kesehatan dan temukan fasilitas medis terbaik di Subang.</div>
+            <div class="wb-actions">
+                <a href="/peta-faskes" class="wb-btn-solid wb-btn">
+                    <i class="fas fa-map-marked-alt"></i> Peta Faskes
+                </a>
+                <button class="wb-btn" onclick="switchTab('medis')">
+                    <i class="fas fa-notes-medical"></i> Rekam Medis
+                </button>
             </div>
         </div>
 
-        <!-- TABS -->
-        <div class="w-pills animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-            <button class="w-pill active" data-target="tab-riwayat" onclick="switchTab('riwayat')"><i class="fas fa-history"></i> Riwayat Kunjungan</button>
-            <button class="w-pill" data-target="tab-profil" onclick="switchTab('profil')"><i class="fas fa-user-cog"></i> Pengaturan Akun</button>
-            <button class="w-pill" data-target="tab-medis" onclick="switchTab('medis')"><i class="fas fa-notes-medical"></i> Rekam Medis Pribadi</button>
+        {{-- ── PIN PEMULIHAN (Mobile only — sidebar tidak tersedia di hp) ── --}}
+        <div class="pin-mobile-card">
+            <div class="pin-mobile-header">
+                <div class="pin-mobile-label">
+                    <i class="fas fa-key"></i>
+                    <span>PIN Pemulihan Akun</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="togglePinMobile" onchange="togglePinMobile()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="pin-mobile-value">
+                <span id="pinValueMobile" style="filter:blur(5px); transition:filter 0.3s; user-select:none; letter-spacing:8px;">
+                    {{ $user->recovery_pin ?? '000000' }}
+                </span>
+            </div>
+            <div class="pin-mobile-hint">
+                <i class="fas fa-shield-alt"></i>
+                Aktifkan toggle di atas untuk melihat PIN 6-digit Anda
+            </div>
         </div>
 
-        <!-- TAB CONTENT: RIWAYAT -->
+        {{-- Stats Grid --}}
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="sc-icon blue"><i class="fas fa-hospital-user"></i></div>
+                <div class="sc-body">
+                    <div class="sc-val">{{ $totalKunjungan }}</div>
+                    <div class="sc-lbl">Total Kunjungan</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-icon orange"><i class="fas fa-calendar-check"></i></div>
+                <div class="sc-body">
+                    <div class="sc-val">{{ $kunjunganBulan }}</div>
+                    <div class="sc-lbl">Bulan Ini</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-icon green"><i class="fas fa-star"></i></div>
+                <div class="sc-body">
+                    <div class="sc-val">{{ $rekomendasiCount }}</div>
+                    <div class="sc-lbl">Direkomendasikan</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Tab Pills --}}
+        <div class="w-pills">
+            <button class="w-pill active" id="pill-riwayat" data-target="tab-riwayat" onclick="switchTab('riwayat')">
+                <i class="fas fa-history"></i> Riwayat
+            </button>
+            <button class="w-pill" id="pill-profil" data-target="tab-profil" onclick="switchTab('profil')">
+                <i class="fas fa-user-cog"></i> Akun
+            </button>
+            <button class="w-pill" id="pill-medis" data-target="tab-medis" onclick="switchTab('medis')">
+                <i class="fas fa-notes-medical"></i> Medis
+            </button>
+        </div>
+
+        {{-- ── TAB: RIWAYAT KUNJUNGAN ── --}}
         <div id="tab-riwayat" class="w-pane active">
-            <div class="w-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
-                <div class="w-card-header"><i class="fas fa-history"></i> Riwayat Kunjungan Faskes Anda</div>
+            <div class="w-card">
+                <div class="w-card-header">
+                    <i class="fas fa-history"></i> Riwayat Kunjungan Faskes
+                </div>
                 <div class="w-card-body">
                     @if($riwayats->count() > 0)
                     <div class="history-list">
@@ -157,7 +242,9 @@
                             $cls = ['green'=>'g','yellow'=>'y','red'=>'r'];
                         @endphp
                         <div class="h-item">
-                            <div class="h-icon {{ $cls[$lbl] ?? 'y' }}"><i class="fas {{ $ico[$lbl] ?? 'fa-check' }}"></i></div>
+                            <div class="h-icon {{ $cls[$lbl] ?? 'y' }}">
+                                <i class="fas {{ $ico[$lbl] ?? 'fa-check' }}"></i>
+                            </div>
                             <div class="h-main">
                                 <div class="h-name">{{ $r->faskes ? $r->faskes->nama_faskes : 'Faskes Tidak Diketahui' }}</div>
                                 <div class="h-meta">
@@ -174,9 +261,9 @@
                     @else
                     <div class="h-empty">
                         <i class="fas fa-folder-open"></i>
-                        <p>Anda belum memiliki riwayat kunjungan fasilitas medis yang dicatat.</p>
-                        <a href="/peta-faskes" class="w-btn w-btn-orange" style="padding: 12px 24px; font-size: 14px;">
-                            <i class="fas fa-map-marked-alt"></i> Jelajahi Peta Faskes Sekarang
+                        <p>Belum ada riwayat kunjungan yang dicatat.</p>
+                        <a href="/peta-faskes" class="w-btn w-btn-orange" style="padding:12px 24px; font-size:14px;">
+                            <i class="fas fa-map-marked-alt"></i> Jelajahi Peta Faskes
                         </a>
                     </div>
                     @endif
@@ -184,9 +271,9 @@
             </div>
         </div>
 
-        <!-- TAB CONTENT: PROFIL -->
+        {{-- ── TAB: PENGATURAN AKUN ── --}}
         <div id="tab-profil" class="w-pane">
-            <div class="w-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+            <div class="w-card">
                 <div class="w-card-header"><i class="fas fa-user-cog"></i> Pengaturan Akun</div>
                 <div class="w-card-body">
                     <form action="{{ route('wisatawan.profil.update') }}" method="POST">
@@ -197,38 +284,40 @@
                                 <input type="text" name="name" class="w-input" value="{{ old('name', $user->name) }}" required maxlength="100">
                             </div>
                             <div>
-                                <label class="w-label">Email Utama (Read Only)</label>
+                                <label class="w-label">Email (Tidak dapat diubah)</label>
                                 <input type="email" class="w-input" value="{{ $user->email }}" disabled>
                             </div>
                         </div>
-                        <div style="text-align: right; margin-top: 24px;">
-                            <button type="submit" class="w-btn w-btn-orange" style="padding: 12px 32px;">
-                                <i class="fas fa-save"></i> Simpan Perubahan Akun
+                        <div class="form-actions">
+                            <button type="submit" class="w-btn w-btn-orange" style="padding:11px 28px;">
+                                <i class="fas fa-save"></i> Simpan
                             </button>
                         </div>
                     </form>
 
-                    <hr style="border-color: var(--border); margin: 32px 0;">
+                    <hr style="border-color:var(--border); margin:24px 0;">
 
-                    <h5 style="color: var(--text); margin-bottom: 20px; font-size: 16px; font-weight: 600;"><i class="fas fa-lock" style="color:var(--orange);"></i> Ganti Password</h5>
+                    <h5 style="font-size:14px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-lock" style="color:var(--orange)"></i> Ganti Password
+                    </h5>
                     <form action="{{ route('password.update') }}" method="POST">
                         @csrf
+                        <div class="w-form-group">
+                            <label class="w-label">Password Saat Ini</label>
+                            <input type="password" name="current_password" class="w-input" placeholder="Password lama..." required>
+                        </div>
                         <div class="w-form-grid">
-                            <div style="grid-column: 1 / -1;">
-                                <label class="w-label">Password Saat Ini</label>
-                                <input type="password" name="current_password" class="w-input" placeholder="Ketik password lama Anda..." required>
-                            </div>
                             <div>
                                 <label class="w-label">Password Baru</label>
-                                <input type="password" name="new_password" class="w-input" placeholder="Minimal 8 karakter" required minlength="8">
+                                <input type="password" name="new_password" class="w-input" placeholder="Min. 8 karakter" required minlength="8">
                             </div>
                             <div>
-                                <label class="w-label">Konfirmasi Password Baru</label>
+                                <label class="w-label">Konfirmasi Password</label>
                                 <input type="password" name="new_password_confirmation" class="w-input" placeholder="Ulangi password baru" required minlength="8">
                             </div>
                         </div>
-                        <div style="text-align: right; margin-top: 24px;">
-                            <button type="submit" class="w-btn w-btn-orange" style="padding: 12px 32px;">
+                        <div class="form-actions">
+                            <button type="submit" class="w-btn w-btn-orange" style="padding:11px 28px;">
                                 <i class="fas fa-key"></i> Perbarui Password
                             </button>
                         </div>
@@ -237,24 +326,21 @@
             </div>
         </div>
 
-        <!-- TAB CONTENT: MEDIS -->
+        {{-- ── TAB: REKAM MEDIS ── --}}
         <div id="tab-medis" class="w-pane">
-            <div class="w-card animate__animated animate__fadeInUp" style="border-top: 4px solid var(--red); animation-delay: 0.3s;">
-                <div class="w-card-header" style="color: var(--red);">
-                    <i class="fas fa-notes-medical" style="color:var(--red);"></i> Rekam Medis Darurat Pribadi
+            <div class="w-card" style="border-top: 3px solid var(--red);">
+                <div class="w-card-header" style="color:var(--red);">
+                    <i class="fas fa-notes-medical" style="color:var(--red)"></i> Rekam Medis Darurat Pribadi
                 </div>
                 <div class="w-card-body">
-                    <div style="background: rgba(239,68,68,0.08); border-radius: 12px; padding: 16px; margin-bottom: 24px; display: flex; gap: 12px; color: var(--text);">
-                        <i class="fas fa-info-circle" style="color:var(--red); font-size:18px; margin-top:2px;"></i>
-                        <div style="font-size: 13px; line-height: 1.5;">
-                            <strong>Perhatian:</strong> Informasi ini sangat penting untuk keselamatan Anda. Data medis darurat ini akan ditampilkan pada ulasan Anda, membantu petugas medis di faskes untuk memahami kondisi spesifik Anda jika terjadi keadaan darurat saat Anda berwisata.
-                        </div>
+                    <div class="info-banner">
+                        <i class="fas fa-info-circle"></i>
+                        <div><strong>Perhatian:</strong> Data medis darurat ini membantu petugas medis memahami kondisi Anda jika terjadi kedaruratan saat berwisata di Subang.</div>
                     </div>
 
                     <form action="{{ route('wisatawan.profil.update') }}" method="POST">
                         @csrf
                         <input type="hidden" name="name" value="{{ $user->name }}">
-                        
                         <div class="w-form-grid">
                             <div>
                                 <label class="w-label">Golongan Darah</label>
@@ -266,17 +352,19 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="w-label">Kontak Darurat (Keluarga/Teman)</label>
-                                <input type="text" name="kontak_darurat" class="w-input" value="{{ old('kontak_darurat', $user->kontak_darurat) }}" placeholder="Contoh: 08123456789 (Istri)" maxlength="15">
+                                <label class="w-label">Kontak Darurat</label>
+                                <input type="text" name="kontak_darurat" class="w-input"
+                                    value="{{ old('kontak_darurat', $user->kontak_darurat) }}"
+                                    placeholder="Contoh: 08123456789 (Nama)" maxlength="15">
                             </div>
                         </div>
                         <div class="w-form-group">
                             <label class="w-label">Riwayat Alergi & Penyakit Bawaan</label>
-                            <textarea name="riwayat_alergi" class="w-textarea" placeholder="Sebutkan jika Anda memiliki alergi obat (contoh: Penisilin), makanan, atau penyakit bawaan (contoh: Asma, Hipertensi)..." maxlength="200">{{ old('riwayat_alergi', $user->riwayat_alergi) }}</textarea>
+                            <textarea name="riwayat_alergi" class="w-textarea"
+                                placeholder="Contoh: Alergi Penisilin, Asma, Hipertensi..." maxlength="200">{{ old('riwayat_alergi', $user->riwayat_alergi) }}</textarea>
                         </div>
-                        
-                        <div style="text-align: right; margin-top: 24px;">
-                            <button type="submit" class="w-btn" style="padding: 12px 32px; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.3);">
+                        <div class="form-actions">
+                            <button type="submit" class="w-btn" style="padding:11px 28px; background:rgba(239,68,68,0.1); color:var(--red); border:1px solid rgba(239,68,68,0.3);">
                                 <i class="fas fa-shield-alt"></i> Simpan Data Medis
                             </button>
                         </div>
@@ -286,8 +374,14 @@
         </div>
 
     </main>
-
 </div>
+
+<style>
+/* Utility: sembunyikan teks di navbar pada layar xs */
+@media (max-width: 480px) {
+    .d-none-xs { display: none !important; }
+}
+</style>
 
 <script src="{{ asset('js/dashboard-wisatawan.js') }}"></script>
 </body>

@@ -1,74 +1,120 @@
-// INISIALISASI TEMA SEGERA
-(function() {
-    const t = localStorage.getItem('wanderMedTheme') || 'dark';
-    if (t === 'light') {
-        document.body.classList.remove('dark');
-        document.body.classList.add('light');
-    }
-})();
+/* ================================================================
+ * dashboard-wisatawan.js – WanderMed
+ * ================================================================ */
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Sinkronkan icon tema
-    const isLight = document.body.classList.contains('light');
+// ── Sinkronkan ikon tema setelah DOM siap ──
+document.addEventListener('DOMContentLoaded', function () {
+    const isDark = document.body.classList.contains('dark');
     const ico = document.getElementById('themeIco');
-    if (ico) ico.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+    if (ico) ico.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
 });
 
+// ── TOGGLE TEMA ──
 function toggleTheme() {
-    const isLight = document.body.classList.toggle('light');
-    if (!isLight) document.body.classList.add('dark'); 
-    else document.body.classList.remove('dark');
-    
-    localStorage.setItem('wanderMedTheme', isLight ? 'light' : 'dark');
-    const ico = document.getElementById('themeIco');
-    if (ico) ico.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+    const isDark = document.body.classList.contains('dark');
+
+    if (isDark) {
+        // Beralih ke light mode
+        document.body.classList.remove('dark');
+        localStorage.setItem('wanderMedTheme', 'light');
+        const ico = document.getElementById('themeIco');
+        if (ico) ico.className = 'fas fa-sun';
+    } else {
+        // Beralih ke dark mode
+        document.body.classList.add('dark');
+        localStorage.setItem('wanderMedTheme', 'dark');
+        const ico = document.getElementById('themeIco');
+        if (ico) ico.className = 'fas fa-moon';
+    }
 }
 
+// ── TOGGLE PIN (Sidebar Desktop) ──
+function togglePinVisibility() {
+    const pinEl  = document.getElementById('pinValueWisatawan');
+    const toggle = document.getElementById('togglePinWisatawan');
+    if (!pinEl || !toggle) return;
+
+    if (toggle.checked) {
+        pinEl.style.filter     = 'blur(0)';
+        pinEl.style.userSelect = 'auto';
+    } else {
+        pinEl.style.filter     = 'blur(5px)';
+        pinEl.style.userSelect = 'none';
+    }
+}
+
+// ── TOGGLE PIN (Mobile Card) ──
+function togglePinMobile() {
+    const pinEl  = document.getElementById('pinValueMobile');
+    const toggle = document.getElementById('togglePinMobile');
+    if (!pinEl || !toggle) return;
+
+    if (toggle.checked) {
+        pinEl.style.filter     = 'blur(0)';
+        pinEl.style.userSelect = 'auto';
+    } else {
+        pinEl.style.filter     = 'blur(5px)';
+        pinEl.style.userSelect = 'none';
+    }
+}
+
+// ── SWITCH TAB ──
 function switchTab(name) {
-    // Update Panes
+    // Pane
     document.querySelectorAll('.w-pane').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    
-    // Update Pills
-    document.querySelectorAll('.w-pill').forEach(btn => btn.classList.remove('active'));
-    document.querySelector('.w-pill[data-target="tab-' + name + '"]').classList.add('active');
+    const pane = document.getElementById('tab-' + name);
+    if (pane) pane.classList.add('active');
+
+    // Pills (mobile bar)
+    document.querySelectorAll('.w-pill').forEach(b => b.classList.remove('active'));
+    const pill = document.getElementById('pill-' + name);
+    if (pill) pill.classList.add('active');
+
+    // Sidebar nav (desktop)
+    document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+    const sn = document.getElementById('sn-' + name);
+    if (sn) sn.classList.add('active');
 }
 
-// LOGOUT CONFIRMATION (SweetAlert2)
+// ── SCROLL KE MAIN CONTENT (untuk tombol di profile-strip mobile) ──
+function scrollToMain() {
+    const main = document.getElementById('wMain');
+    if (main) main.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── LOGOUT KONFIRMASI ──
 document.addEventListener('DOMContentLoaded', function () {
     const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const dest = this.href;
-            Swal.fire({
-                title: 'Keluar dari Akun?',
-                html: `<p style="color:var(--text-muted);font-size:14px;margin:0;line-height:1.6;">
-                          Sesi Anda akan diakhiri dan Anda akan<br>diarahkan kembali ke halaman login.
-                       </p>`,
-                icon: 'warning',
-                iconColor: '#ff7a00',
-                showCancelButton: true,
-                confirmButtonText: '<i class="fas fa-sign-out-alt" style="margin-right:6px;"></i>Ya, Keluar',
-                cancelButtonText:  '<i class="fas fa-times" style="margin-right:6px;"></i>Batal',
-                reverseButtons: true,
-                focusCancel: true,
-                customClass: {
-                    popup:         'wm-swal-popup',
-                    title:         'wm-swal-title',
-                    confirmButton: 'wm-swal-confirm',
-                    cancelButton:  'wm-swal-cancel',
-                    icon:          'wm-swal-icon',
-                },
-                showClass:  { popup: 'animate__animated animate__fadeInDown animate__faster' },
-                hideClass:  { popup: 'animate__animated animate__fadeOutUp animate__faster' },
-            }).then(function (result) {
-                if (result.isConfirmed) {
-                    document.body.style.transition = 'opacity 0.18s ease';
-                    document.body.style.opacity    = '0';
-                    setTimeout(function () { window.location.href = dest; }, 185);
-                }
-            });
+    if (!logoutBtn) return;
+
+    logoutBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const dest = this.href;
+
+        Swal.fire({
+            title: 'Keluar dari Akun?',
+            html: `<p style="color:var(--text-muted);font-size:14px;margin:0;line-height:1.6;">
+                       Sesi Anda akan diakhiri dan Anda akan<br>diarahkan kembali ke halaman login.
+                   </p>`,
+            icon: 'warning',
+            iconColor: '#ff7a00',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-sign-out-alt" style="margin-right:6px;"></i>Ya, Keluar',
+            cancelButtonText:  '<i class="fas fa-times" style="margin-right:6px;"></i>Batal',
+            reverseButtons: true,
+            focusCancel: true,
+            customClass: {
+                popup:         'wm-swal-popup',
+                title:         'wm-swal-title',
+                confirmButton: 'wm-swal-confirm',
+                cancelButton:  'wm-swal-cancel',
+            },
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                document.body.style.transition = 'opacity 0.18s ease';
+                document.body.style.opacity    = '0';
+                setTimeout(() => { window.location.href = dest; }, 180);
+            }
         });
-    }
+    });
 });
